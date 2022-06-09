@@ -1,5 +1,7 @@
 extends Node2D
 
+var fileManager = File.new()
+var folderManager = Directory.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,28 +12,31 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func constructFolderPath(path: String, slashInd: int) -> String:
-	var folderPath = ""
-	for i in range(slashInd + 1): #+1 to include slash
-		folderPath += path[i]
-	return folderPath
-
 func acquireContentPath() -> String:
-	var fileManager = File.new()
-	var folderPath = constructFolderPath(OS.get_executable_path(), OS.get_executable_path().find_last("/"))
-	print(folderPath)
-	if fileManager.file_exists(folderPath + "Content/foldercheck"):
-		return folderPath + "Content/"
-	print("Content Folder is missing.")
-	return "FolderMissing"
+	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "Content/"
 
-func prepareGame() -> bool:
-	var contentFolder = acquireContentPath()
-	if contentFolder == "FolderMissing":
+func prepareGame(debug: bool):
+	var contentFolder
+	if debug:
+		contentFolder = "res://Content"
+	else:
+		contentFolder = acquireContentPath()
+	if !folderManager.dir_exists(contentFolder):
 		return false
+	var files = []
+	folderManager.open(contentFolder)
+	folderManager.list_dir_begin(true, true)
+	while true:
+		var file = folderManager.get_next()
+		if file == "":
+			break
+		elif not file.begins_with("."):
+			files.append(file)
+	print(files)
 	return true
 
+
 func _on_Start_pressed():
-	if !prepareGame():
+	if !prepareGame(true):
 		get_tree().quit()
 	
