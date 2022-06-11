@@ -14,6 +14,7 @@ var damageMultiplier = 1.0
 var defenseMultiplier = 1.0
 var startXOffset = 1.5
 var rightFacing = true
+var distance = 0.0
 
 var states = [
 		"Idle",
@@ -56,12 +57,13 @@ func handleInput():
 				if !tooClose:
 					stateCurrent = "WalkForward"
 			if (heldButtons[2] and rightFacing) or (heldButtons[3] and !rightFacing):
-				stateCurrent = "WalkBack"
+				if distance < 5:
+					stateCurrent = "WalkBack"
 		"WalkForward":
 			if (!heldButtons[3] and rightFacing) or (!heldButtons[2] and !rightFacing) or tooClose:
 				stateCurrent = "Idle"
 		"WalkBack":
-			if (!heldButtons[2] and rightFacing) or (!heldButtons[3] and !rightFacing):
+			if (!heldButtons[2] and rightFacing) or (!heldButtons[3] and !rightFacing) or distance > 5:
 				stateCurrent = "Idle"
 
 func doState():

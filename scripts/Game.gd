@@ -50,8 +50,8 @@ func cameraControl(mode: int):
 			$Camera.translation.y += 1
 			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
 			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
-			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 0, 2)
-			$Camera.translation.z += 1
+			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825)
+			$Camera.translation.z += 0.5
 #			$Camera.translation.z = abs(player1.translation.x-player2.translation.x)/2
 
 func handleInputs():
@@ -106,6 +106,8 @@ func characterActBasic():
 	player1.translation.y = max(0.0, player1.translation.y)
 	player2.translation.x = clamp(player2.translation.x, -movementBoundX, movementBoundX)
 	player2.translation.y = max(0.0, player2.translation.y)
+	player1.distance = abs(player1.translation.x - player2.translation.x)
+	player2.distance = abs(player1.translation.x - player2.translation.x)
 	$P1.translation = player1.translation
 	$P1.translate(Vector3.UP * 2)
 	$P2.translation = player2.translation
