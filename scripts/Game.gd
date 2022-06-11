@@ -16,7 +16,7 @@ var statesBase = [
 	"CrouchEnd"
 ]
 
-const cameraMaxX = 2.6
+const cameraMaxX = 4
 const cameraMaxY = 10
 const movementBoundX = 8
 
@@ -50,33 +50,43 @@ func cameraControl(mode: int):
 			$Camera.translation.y += 1
 			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
 			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
-			#$Camera.translation.z = clamp((player1.translation.x-player2.translation.x)/2, 2, 4)
-			#$Camera.translation.z = (player1.translation.x-player2.translation.x)/2
+			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 0, 2)
+			$Camera.translation.z += 1
+#			$Camera.translation.z = abs(player1.translation.x-player2.translation.x)/2
 
 func handleInputs():
-	if player1.stateCurrent == "Idle":
-		if (Input.is_action_pressed("first_right") and player1.rightFacing) or (Input.is_action_pressed("first_left") and !player1.rightFacing):
-			player1.stateCurrent = "WalkForward"
-		if (Input.is_action_pressed("first_left") and player1.rightFacing) or (Input.is_action_pressed("first_right") and !player1.rightFacing):
-			player1.stateCurrent = "WalkBack"
-	if player1.stateCurrent == "WalkForward":
-		if (!Input.is_action_pressed("first_right") and player1.rightFacing) or (!Input.is_action_pressed("first_left") and !player1.rightFacing):
-			player1.stateCurrent = "Idle"
-	if player1.stateCurrent == "WalkBack":
-		if (!Input.is_action_pressed("first_left") and player1.rightFacing) or (!Input.is_action_pressed("first_right") and !player1.rightFacing):
-			player1.stateCurrent = "Idle"
-	
-	if player2.stateCurrent == "Idle":
-		if (Input.is_action_pressed("second_right") and player2.rightFacing) or (Input.is_action_pressed("second_left") and !player2.rightFacing):
-			player2.stateCurrent = "WalkForward"
-		if (Input.is_action_pressed("second_left") and player2.rightFacing) or (Input.is_action_pressed("second_right") and !player2.rightFacing):
-			player2.stateCurrent = "WalkBack"
-	if player2.stateCurrent == "WalkForward":
-		if (!Input.is_action_pressed("second_right") and player2.rightFacing) or (!Input.is_action_pressed("second_left") and !player2.rightFacing):
-			player2.stateCurrent = "Idle"
-	if player2.stateCurrent == "WalkBack":
-		if (!Input.is_action_pressed("second_left") and player2.rightFacing) or (!Input.is_action_pressed("second_right") and !player2.rightFacing):
-			player2.stateCurrent = "Idle"
+	if Input.is_action_pressed("first_up"):
+		player1.heldButtons[0] = true
+	else:
+		player1.heldButtons[0] = false
+	if Input.is_action_pressed("first_down"):
+		player1.heldButtons[1] = true
+	else:
+		player1.heldButtons[1] = false
+	if Input.is_action_pressed("first_left"):
+		player1.heldButtons[2] = true
+	else:
+		player1.heldButtons[2] = false
+	if Input.is_action_pressed("first_right"):
+		player1.heldButtons[3] = true
+	else:
+		player1.heldButtons[3] = false
+	if Input.is_action_pressed("second_up"):
+		player2.heldButtons[0] = true
+	else:
+		player2.heldButtons[0] = false
+	if Input.is_action_pressed("second_down"):
+		player2.heldButtons[1] = true
+	else:
+		player2.heldButtons[1] = false
+	if Input.is_action_pressed("second_left"):
+		player2.heldButtons[2] = true
+	else:
+		player2.heldButtons[2] = false
+	if Input.is_action_pressed("second_right"):
+		player2.heldButtons[3] = true
+	else:
+		player2.heldButtons[3] = false
 
 
 func characterActBasic():
