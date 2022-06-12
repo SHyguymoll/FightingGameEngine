@@ -36,6 +36,7 @@ func _ready():
 	player2 = debugchar.instance()
 	add_child(player1)
 	add_child(player2)
+	player1.loadExtraData()
 	startGame()
 	loadFrame = true
 
