@@ -33,12 +33,13 @@ _global_script_class_icons={
 [application]
 
 config/name="FightingGame"
-run/main_scene="res://Menu.tscn"
+run/main_scene="res://scenes/Menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 SyncManager="res://addons/godot-rollback-netcode/SyncManager.gd"
+CharactersDict="*res://scripts/CharactersDict.gd"
 
 [display]
 

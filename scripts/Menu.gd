@@ -1,17 +1,33 @@
 extends Node
 
+var screen = "Menu"
+
 var fileManager = File.new()
 var folderManager = Directory.new()
 
+var contentFolder
 const reservedFolders = [ #Baseline folders in each Character
+	"Scripts",
 	"HelperScripts",
 	"Sounds",
 	"Sprites"
 ]
 
-var characters = {}
+var lastCharacterID
+onready var characters = get_node("/root/CharactersDict").characters
+onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
+onready var select = preload("res://scenes/PlayerSelect.tscn")
+var player1Cursor = null
+var player2Cursor = null
 
-onready var characterIcon = preload("res://Content/Game/Menu/CharacterIcon3D.tscn")
+
+#onready var screen_size = $Camera.get_viewport_rect().size
+const WIDTH = 5
+const X_LEFT = -2.5
+const Y_TOP = 2
+const X_JUMP = 1.25
+const Y_JUMP = 1
+const Z_POSITION = -4
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,8 +37,18 @@ func _ready():
 		$CanvasLayer/Start.hide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	if screen == "CharSelect":
+		player1Cursor.translation = Vector3(
+			((player1Cursor.selected % WIDTH)*X_JUMP)+X_LEFT,
+			-((player1Cursor.selected/WIDTH)*Y_JUMP)+Y_TOP,
+			Z_POSITION
+		)
+		player2Cursor.translation = Vector3(
+			((player2Cursor.selected % WIDTH)*X_JUMP)+X_LEFT,
+			-((player2Cursor.selected/WIDTH)*Y_JUMP)+Y_TOP,
+			Z_POSITION
+		)
 
 func acquireContentPath() -> String:
 	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "/Content"
@@ -43,10 +69,9 @@ func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first sear
 	folderManager.list_dir_end()
 	return folders
 
-func prepareGame(debug: bool):
-	var contentFolder
+func prepareGame(debug: bool) -> String:
 	if debug:
-		contentFolder = "res://Content"
+		contentFolder = ""
 	else:
 		contentFolder = acquireContentPath()
 	if !folderManager.dir_exists(contentFolder):
@@ -56,39 +81,72 @@ func prepareGame(debug: bool):
 	if !folderManager.dir_exists(contentFolder + "/Game"):
 		return "Game folder missing."
 	var characterFolder = searchCharacters(contentFolder + "/Characters")
+	var numberID = 0
 	for entry in characterFolder:
 		folderManager.open(entry)
 		if folderManager.file_exists("MainScript.gd"):
 			var mainScript = load(folderManager.get_current_dir() + "/MainScript.gd").new()
-			characters[mainScript.fighterName] = {
-				directory = folderManager.get_current_dir(),
-				mainScript = folderManager.get_current_dir() + mainScript.tscnFile,
-				charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
-			}
+			for a in range(20):
+				characters[numberID] = {
+					charName = mainScript.fighterName,
+					directory = folderManager.get_current_dir(),
+					tscnFile = folderManager.get_current_dir() + mainScript.tscnFile,
+					charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
+				}
+				numberID += 1
 			mainScript.free()
+	lastCharacterID = numberID - 1
 	return "Characters loaded successfully."
 
+func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
+	var iconSpatial = SpatialMaterial.new()
+	var iconTexture = ImageTexture.new()
+	var iconImage = Image.new()
+	iconImage.load(image)
+	iconTexture.create_from_image(iconImage)
+	iconSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, iconTexture)
+	iconSpatial.flags_transparent = transparent
+	iconSpatial.flags_unshaded = unshaded
+	return iconSpatial
+
 func loadCharSelect():
-	var characterCount = len(characters)
-	var cameraRect = $Camera.get_camera_transform()
-	print(cameraRect)
+	#var characterCount = len(characters)
+	var charSpawnPoint = Vector3(X_LEFT,Y_TOP,Z_POSITION)
+	var currentRowPos = 0
 	for character in characters:
 		var newIcon = characterIcon.instance()
-		newIcon.characterData = characters[character].mainScript
-		print(newIcon.characterData)
-		var iconSpatial = SpatialMaterial.new()
-		var iconTexture = ImageTexture.new()
-		var iconImage = Image.new()
-		iconImage.load(characters[character].charSelectIcon)
-		iconTexture.create_from_image(iconImage)
-		iconSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, iconTexture)
-		iconSpatial.flags_unshaded = true
-		newIcon.get_node("MeshInstance").set_surface_material(0,iconSpatial)
-		newIcon.get_node("MeshInstance")
+		newIcon.name = characters[character].charName
+		newIcon.characterData = characters[character].tscnFile
+		newIcon.get_node("MeshInstance").set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+		#newIcon.connect("")
 		$CharSelectHolder.add_child(newIcon)
-		newIcon.translation.x -= 1
-		newIcon.translation.y += 1
-		newIcon.translation.z -= 4
+		newIcon.translation = charSpawnPoint
+		charSpawnPoint.x += X_JUMP
+		currentRowPos += 1
+		if currentRowPos >= WIDTH:
+			currentRowPos = 0
+			charSpawnPoint.x = X_LEFT
+			charSpawnPoint.y -= Y_JUMP
+	
+	player1Cursor = select.instance()
+	player1Cursor.name = "PlayerOne"
+	player1Cursor.player = 1
+	player1Cursor.selected = 0 #places at lefttopmost spot
+	player1Cursor.maxWidth = WIDTH
+	player1Cursor.lastID = lastCharacterID
+	player1Cursor.get_node("MeshInstance").set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player1Select.png", true))
+	$CharSelectHolder.add_child(player1Cursor)
+	
+	player2Cursor = select.instance()
+	player2Cursor.name = "PlayerTwo"
+	player2Cursor.player = 2
+	player2Cursor.selected = WIDTH - 1 if lastCharacterID > WIDTH else lastCharacterID #places at righttopmost spot
+	player2Cursor.maxWidth = WIDTH
+	player2Cursor.lastID = lastCharacterID
+	player2Cursor.get_node("MeshInstance").set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player2Select.png", true))
+	$CharSelectHolder.add_child(player2Cursor)
+	
+	screen = "CharSelect"
 
 func _on_Start_pressed():
 	$CanvasLayer/Start.hide()

@@ -2,8 +2,8 @@ extends Spatial
 
 var loadFrame = true
 
-export var player1 = ""
-export var player2 = ""
+onready var player1 = get_node("/root/CharactersDict").player1
+onready var player2 = get_node("/root/CharactersDict").player2
 
 var stage
 
