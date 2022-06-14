@@ -37,7 +37,7 @@ func _ready():
 		$CanvasLayer/Start.hide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if screen == "CharSelect":
 		player1Cursor.translation = Vector3(
 			((player1Cursor.selected % WIDTH)*X_JUMP)+X_LEFT,
@@ -49,6 +49,10 @@ func _process(delta):
 			-((player2Cursor.selected/WIDTH)*Y_JUMP)+Y_TOP,
 			Z_POSITION
 		)
+		if player1Cursor.choiceMade and player2Cursor.choiceMade:
+			get_node("/root/CharactersDict").player1 = characters[player1Cursor.selected]
+			get_node("/root/CharactersDict").player2 = characters[player2Cursor.selected]
+			get_tree().change_scene("res://scenes/Game.tscn")
 
 func acquireContentPath() -> String:
 	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "/Content"
@@ -64,14 +68,14 @@ func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first sear
 				for entry in folders:
 					folders.append_array(searchCharacters(entry))
 			break
-		if folderManager.current_is_dir() and !reservedFolders.has(folder): #Avoid not directories to avoid recursion loops, and common directories for speed
+		if folderManager.current_is_dir() and !reservedFolders.has(folder): #Avoid files for recursion loops, and common directories for speed
 			folders.append(start_dir + "/" + folder)
 	folderManager.list_dir_end()
 	return folders
 
 func prepareGame(debug: bool) -> String:
 	if debug:
-		contentFolder = ""
+		contentFolder = "res://Content"
 	else:
 		contentFolder = acquireContentPath()
 	if !folderManager.dir_exists(contentFolder):
@@ -86,7 +90,7 @@ func prepareGame(debug: bool) -> String:
 		folderManager.open(entry)
 		if folderManager.file_exists("MainScript.gd"):
 			var mainScript = load(folderManager.get_current_dir() + "/MainScript.gd").new()
-			for a in range(20):
+			for _a in range(20):
 				characters[numberID] = {
 					charName = mainScript.fighterName,
 					directory = folderManager.get_current_dir(),
@@ -117,7 +121,7 @@ func loadCharSelect():
 		var newIcon = characterIcon.instance()
 		newIcon.name = characters[character].charName
 		newIcon.characterData = characters[character].tscnFile
-		newIcon.get_node("MeshInstance").set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+		newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
 		#newIcon.connect("")
 		$CharSelectHolder.add_child(newIcon)
 		newIcon.translation = charSpawnPoint
@@ -130,22 +134,21 @@ func loadCharSelect():
 	
 	player1Cursor = select.instance()
 	player1Cursor.name = "PlayerOne"
-	player1Cursor.player = 1
+	player1Cursor.player = 0
 	player1Cursor.selected = 0 #places at lefttopmost spot
 	player1Cursor.maxWidth = WIDTH
 	player1Cursor.lastID = lastCharacterID
-	player1Cursor.get_node("MeshInstance").set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player1Select.png", true))
+	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player1Select.png", true))
 	$CharSelectHolder.add_child(player1Cursor)
 	
 	player2Cursor = select.instance()
 	player2Cursor.name = "PlayerTwo"
-	player2Cursor.player = 2
-	player2Cursor.selected = WIDTH - 1 if lastCharacterID > WIDTH else lastCharacterID #places at righttopmost spot
+	player2Cursor.player = 1
+	player2Cursor.selected = (WIDTH - 1) if lastCharacterID > (WIDTH - 1) else lastCharacterID #places at righttopmost spot
 	player2Cursor.maxWidth = WIDTH
 	player2Cursor.lastID = lastCharacterID
-	player2Cursor.get_node("MeshInstance").set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player2Select.png", true))
+	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
-	
 	screen = "CharSelect"
 
 func _on_Start_pressed():

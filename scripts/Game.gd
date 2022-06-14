@@ -31,12 +31,12 @@ func startGame():
 func _ready():
 	stage = load("res://Content/Game/Stages/BlankStage.tscn")
 	add_child(stage.instance())
-	var debugchar = load("res://Content/Characters/SF2/Ryu/SF2Ryu.tscn")
-	player1 = debugchar.instance()
-	player2 = debugchar.instance()
+	player1 = load(get_node("/root/CharactersDict").player1.tscnFile).instance()
+	player2 = load(get_node("/root/CharactersDict").player2.tscnFile).instance()
 	add_child(player1)
 	add_child(player2)
-	player1.loadExtraData()
+	player1.loadExtraData(get_node("/root/CharactersDict").player1.directory)
+	player2.loadExtraData(get_node("/root/CharactersDict").player1.directory)
 	startGame()
 	loadFrame = true
 
@@ -56,38 +56,14 @@ func cameraControl(mode: int):
 #			$Camera.translation.z = abs(player1.translation.x-player2.translation.x)/2
 
 func handleInputs():
-	if Input.is_action_pressed("first_up"):
-		player1.heldButtons[0] = true
-	else:
-		player1.heldButtons[0] = false
-	if Input.is_action_pressed("first_down"):
-		player1.heldButtons[1] = true
-	else:
-		player1.heldButtons[1] = false
-	if Input.is_action_pressed("first_left"):
-		player1.heldButtons[2] = true
-	else:
-		player1.heldButtons[2] = false
-	if Input.is_action_pressed("first_right"):
-		player1.heldButtons[3] = true
-	else:
-		player1.heldButtons[3] = false
-	if Input.is_action_pressed("second_up"):
-		player2.heldButtons[0] = true
-	else:
-		player2.heldButtons[0] = false
-	if Input.is_action_pressed("second_down"):
-		player2.heldButtons[1] = true
-	else:
-		player2.heldButtons[1] = false
-	if Input.is_action_pressed("second_left"):
-		player2.heldButtons[2] = true
-	else:
-		player2.heldButtons[2] = false
-	if Input.is_action_pressed("second_right"):
-		player2.heldButtons[3] = true
-	else:
-		player2.heldButtons[3] = false
+	player1.heldButtons[0] = Input.is_action_pressed("first_up")
+	player1.heldButtons[1] = Input.is_action_pressed("first_down")
+	player1.heldButtons[2] = Input.is_action_pressed("first_left")
+	player1.heldButtons[3] = Input.is_action_pressed("first_right")
+	player2.heldButtons[0] = Input.is_action_pressed("second_up")
+	player2.heldButtons[1] = Input.is_action_pressed("second_down")
+	player2.heldButtons[2] = Input.is_action_pressed("second_left")
+	player2.heldButtons[3] = Input.is_action_pressed("second_right")
 
 
 func characterActBasic():
