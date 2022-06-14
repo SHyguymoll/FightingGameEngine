@@ -1,7 +1,5 @@
 extends Spatial
 
-var loadFrame = true
-
 onready var player1 = get_node("/root/CharactersDict").player1
 onready var player2 = get_node("/root/CharactersDict").player2
 
@@ -38,7 +36,6 @@ func _ready():
 	player1.loadExtraData(get_node("/root/CharactersDict").player1.directory)
 	player2.loadExtraData(get_node("/root/CharactersDict").player1.directory)
 	startGame()
-	loadFrame = true
 
 func cameraControl(mode: int):
 	match mode:
@@ -64,6 +61,10 @@ func handleInputs():
 	player2.heldButtons[1] = Input.is_action_pressed("second_down")
 	player2.heldButtons[2] = Input.is_action_pressed("second_left")
 	player2.heldButtons[3] = Input.is_action_pressed("second_right")
+	for button in range(player1.buttonCount):
+		player1.heldButtons[button + 4] = Input.is_action_pressed("first_button" + str(button))
+	for button in range(player2.buttonCount):
+		player2.heldButtons[button + 4] = Input.is_action_pressed("second_button" + str(button))
 
 
 func characterActBasic():
@@ -92,9 +93,6 @@ func characterActBasic():
 	
 
 func _physics_process(_delta):
-	if loadFrame:
-		loadFrame = false
-	else:
-		cameraControl(0)
-		handleInputs()
-		characterActBasic()
+	cameraControl(0)
+	handleInputs()
+	characterActBasic()

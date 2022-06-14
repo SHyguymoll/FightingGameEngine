@@ -17,6 +17,8 @@ var lastCharacterID
 onready var characters = get_node("/root/CharactersDict").characters
 onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
 onready var select = preload("res://scenes/PlayerSelect.tscn")
+onready var menuLogo = [preload("res://scenes/Logo.tscn")]
+
 var player1Cursor = null
 var player2Cursor = null
 
@@ -35,6 +37,17 @@ func _ready():
 	if errorRet != "Characters loaded successfully.":
 		print(errorRet)
 		$CanvasLayer/Start.hide()
+	
+	menuLogo.append(menuLogo[0].instance())
+	var logoTexture = ImageTexture.new()
+	var logoImage = Image.new()
+	logoImage.load(contentFolder + "/Game/Menu/Logo.png")
+	logoTexture.create_from_image(logoImage, 1)
+	menuLogo[1].texture = logoTexture
+	menuLogo[1].translation = Vector3(0, -2, -10)
+	
+	add_child(menuLogo[1])
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -52,7 +65,8 @@ func _process(_delta):
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
 			get_node("/root/CharactersDict").player1 = characters[player1Cursor.selected]
 			get_node("/root/CharactersDict").player2 = characters[player2Cursor.selected]
-			get_tree().change_scene("res://scenes/Game.tscn")
+			if get_tree().change_scene("res://scenes/Game.tscn"):
+				printerr("game failed to load")
 
 func acquireContentPath() -> String:
 	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "/Content"
@@ -153,5 +167,6 @@ func loadCharSelect():
 
 func _on_Start_pressed():
 	$CanvasLayer/Start.hide()
+	menuLogo[1].queue_free()
 	loadCharSelect()
 	

@@ -49,8 +49,7 @@ func _process(_delta):
 					selected = lastID
 				else:
 					selected += maxWidth
-		if Input.is_action_just_pressed(playerList[player] + "_button0"):
-			choiceMade = true
+		choiceMade = Input.is_action_just_pressed(playerList[player] + "_button0")
 	else:
 		if Input.is_action_just_pressed(playerList[player] + "_button1"):
 			choiceMade = false
