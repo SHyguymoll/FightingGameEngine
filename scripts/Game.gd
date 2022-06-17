@@ -14,7 +14,7 @@ var statesBase = [
 	"CrouchEnd"
 ]
 
-const cameraMaxX = 4
+const cameraMaxX = 6
 const cameraMaxY = 10
 const movementBoundX = 8
 
@@ -51,6 +51,20 @@ func cameraControl(mode: int):
 			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825)
 			$Camera.translation.z += 0.5
 #			$Camera.translation.z = abs(player1.translation.x-player2.translation.x)/2
+		1: #focus player1
+			$Camera.translation.x = (player1.translation.x+(player2.translation.x * 0.05))/2
+			$Camera.translation.y = player1.translation.y
+			$Camera.translation.y += 1
+			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
+			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
+			$Camera.translation.z = 2
+		2: #focus player2
+			$Camera.translation.x = (player2.translation.x+(player1.translation.x * 0.05))/2
+			$Camera.translation.y = player2.translation.y
+			$Camera.translation.y += 1
+			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
+			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
+			$Camera.translation.z = 2
 
 func handleInputs():
 	player1.heldButtons[0] = Input.is_action_pressed("first_up")
