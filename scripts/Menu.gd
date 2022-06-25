@@ -17,7 +17,7 @@ var lastCharacterID
 onready var characters = get_node("/root/CharactersDict").characters
 onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
 onready var select = preload("res://scenes/PlayerSelect.tscn")
-onready var menuLogo = [preload("res://scenes/Logo.tscn")]
+onready var menuLogo = []
 
 var player1Cursor = null
 var player2Cursor = null
@@ -33,20 +33,15 @@ const Z_POSITION = -4
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var errorRet = prepareGame(true)
+	findContent(true)
+	var errorRet = prepareGame()
 	if errorRet != "Characters loaded successfully.":
 		print(errorRet)
 		$CanvasLayer/Start.hide()
-	
-	menuLogo.append(menuLogo[0].instance())
-	var logoTexture = ImageTexture.new()
-	var logoImage = Image.new()
-	logoImage.load(contentFolder + "/Game/Menu/Logo.png")
-	logoTexture.create_from_image(logoImage, 1)
-	menuLogo[1].texture = logoTexture
-	menuLogo[1].translation = Vector3(0, -2, -10)
-	
-	add_child(menuLogo[1])
+	errorRet = prepareMenu()
+	if errorRet != "Menu loaded successfully.":
+		print(errorRet)
+		$CanvasLayer/Start.hide()
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -71,6 +66,13 @@ func _process(_delta):
 func acquireContentPath() -> String:
 	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "/Content"
 
+func findContent(debug: bool) -> void:
+	if debug:
+		contentFolder = "res://Content"
+	else:
+		contentFolder = acquireContentPath()
+	pass
+
 func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
 	var folders = []
 	folderManager.open(start_dir)
@@ -87,17 +89,10 @@ func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first sear
 	folderManager.list_dir_end()
 	return folders
 
-func prepareGame(debug: bool) -> String:
-	if debug:
-		contentFolder = "res://Content"
-	else:
-		contentFolder = acquireContentPath()
-	if !folderManager.dir_exists(contentFolder):
-		return "Content Folder missing."
-	if !folderManager.dir_exists(contentFolder + "/Characters"):
-		return "Character folder missing."
-	if !folderManager.dir_exists(contentFolder + "/Game"):
-		return "Game folder missing."
+func prepareGame() -> String:
+	assert(folderManager.dir_exists(contentFolder), "Content Folder missing.")
+	assert(folderManager.dir_exists(contentFolder + "/Characters"), "Character folder missing.")
+	assert(folderManager.dir_exists(contentFolder + "/Game"), "Game folder missing.")
 	var characterFolder = searchCharacters(contentFolder + "/Characters")
 	var numberID = 0
 	for entry in characterFolder:
@@ -116,6 +111,18 @@ func prepareGame(debug: bool) -> String:
 	lastCharacterID = numberID - 1
 	return "Characters loaded successfully."
 
+func prepareMenu() -> String:
+	assert(folderManager.dir_exists(contentFolder + "/Game/Menu"), "Menu missing.")
+	var menuFolder = contentFolder + "/Game/Menu"
+	assert(folderManager.file_exists(menuFolder + "/Player1Select.png"), "Player1Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/Player2Select.png"), "Player2Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
+	
+	var logo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
+	logo.set_translation(logo.menuPos)
+	add_child(logo)
+	return "Menu loaded successfully."
+
 func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
 	var iconSpatial = SpatialMaterial.new()
 	var iconTexture = ImageTexture.new()
@@ -128,7 +135,6 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 	return iconSpatial
 
 func loadCharSelect():
-	#var characterCount = len(characters)
 	var charSpawnPoint = Vector3(X_LEFT,Y_TOP,Z_POSITION)
 	var currentRowPos = 0
 	for character in characters:

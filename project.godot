@@ -32,7 +32,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="FightingGame"
+config/name="Open Fighting Game Engine"
 run/main_scene="res://scenes/Menu.tscn"
 config/icon="res://icon.png"
 
