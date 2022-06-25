@@ -114,8 +114,8 @@ func prepareGame() -> String:
 func prepareMenu() -> String:
 	assert(folderManager.dir_exists(contentFolder + "/Game/Menu"), "Menu missing.")
 	var menuFolder = contentFolder + "/Game/Menu"
-	assert(folderManager.file_exists(menuFolder + "/Player1Select.png"), "Player1Select icon missing.")
-	assert(folderManager.file_exists(menuFolder + "/Player2Select.png"), "Player2Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"), "Player1Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"), "Player2Select icon missing.")
 	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
 	
 	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
@@ -137,6 +137,8 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 func loadCharSelect():
 	var charSpawnPoint = Vector3(X_LEFT,Y_TOP,Z_POSITION)
 	var currentRowPos = 0
+	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"):
+		pass
 	for character in characters:
 		var newIcon = characterIcon.instance()
 		newIcon.name = characters[character].charName
@@ -158,7 +160,7 @@ func loadCharSelect():
 	player1Cursor.selected = 0 #places at lefttopmost spot
 	player1Cursor.maxWidth = WIDTH
 	player1Cursor.lastID = lastCharacterID
-	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player1Select.png", true))
+	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player1Select.png", true))
 	$CharSelectHolder.add_child(player1Cursor)
 	
 	player2Cursor = select.instance()
@@ -167,7 +169,7 @@ func loadCharSelect():
 	player2Cursor.selected = (WIDTH - 1) if lastCharacterID > (WIDTH - 1) else lastCharacterID #places at righttopmost spot
 	player2Cursor.maxWidth = WIDTH
 	player2Cursor.lastID = lastCharacterID
-	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/Player2Select.png", true))
+	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
 	screen = "CharSelect"
 
