@@ -1,14 +1,14 @@
 extends MeshInstance
 
-var player: int
+
 var playerList = [
 	"first",
 	"second"
 ]
-
-var selected: int
 var choiceMade = false
 
+var player: int
+var selected: int
 var maxWidth: int
 var lastID: int
 # Called when the node enters the scene tree for the first time.
