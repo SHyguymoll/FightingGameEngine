@@ -17,8 +17,8 @@ var lastCharacterID
 onready var characters = get_node("/root/CharactersDict").characters
 onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
 onready var select = preload("res://scenes/PlayerSelect.tscn")
-onready var menuLogo = []
 
+var menuLogo
 var player1Cursor = null
 var player2Cursor = null
 
@@ -118,9 +118,9 @@ func prepareMenu() -> String:
 	assert(folderManager.file_exists(menuFolder + "/Player2Select.png"), "Player2Select icon missing.")
 	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
 	
-	var logo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
-	logo.set_translation(logo.menuPos)
-	add_child(logo)
+	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
+	menuLogo.set_translation(menuLogo.menuPos)
+	add_child(menuLogo)
 	return "Menu loaded successfully."
 
 func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
@@ -173,6 +173,6 @@ func loadCharSelect():
 
 func _on_Start_pressed():
 	$CanvasLayer/Start.hide()
-	menuLogo[1].queue_free()
+	menuLogo.queue_free()
 	loadCharSelect()
 	
