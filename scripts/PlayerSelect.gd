@@ -25,28 +25,44 @@ func _process(_delta):
 	if !choiceMade:
 		if Input.is_action_just_pressed(playerList[player] + "_left"):
 			selected.x -= 1
-			if selected.x == -1 or charMap[selected.y][selected.x] == 0:
+			if selected.x == -1:
+				selected.x = maxX - 1
+			if charMap[selected.y][selected.x] == 0:
 				while charMap[selected.y][selected.x] != 1:
+					selected.x -= 1
 					if selected.x == -1:
-						selected.x = maxX
+						selected.x = maxX - 1
+			print("Player" + str(player+1) + ": " + str(selected))
 		if Input.is_action_just_pressed(playerList[player] + "_right"):
 			selected.x += 1
-			if selected.x == maxX + 1 or charMap[selected.y][selected.x] == 0:
+			if selected.x == maxX:
+				selected.x = 0
+			if charMap[selected.y][selected.x] == 0:
 				while charMap[selected.y][selected.x] != 1:
-					if selected.x == maxX + 1:
+					selected.x += 1
+					if selected.x == maxX:
 						selected.x = 0
+			print("Player" + str(player+1) + ": " + str(selected))
 		if Input.is_action_just_pressed(playerList[player] + "_up"):
 			selected.y -= 1
-			if selected.y == -1 or charMap[selected.y][selected.x] == 0:
+			if selected.y == -1:
+				selected.y = maxY - 1
+			if charMap[selected.y][selected.x] == 0:
 				while charMap[selected.y][selected.x] != 1:
+					selected.y -= 1
 					if selected.y == -1:
-						selected.y = maxY
+						selected.y = maxY - 1
+			print("Player" + str(player+1) + ": " + str(selected))
 		if Input.is_action_just_pressed(playerList[player] + "_down"):
 			selected.y += 1
-			if selected.y == maxY + 1 or charMap[selected.y][selected.x] == 0:
+			if selected.y == maxY:
+				selected.y = 0
+			if charMap[selected.y][selected.x] == 0:
 				while charMap[selected.y][selected.x] != 1:
-					if selected.y == maxY + 1:
+					selected.y += 1
+					if selected.y == maxY:
 						selected.y = 0
+			print("Player" + str(player+1) + ": " + str(selected))
 #		if Input.is_action_just_pressed(playerList[player] + "_left"):
 #			if selected % maxWidth == 0:
 #				selected += maxWidth - 1

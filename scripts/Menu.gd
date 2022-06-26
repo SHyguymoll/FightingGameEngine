@@ -54,12 +54,12 @@ func _process(_delta):
 		player1Cursor.translation = Vector3(
 			charTopLeft.x + player1Cursor.selected.x * jumpDists.x,
 			charTopLeft.y - player1Cursor.selected.y * jumpDists.y,
-			Z_POSITION
+			charTopLeft.z
 		)
 		player2Cursor.translation = Vector3(
 			charTopLeft.x + player2Cursor.selected.x * jumpDists.x,
 			charTopLeft.y - player2Cursor.selected.y * jumpDists.y,
-			Z_POSITION
+			charTopLeft.z
 		)
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
 			get_node("/root/CharactersDict").player1 = characters[player1Cursor.selected]
@@ -103,7 +103,7 @@ func prepareGame() -> String:
 		folderManager.open(entry)
 		if folderManager.file_exists("MainScript.gd"):
 			var mainScript = load(folderManager.get_current_dir() + "/MainScript.gd").new()
-			for _a in range(20):
+			for _a in range(25):
 				characters[numberID] = {
 					charName = mainScript.fighterName,
 					directory = folderManager.get_current_dir(),
@@ -144,7 +144,6 @@ func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
 	return convertedArray
 
 func loadCharSelect():
-	
 	var charMap = []
 	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"): #custom shape
 		fileManager.open(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt", File.READ)
@@ -194,6 +193,10 @@ func loadCharSelect():
 					charMap.append(currentSlice)
 					currentIndex = 0
 					yIndex += 1
+		if currentIndex != len(currentSlice) - 1: #set the rest to 0 to stop floating
+			while currentIndex != len(currentSlice) - 1:
+				charMap[yIndex][currentIndex] = 0
+				currentIndex += 1
 	else: #fallback shape
 		charTopLeft = Vector3(X_LEFT,Y_TOP,Z_POSITION)
 		var currentRowPos = 0
@@ -234,6 +237,7 @@ func loadCharSelect():
 	player1Cursor.charMap = charMap.duplicate(true)
 	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player1Select.png", true))
 	$CharSelectHolder.add_child(player1Cursor)
+	print("Player1: " + str(player1Cursor.selected))
 	
 	player2Cursor = select.instance()
 	player2Cursor.name = "PlayerTwo"
@@ -249,6 +253,8 @@ func loadCharSelect():
 	player2Cursor.charMap = charMap.duplicate(true)
 	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
+	print("Player2: " + str(player2Cursor.selected))
+	
 	screen = "CharSelect"
 
 func _on_Start_pressed():
