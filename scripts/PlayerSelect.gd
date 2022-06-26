@@ -7,7 +7,6 @@ var playerList = [
 var player: int
 
 var selected = Vector2(0, 0)
-var charMap
 var maxX: int
 var maxY: int
 
@@ -27,8 +26,8 @@ func _process(_delta):
 			selected.x -= 1
 			if selected.x == -1:
 				selected.x = maxX - 1
-			if charMap[selected.y][selected.x] == 0:
-				while charMap[selected.y][selected.x] != 1:
+			if CharactersDict.charMap[selected.y][selected.x] == null:
+				while CharactersDict.charMap[selected.y][selected.x] == null:
 					selected.x -= 1
 					if selected.x == -1:
 						selected.x = maxX - 1
@@ -36,8 +35,8 @@ func _process(_delta):
 			selected.x += 1
 			if selected.x == maxX:
 				selected.x = 0
-			if charMap[selected.y][selected.x] == 0:
-				while charMap[selected.y][selected.x] != 1:
+			if CharactersDict.charMap[selected.y][selected.x] == null:
+				while CharactersDict.charMap[selected.y][selected.x] == null:
 					selected.x += 1
 					if selected.x == maxX:
 						selected.x = 0
@@ -45,8 +44,8 @@ func _process(_delta):
 			selected.y -= 1
 			if selected.y == -1:
 				selected.y = maxY - 1
-			if charMap[selected.y][selected.x] == 0:
-				while charMap[selected.y][selected.x] != 1:
+			if CharactersDict.charMap[selected.y][selected.x] == null:
+				while CharactersDict.charMap[selected.y][selected.x] == null:
 					selected.y -= 1
 					if selected.y == -1:
 						selected.y = maxY - 1
@@ -54,8 +53,8 @@ func _process(_delta):
 			selected.y += 1
 			if selected.y == maxY:
 				selected.y = 0
-			if charMap[selected.y][selected.x] == 0:
-				while charMap[selected.y][selected.x] != 1:
+			if CharactersDict.charMap[selected.y][selected.x] == null:
+				while CharactersDict.charMap[selected.y][selected.x] == null:
 					selected.y += 1
 					if selected.y == maxY:
 						selected.y = 0
