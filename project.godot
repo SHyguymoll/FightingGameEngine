@@ -43,8 +43,8 @@ CharactersDict="*res://scripts/CharactersDict.gd"
 
 [display]
 
-window/size/width=1366
-window/size/height=768
+window/size/width=1920
+window/size/height=1080
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 

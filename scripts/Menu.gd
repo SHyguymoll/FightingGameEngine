@@ -30,11 +30,11 @@ func _ready():
 	var errorRet = prepareGame()
 	if errorRet != "Characters loaded successfully.":
 		print(errorRet)
-		$CanvasLayer/Start.hide()
+		$MenuButtons/Start.hide()
 	errorRet = prepareMenu()
 	if errorRet != "Menu loaded successfully.":
 		print(errorRet)
-		$CanvasLayer/Start.hide()
+		$MenuButtons/Start.hide()
 
 func _process(_delta):
 	if screen == "CharSelect":
@@ -49,8 +49,8 @@ func _process(_delta):
 			charTopLeft.z
 		)
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
-			get_node("/root/CharactersDict").player1 = characters[CharactersDict.charMap[
-				player1Cursor.selected.y][player1Cursor.selected.x]
+			get_node("/root/CharactersDict").player1 = characters[
+				CharactersDict.charMap[player1Cursor.selected.y][player1Cursor.selected.x]
 			]
 			get_node("/root/CharactersDict").player2 = characters[
 				CharactersDict.charMap[player2Cursor.selected.y][player2Cursor.selected.x]
@@ -105,28 +105,34 @@ func prepareGame() -> String:
 			mainScript.free()
 	return "Characters loaded successfully."
 
-func prepareMenu() -> String:
-	assert(folderManager.dir_exists(contentFolder + "/Game/Menu"), "Menu missing.")
-	var menuFolder = contentFolder + "/Game/Menu"
-	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"), "Player1Select icon missing.")
-	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"), "Player2Select icon missing.")
-	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
-	
-	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
-	menuLogo.set_translation(menuLogo.menuPos)
-	add_child(menuLogo)
-	return "Menu loaded successfully."
-
-func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
-	var iconSpatial = SpatialMaterial.new()
+func buildTexture(image: String) -> ImageTexture:
 	var iconTexture = ImageTexture.new()
 	var iconImage = Image.new()
 	iconImage.load(image)
 	iconTexture.create_from_image(iconImage)
+	return iconTexture
+
+func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
+	var iconSpatial = SpatialMaterial.new()
+	var iconTexture = buildTexture(image)
 	iconSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, iconTexture)
 	iconSpatial.flags_transparent = transparent
 	iconSpatial.flags_unshaded = unshaded
 	return iconSpatial
+
+func prepareMenu() -> String:
+	assert(folderManager.dir_exists(contentFolder + "/Game/Menu"), "Menu missing.")
+	var menuFolder = contentFolder + "/Game/Menu"
+	assert(folderManager.file_exists(menuFolder + "/MenuBackground.png"), "Menu Background missing.")
+	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"), "Player1Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"), "Player2Select icon missing.")
+	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/CharacterSelectBackground.png"), "Character Select Background missing.")
+	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
+	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png"))
+	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
+	menuLogo.set_translation(menuLogo.menuPos)
+	$Logo.add_child(menuLogo)
+	return "Menu loaded successfully."
 
 func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
 	var convertedArray = []
@@ -135,6 +141,7 @@ func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
 	return convertedArray
 
 func loadCharSelect():
+	$Background/Background.set_texture(buildTexture(contentFolder + "/Game/Menu/CharacterSelect/CharacterSelectBackground.png"))
 	CharactersDict.charMap = []
 	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"): #custom shape
 		fileManager.open(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt", File.READ)
@@ -247,6 +254,6 @@ func loadCharSelect():
 	screen = "CharSelect"
 
 func _on_Start_pressed():
-	$CanvasLayer/Start.hide()
+	$MenuButtons/Start.hide()
 	menuLogo.queue_free()
 	loadCharSelect()
