@@ -237,7 +237,6 @@ func loadCharSelect():
 	player1Cursor.charMap = charMap.duplicate(true)
 	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player1Select.png", true))
 	$CharSelectHolder.add_child(player1Cursor)
-	print("Player1: " + str(player1Cursor.selected))
 	
 	player2Cursor = select.instance()
 	player2Cursor.name = "PlayerTwo"
@@ -253,7 +252,6 @@ func loadCharSelect():
 	player2Cursor.charMap = charMap.duplicate(true)
 	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
-	print("Player2: " + str(player2Cursor.selected))
 	
 	screen = "CharSelect"
 
