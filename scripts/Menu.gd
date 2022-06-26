@@ -13,23 +13,27 @@ const reservedFolders = [ #Baseline folders in each Character
 	"Sprites"
 ]
 
-var lastCharacterID
 onready var characters = get_node("/root/CharactersDict").characters
 onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
 onready var select = preload("res://scenes/PlayerSelect.tscn")
 
 var menuLogo
+
 var player1Cursor = null
 var player2Cursor = null
 
-
 #onready var screen_size = $Camera.get_viewport_rect().size
+var charTopLeft
+var jumpDists
+
 const WIDTH = 5
+
 const X_LEFT = -2.5
 const Y_TOP = 2
+const Z_POSITION = -4
 const X_JUMP = 1.25
 const Y_JUMP = 1
-const Z_POSITION = -4
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -48,13 +52,13 @@ func _ready():
 func _process(_delta):
 	if screen == "CharSelect":
 		player1Cursor.translation = Vector3(
-			((player1Cursor.selected % WIDTH)*X_JUMP)+X_LEFT,
-			-((player1Cursor.selected/WIDTH)*Y_JUMP)+Y_TOP,
+			charTopLeft.x + player1Cursor.selected.x * jumpDists.x,
+			charTopLeft.y - player1Cursor.selected.y * jumpDists.y,
 			Z_POSITION
 		)
 		player2Cursor.translation = Vector3(
-			((player2Cursor.selected % WIDTH)*X_JUMP)+X_LEFT,
-			-((player2Cursor.selected/WIDTH)*Y_JUMP)+Y_TOP,
+			charTopLeft.x + player2Cursor.selected.x * jumpDists.x,
+			charTopLeft.y - player2Cursor.selected.y * jumpDists.y,
 			Z_POSITION
 		)
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
@@ -108,7 +112,6 @@ func prepareGame() -> String:
 				}
 				numberID += 1
 			mainScript.free()
-	lastCharacterID = numberID - 1
 	return "Characters loaded successfully."
 
 func prepareMenu() -> String:
@@ -134,41 +137,116 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 	iconSpatial.flags_unshaded = unshaded
 	return iconSpatial
 
+func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
+	var convertedArray = []
+	for item in PSArray:
+		convertedArray.append(item.to_int())
+	return convertedArray
+
 func loadCharSelect():
-	var charSpawnPoint = Vector3(X_LEFT,Y_TOP,Z_POSITION)
-	var currentRowPos = 0
-	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"):
-		pass
-	for character in characters:
-		var newIcon = characterIcon.instance()
-		newIcon.name = characters[character].charName
-		newIcon.characterData = characters[character].tscnFile
-		newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
-		#newIcon.connect("")
-		$CharSelectHolder.add_child(newIcon)
-		newIcon.translation = charSpawnPoint
-		charSpawnPoint.x += X_JUMP
-		currentRowPos += 1
-		if currentRowPos >= WIDTH:
-			currentRowPos = 0
-			charSpawnPoint.x = X_LEFT
-			charSpawnPoint.y -= Y_JUMP
+	
+	var charMap = []
+	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"): #custom shape
+		fileManager.open(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt", File.READ)
+		var currentLine = fileManager.get_csv_line()
+		charTopLeft = Vector3(float(currentLine[0]), float(currentLine[1]), float(currentLine[2]))
+		currentLine = fileManager.get_csv_line()
+		jumpDists = Vector2(float(currentLine[0]), float(currentLine[1]))
+		var currentSlice = convertPSArrayToNumberArray(fileManager.get_csv_line())
+		var previousSlice = currentSlice.duplicate()
+		charMap.append(currentSlice)
+		var currentIndex = 0
+		var yIndex = 0
+		for character in characters:
+			var newIcon = characterIcon.instance()
+			newIcon.name = characters[character].charName
+			newIcon.characterData = characters[character].tscnFile
+			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+			$CharSelectHolder.add_child(newIcon)
+			while currentSlice[currentIndex] == 0:
+				currentIndex += 1
+				if currentIndex == len(currentSlice):
+					if fileManager.get_position() < fileManager.get_len():
+						currentSlice = convertPSArrayToNumberArray(fileManager.get_csv_line())
+						assert(len(currentSlice) == len(previousSlice), "ERROR: shape must occupy a rectangle of space")
+						previousSlice = currentSlice.duplicate()
+					else:
+						currentSlice = previousSlice.duplicate()
+						assert(currentSlice.count(0) != len(currentSlice), "ERROR: shape must not end with empty line")
+					charMap.append(currentSlice)
+					currentIndex = 0
+					yIndex += 1
+			if currentSlice[currentIndex] == 1:
+				newIcon.translation = Vector3(
+					charTopLeft.x + currentIndex*jumpDists.x,
+					charTopLeft.y - yIndex*jumpDists.y,
+					charTopLeft.z
+				)
+				currentIndex += 1
+				if currentIndex == len(currentSlice):
+					if fileManager.get_position() < fileManager.get_len():
+						currentSlice = convertPSArrayToNumberArray(fileManager.get_csv_line())
+						assert(len(currentSlice) == len(previousSlice), "ERROR: shape must occupy a rectangle of space")
+						previousSlice = currentSlice.duplicate()
+					else:
+						currentSlice = previousSlice.duplicate()
+						assert(currentSlice.count(0) != len(currentSlice), "ERROR: shape must not end with empty line")
+					charMap.append(currentSlice)
+					currentIndex = 0
+					yIndex += 1
+	else: #fallback shape
+		charTopLeft = Vector3(X_LEFT,Y_TOP,Z_POSITION)
+		var currentRowPos = 0
+		var currentSlice = []
+		for character in characters:
+			var newIcon = characterIcon.instance()
+			newIcon.name = characters[character].charName
+			newIcon.characterData = characters[character].tscnFile
+			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+			$CharSelectHolder.add_child(newIcon)
+			newIcon.translation = charTopLeft
+			charTopLeft.x += X_JUMP
+			currentRowPos += 1
+			currentSlice.append(1)
+			if currentRowPos >= WIDTH:
+				currentRowPos = 0
+				charTopLeft.x = X_LEFT
+				charTopLeft.y -= Y_JUMP
+				charMap.append(currentSlice)
+				currentSlice = []
+		if currentSlice != []:
+			while len(currentSlice) != len(charMap[0]):
+				currentSlice.append(0)
+			charMap.append(currentSlice)
+			currentSlice = []
 	
 	player1Cursor = select.instance()
 	player1Cursor.name = "PlayerOne"
 	player1Cursor.player = 0
-	player1Cursor.selected = 0 #places at lefttopmost spot
-	player1Cursor.maxWidth = WIDTH
-	player1Cursor.lastID = lastCharacterID
+	player1Cursor.selected = Vector2(0,0) #places at lefttopmost spot
+	player1Cursor.maxX = len(charMap[0])
+	player1Cursor.maxY = len(charMap)
+	while charMap[player1Cursor.selected.y][player1Cursor.selected.x] == 0:
+		player1Cursor.selected.x += 1
+		if player1Cursor.selected.x == player1Cursor.maxX:
+			player1Cursor.selected.x = 0
+			player1Cursor.selected.y += 1
+	player1Cursor.charMap = charMap.duplicate(true)
 	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player1Select.png", true))
 	$CharSelectHolder.add_child(player1Cursor)
 	
 	player2Cursor = select.instance()
 	player2Cursor.name = "PlayerTwo"
 	player2Cursor.player = 1
-	player2Cursor.selected = (WIDTH - 1) if lastCharacterID > (WIDTH - 1) else lastCharacterID #places at righttopmost spot
-	player2Cursor.maxWidth = WIDTH
-	player2Cursor.lastID = lastCharacterID
+	player2Cursor.selected = Vector2(len(charMap[0]) - 1,len(charMap) - 1) #places at rightbottommost spot
+	player2Cursor.maxX = len(charMap[0])
+	player2Cursor.maxY = len(charMap)
+	while charMap[player2Cursor.selected.y][player2Cursor.selected.x] == 0:
+		player2Cursor.selected.x -= 1
+		if player2Cursor.selected.x == -1:
+			player2Cursor.selected.x = player2Cursor.maxX
+			player2Cursor.selected.y -= 1
+	player2Cursor.charMap = charMap.duplicate(true)
 	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
 	screen = "CharSelect"
