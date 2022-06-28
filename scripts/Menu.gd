@@ -85,9 +85,9 @@ func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first sear
 	return folders
 
 func prepareGame() -> String:
-	assert(folderManager.dir_exists(contentFolder), "Content Folder missing.")
-	assert(folderManager.dir_exists(contentFolder + "/Characters"), "Character folder missing.")
-	assert(folderManager.dir_exists(contentFolder + "/Game"), "Game folder missing.")
+	if !folderManager.dir_exists(contentFolder): return "Content Folder missing."
+	if !folderManager.dir_exists(contentFolder + "/Characters"): return "Character folder missing."
+	if !folderManager.dir_exists(contentFolder + "/Game"): return "Game folder missing."
 	var characterFolder = searchCharacters(contentFolder + "/Characters")
 	var numberID = 0
 	for entry in characterFolder:
@@ -180,11 +180,11 @@ func loadCharSelect():
 					sliceBuilt = []
 					if fileManager.get_position() < fileManager.get_len():
 						currentSlice = convertPSArrayToNumberArray(fileManager.get_csv_line())
-						assert(len(currentSlice) == len(previousSlice), "ERROR: shape must occupy a rectangle of space")
+						if !len(currentSlice) == len(previousSlice): return "ERROR: shape must occupy a rectangle of space"
 						previousSlice = currentSlice.duplicate()
 					else:
 						currentSlice = previousSlice.duplicate()
-						assert(currentSlice.count(0) != len(currentSlice), "ERROR: shape must not end with empty line")
+						if !currentSlice.count(0) != len(currentSlice): return "ERROR: shape must not end with empty line"
 					currentIndex = 0
 					yIndex += 1
 			if currentSlice[currentIndex] == 1:
