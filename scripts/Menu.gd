@@ -68,7 +68,7 @@ func findContent(debug: bool) -> void:
 		contentFolder = acquireContentPath()
 	pass
 
-func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
+func searchCharacterFolders(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
 	var folders = []
 	folderManager.open(start_dir)
 	folderManager.list_dir_begin(true, true)
@@ -77,24 +77,40 @@ func searchCharacters(start_dir: String) -> Array: #Recursive breadth-first sear
 		if folder == "":
 			if len(folders):
 				for entry in folders:
-					folders.append_array(searchCharacters(entry))
+					folders.append_array(searchCharacterFolders(entry))
 			break
 		if folderManager.current_is_dir() and !reservedFolders.has(folder): #Avoid files for recursion loops, and common directories for speed
 			folders.append(start_dir + "/" + folder)
 	folderManager.list_dir_end()
 	return folders
 
+func searchCharacterPcks(dir: String) -> Array:
+	var pckNames = []
+	folderManager.open(dir)
+	folderManager.list_dir_begin(true, true)
+	while true:
+		var file = folderManager.get_next()
+		if file.get_extension() == "pck" or file.get_extension() == "zip":
+			pckNames.append(file)
+		if file == "":
+			break
+	folderManager.list_dir_end()
+	return pckNames
+
 func prepareGame() -> String:
 	if !folderManager.dir_exists(contentFolder): return "Content Folder missing."
 	if !folderManager.dir_exists(contentFolder + "/Characters"): return "Character folder missing."
 	if !folderManager.dir_exists(contentFolder + "/Game"): return "Game folder missing."
-	var characterFolder = searchCharacters(contentFolder + "/Characters")
+	var characterFolder = searchCharacterFolders(contentFolder + "/Characters")
 	var numberID = 0
+	var test = []
 	for entry in characterFolder:
-		folderManager.open(entry)
-		if folderManager.file_exists("MainScript.gd"):
-			var mainScript = load(folderManager.get_current_dir() + "/MainScript.gd").new()
-			for _a in range(11):
+		var foundPcks = searchCharacterPcks(entry)
+		test.append_array(foundPcks)
+		for pck in foundPcks:
+			var tryLoad = ProjectSettings.load_resource_pack(folderManager.get_current_dir() + "/" + pck)
+			if tryLoad:
+				var mainScript = ResourceLoader.load("res://" + pck.left(pck.find(".")) + "/MainScript.gd").new()
 				characters[numberID] = {
 					charName = mainScript.fighterName,
 					directory = folderManager.get_current_dir(),
@@ -102,7 +118,8 @@ func prepareGame() -> String:
 					charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
 				}
 				numberID += 1
-			mainScript.free()
+				mainScript.free()
+	print(test)
 	return "Characters loaded successfully."
 
 func buildTexture(image: String) -> ImageTexture:
