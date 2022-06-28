@@ -26,7 +26,7 @@ const X_JUMP = 1.25
 const Y_JUMP = 1
 
 func _ready():
-	findContent(true)
+	findContent(OS.has_feature("editor"))
 	var errorRet = prepareGame()
 	if errorRet != "Characters loaded successfully.":
 		push_error(errorRet)
