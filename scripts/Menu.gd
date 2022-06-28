@@ -29,11 +29,11 @@ func _ready():
 	findContent(true)
 	var errorRet = prepareGame()
 	if errorRet != "Characters loaded successfully.":
-		print(errorRet)
+		push_error(errorRet)
 		$MenuButtons/Start.hide()
 	errorRet = prepareMenu()
 	if errorRet != "Menu loaded successfully.":
-		print(errorRet)
+		push_error(errorRet)
 		$MenuButtons/Start.hide()
 
 func _process(_delta):
@@ -59,7 +59,7 @@ func _process(_delta):
 				printerr("game failed to load")
 
 func acquireContentPath() -> String:
-	return OS.get_executable_path().left(OS.get_executable_path().find_last("/")) + "/Content"
+	return OS.get_executable_path().get_base_dir() + "/Content"
 
 func findContent(debug: bool) -> void:
 	if debug:
@@ -121,17 +121,29 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 	return iconSpatial
 
 func prepareMenu() -> String:
-	assert(folderManager.dir_exists(contentFolder + "/Game/Menu"), "Menu missing.")
+	if !folderManager.dir_exists(contentFolder + "/Game/Menu"):
+		return "Menu missing."
 	var menuFolder = contentFolder + "/Game/Menu"
-	assert(folderManager.file_exists(menuFolder + "/MenuBackground.png"), "Menu Background missing.")
-	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"), "Player1Select icon missing.")
-	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"), "Player2Select icon missing.")
-	assert(folderManager.file_exists(menuFolder + "/CharacterSelect/CharacterSelectBackground.png"), "Character Select Background missing.")
-	assert(folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"), "Logo missing.")
+	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"):
+		return "Menu Background missing."
+	if !folderManager.file_exists(menuFolder + "/Font.ttf"):
+		return "Menu Font missing."
+	if !folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"):
+		return "Player1Select icon missing."
+	if !folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"):
+		return "Player2Select icon missing."
+	if !folderManager.file_exists(menuFolder + "/CharacterSelect/CharacterSelectBackground.png"):
+		return "Character Select Background missing."
+	if !folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"):
+		return "Logo missing."
 	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png"))
 	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
 	menuLogo.set_translation(menuLogo.menuPos)
 	$Logo.add_child(menuLogo)
+	var dynamic_font = DynamicFont.new()
+	dynamic_font.font_data = load(menuFolder + "/Font.ttf")
+	dynamic_font.size = 50
+	$MenuButtons/Start.set("custom_fonts/font", dynamic_font)
 	return "Menu loaded successfully."
 
 func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
@@ -188,11 +200,11 @@ func loadCharSelect():
 					sliceBuilt = []
 					if fileManager.get_position() < fileManager.get_len():
 						currentSlice = convertPSArrayToNumberArray(fileManager.get_csv_line())
-						assert(len(currentSlice) == len(previousSlice), "ERROR: shape must occupy a rectangle of space")
+						if !len(currentSlice) == len(previousSlice): return "ERROR: shape must occupy a rectangle of space"
 						previousSlice = currentSlice.duplicate()
 					else:
 						currentSlice = previousSlice.duplicate()
-						assert(currentSlice.count(0) != len(currentSlice), "ERROR: shape must not end with empty line")
+						if !currentSlice.count(0) != len(currentSlice): return "ERROR: shape must not end with empty line"
 					currentIndex = 0
 					yIndex += 1
 		if currentIndex != len(currentSlice): #set the rest to 0 to stop floating
@@ -252,8 +264,11 @@ func loadCharSelect():
 	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
 	$CharSelectHolder.add_child(player2Cursor)
 	screen = "CharSelect"
+	return "Character Select loaded successfully."
 
 func _on_Start_pressed():
 	$MenuButtons/Start.hide()
 	menuLogo.queue_free()
-	loadCharSelect()
+	var errorRet = loadCharSelect()
+	if errorRet != "Character Select loaded successfully.":
+		push_error(errorRet)

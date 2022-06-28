@@ -1,15 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/Menu.gd" type="Script" id=1]
-[ext_resource path="res://Content/Game/Menu/Signika_Negative/SignikaNegative-VariableFont_wght.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="Environment" id=2]
 background_mode = 4
 background_canvas_max_layer = -100
-
-[sub_resource type="DynamicFont" id=1]
-size = 50
-font_data = ExtResource( 2 )
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
@@ -39,7 +34,6 @@ margin_left = 2.0
 margin_top = -33.776
 margin_right = 356.0
 margin_bottom = 34.224
-custom_fonts/font = SubResource( 1 )
 text = "Player vs. Player"
 
 [connection signal="pressed" from="MenuButtons/Start" to="." method="_on_Start_pressed"]
