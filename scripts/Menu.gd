@@ -100,18 +100,18 @@ func prepareGame() -> String:
 	for pck in foundPcks:
 		var tryLoad = ProjectSettings.load_resource_pack(pck)
 		if tryLoad:
-			#this horrific combo of string functions gets the name of the folder stored in the pck file
-			var mainScript = ResourceLoader.load(
-				"res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"
-			).new()
-			characters[numberID] = {
-				charName = mainScript.fighterName,
-				directory = folderManager.get_current_dir(),
-				tscnFile = folderManager.get_current_dir() + mainScript.tscnFile,
-				charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
-			}
-			numberID += 1
-			mainScript.free()
+			if ResourceLoader.exists("res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"):
+				#this horrific combo of string functions gets the name of the folder stored in the pck file
+				var mainScript = ResourceLoader.load(
+					"res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"
+				).new()
+				characters[numberID] = {
+					charName = mainScript.fighterName,
+					tscnFile = mainScript.tscnFile,
+					charSelectIcon = mainScript.charSelectIcon
+				}
+				numberID += 1
+				mainScript.free()
 	return "Characters loaded successfully."
 
 func buildTexture(image: String) -> ImageTexture:

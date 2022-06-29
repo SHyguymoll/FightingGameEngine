@@ -33,8 +33,8 @@ func _ready():
 	player2 = load(get_node("/root/CharactersDict").player2.tscnFile).instance()
 	add_child(player1)
 	add_child(player2)
-	player1.loadExtraData(get_node("/root/CharactersDict").player1.directory)
-	player2.loadExtraData(get_node("/root/CharactersDict").player1.directory)
+	player1.loadExtraData()
+	player2.loadExtraData()
 	startGame()
 
 func cameraControl(mode: int):
