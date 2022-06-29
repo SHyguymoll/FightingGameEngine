@@ -58,15 +58,8 @@ func _process(_delta):
 			if get_tree().change_scene("res://scenes/Game.tscn"):
 				printerr("game failed to load")
 
-func acquireContentPath() -> String:
-	return OS.get_executable_path().get_base_dir() + "/Content"
-
 func findContent(debug: bool) -> void:
-	if debug:
-		contentFolder = "res://Content"
-	else:
-		contentFolder = acquireContentPath()
-	pass
+	contentFolder = "res://Content" if debug else OS.get_executable_path().get_base_dir() + "/Content"
 
 func searchCharacterFolders(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
 	var folders = []
@@ -81,19 +74,19 @@ func searchCharacterFolders(start_dir: String) -> Array: #Recursive breadth-firs
 			break
 		if folderManager.current_is_dir() and !reservedFolders.has(folder): #Avoid files for recursion loops, and common directories for speed
 			folders.append(start_dir + "/" + folder)
-	folderManager.list_dir_end()
 	return folders
 
-func searchCharacterPcks(dir: String) -> Array:
+func searchCharacterPcks(dirs: Array) -> Array:
 	var pckNames = []
-	folderManager.open(dir)
-	folderManager.list_dir_begin(true, true)
-	while true:
-		var file = folderManager.get_next()
-		if file.get_extension() == "pck" or file.get_extension() == "zip":
-			pckNames.append(file)
-		if file == "":
-			break
+	for dir in dirs:
+		folderManager.open(dir)
+		folderManager.list_dir_begin(true, true)
+		while true:
+			var file = folderManager.get_next()
+			if file.get_extension() == "pck" or file.get_extension() == "zip":
+				pckNames.append(folderManager.get_current_dir() + "/" + file)
+			if file == "":
+				break
 	folderManager.list_dir_end()
 	return pckNames
 
@@ -102,24 +95,23 @@ func prepareGame() -> String:
 	if !folderManager.dir_exists(contentFolder + "/Characters"): return "Character folder missing."
 	if !folderManager.dir_exists(contentFolder + "/Game"): return "Game folder missing."
 	var characterFolder = searchCharacterFolders(contentFolder + "/Characters")
+	var foundPcks = searchCharacterPcks(characterFolder)
 	var numberID = 0
-	var test = []
-	for entry in characterFolder:
-		var foundPcks = searchCharacterPcks(entry)
-		test.append_array(foundPcks)
-		for pck in foundPcks:
-			var tryLoad = ProjectSettings.load_resource_pack(folderManager.get_current_dir() + "/" + pck)
-			if tryLoad:
-				var mainScript = ResourceLoader.load("res://" + pck.left(pck.find(".")) + "/MainScript.gd").new()
-				characters[numberID] = {
-					charName = mainScript.fighterName,
-					directory = folderManager.get_current_dir(),
-					tscnFile = folderManager.get_current_dir() + mainScript.tscnFile,
-					charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
-				}
-				numberID += 1
-				mainScript.free()
-	print(test)
+	for pck in foundPcks:
+		var tryLoad = ProjectSettings.load_resource_pack(pck)
+		if tryLoad:
+			#this horrific combo of string functions gets the name of the folder stored in the pck file
+			var mainScript = ResourceLoader.load(
+				"res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"
+			).new()
+			characters[numberID] = {
+				charName = mainScript.fighterName,
+				directory = folderManager.get_current_dir(),
+				tscnFile = folderManager.get_current_dir() + mainScript.tscnFile,
+				charSelectIcon = folderManager.get_current_dir() + mainScript.charSelectIcon
+			}
+			numberID += 1
+			mainScript.free()
 	return "Characters loaded successfully."
 
 func buildTexture(image: String) -> ImageTexture:
@@ -138,8 +130,6 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 	return iconSpatial
 
 func prepareMenu() -> String:
-	if !folderManager.dir_exists(contentFolder + "/Game/Menu"):
-		return "Menu missing."
 	var menuFolder = contentFolder + "/Game/Menu"
 	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"):
 		return "Menu Background missing."
