@@ -100,18 +100,23 @@ func prepareGame() -> String:
 	for pck in foundPcks:
 		var tryLoad = ProjectSettings.load_resource_pack(pck)
 		if tryLoad:
-			if ResourceLoader.exists("res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"):
-				#this horrific combo of string functions gets the name of the folder stored in the pck file
-				var mainScript = ResourceLoader.load(
-					"res://" + pck.split("/")[-1].left(pck.split("/")[-1].find(".")) + "/MainScript.gd"
-				).new()
-				characters[numberID] = {
-					charName = mainScript.fighterName,
-					tscnFile = mainScript.tscnFile,
-					charSelectIcon = mainScript.charSelectIcon
-				}
-				numberID += 1
-				mainScript.free()
+			if !fileManager.file_exists(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc"): return "FolderName.gd missing in pck " + pck
+			var folderName = ResourceLoader.load(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc").new()
+			if !("folder" in folderName):
+				folderName.free()
+				return "folder variable missing in FolderName.gd for pck " + pck
+			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gd"): return "MainScript missing in pck " + pck
+			var mainScript = ResourceLoader.load(
+				"res://" + folderName.folder + "/MainScript.gd"
+			).new()
+			folderName.free()
+			characters[numberID] = {
+				charName = mainScript.fighterName,
+				tscnFile = mainScript.tscnFile,
+				charSelectIcon = mainScript.charSelectIcon
+			}
+			numberID += 1
+			mainScript.free()
 	return "Characters loaded successfully."
 
 func buildTexture(image: String) -> ImageTexture:
