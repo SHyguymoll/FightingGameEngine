@@ -98,13 +98,12 @@ func prepareGame() -> String:
 	var foundPcks = searchCharacterPcks(characterFolder)
 	var numberID = 0
 	for pck in foundPcks:
-		var tryLoad = ProjectSettings.load_resource_pack(pck)
-		if tryLoad:
-			if !fileManager.file_exists(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc"): return "FolderName.gd missing in pck " + pck
+		if ProjectSettings.load_resource_pack(pck):
+			if !fileManager.file_exists(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc"): return "FolderName.gdc missing in pck " + pck
 			var folderName = ResourceLoader.load(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc").new()
 			if !("folder" in folderName):
 				folderName.free()
-				return "folder variable missing in FolderName.gd for pck " + pck
+				return "folder variable missing in FolderName.gdc for pck " + pck
 			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gd"): return "MainScript missing in pck " + pck
 			var mainScript = ResourceLoader.load(
 				"res://" + folderName.folder + "/MainScript.gd"
@@ -136,18 +135,14 @@ func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true
 
 func prepareMenu() -> String:
 	var menuFolder = contentFolder + "/Game/Menu"
-	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"):
-		return "Menu Background missing."
-	if !folderManager.file_exists(menuFolder + "/Font.ttf"):
-		return "Menu Font missing."
-	if !folderManager.file_exists(menuFolder + "/CharacterSelect/Player1Select.png"):
-		return "Player1Select icon missing."
-	if !folderManager.file_exists(menuFolder + "/CharacterSelect/Player2Select.png"):
-		return "Player2Select icon missing."
-	if !folderManager.file_exists(menuFolder + "/CharacterSelect/CharacterSelectBackground.png"):
-		return "Character Select Background missing."
-	if !folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"):
-		return "Logo missing."
+	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"): return "Menu Background missing."
+	if !folderManager.file_exists(menuFolder + "/Font.ttf"): return "Menu Font missing."
+	if !folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"): return "Logo missing."
+	var charSelFolder = menuFolder + "/CharacterSelect"
+	if !folderManager.file_exists(charSelFolder + "/Player1Select.png"): return "Player1Select icon missing."
+	if !folderManager.file_exists(charSelFolder + "/Player2Select.png"): return "Player2Select icon missing."
+	if !folderManager.file_exists(charSelFolder + "/CharacterSelectBackground.png"): return "Character Select Background missing."
+	
 	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png"))
 	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
 	menuLogo.set_translation(menuLogo.menuPos)
