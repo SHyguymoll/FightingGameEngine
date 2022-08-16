@@ -104,9 +104,9 @@ func prepareGame() -> String:
 			if !("folder" in folderName):
 				folderName.free()
 				return "folder variable missing in FolderName.gdc for pck " + pck
-			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gd"): return "MainScript missing in pck " + pck
+			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gdc"): return "MainScript.gdc missing in pck " + pck
 			var mainScript = ResourceLoader.load(
-				"res://" + folderName.folder + "/MainScript.gd"
+				"res://" + folderName.folder + "/MainScript.gdc"
 			).new()
 			folderName.free()
 			characters[numberID] = {
