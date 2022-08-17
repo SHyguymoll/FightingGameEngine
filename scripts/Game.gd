@@ -141,6 +141,6 @@ func characterActBasic():
 	
 
 func _physics_process(_delta):
-	cameraControl(0)
+	cameraControl(cameraMode)
 	handleInputs()
 	characterActBasic()
