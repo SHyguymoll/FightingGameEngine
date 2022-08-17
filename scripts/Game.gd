@@ -128,16 +128,9 @@ func characterActBasic():
 					player2.animStep = TURNAROUND_ANIMSTEP
 		player2.rotation_degrees.y = HALFPI * int(player2.rightFacing)
 	player1.translation.x = clamp(player1.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	player1.translation.y = max(0.0, player1.translation.y)
 	player2.translation.x = clamp(player2.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	player2.translation.y = max(0.0, player2.translation.y)
 	player1.distance = abs(player1.translation.x - player2.translation.x)
 	player2.distance = abs(player1.translation.x - player2.translation.x)
-	#debugging meshes
-	$P1.translation = player1.translation
-	$P1.translate(Vector3.UP * 2)
-	$P2.translation = player2.translation
-	$P2.translate(Vector3.UP * 2)
 	
 
 func _physics_process(_delta):
