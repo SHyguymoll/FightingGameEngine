@@ -63,7 +63,7 @@ func cameraControl(mode: int):
 				$Camera.translation.y = player1.translation.y + 1
 			else:
 				$Camera.translation.y = player2.translation.y + 1
-			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825)
+			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825) + 0.5
 		4: #focus player1
 			$Camera.translation.x = player1.translation.x
 			$Camera.translation.y = player1.translation.y + 1
