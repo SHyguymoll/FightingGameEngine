@@ -12,9 +12,10 @@ enum statesBase {
 	Crouch,
 }
 
-const cameraMaxX = 6
-const cameraMaxY = 10
-const movementBoundX = 8
+export var cameraMode = 0
+const CAMERAMAXX = 6
+const CAMERAMAXY = 10
+const MOVEMENTBOUNDX = 8
 
 func startGame():
 	player1.translation = Vector3(player1.STARTXOFFSET * -1,0,0)
@@ -33,35 +34,46 @@ func _ready():
 	add_child(player2)
 	startGame()
 
+const ORTH_DIST = 1.328125
+
 func cameraControl(mode: int):
+	$Camera.projection = 1 if mode < 3 else 0 #0 = Perspective, 1 = Orthagonal
 	match mode:
+		#2d modes
 		0: #default
 			$Camera.translation.x = (player1.translation.x+player2.translation.x)/2
 			if player1.translation.y >= player2.translation.y:
-				$Camera.translation.y = player1.translation.y
+				$Camera.translation.y = player1.translation.y + 1
 			else:
-				$Camera.translation.y = player2.translation.y
-			$Camera.translation.y += 1
-			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
-			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
-			#$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825)
-			$Camera.translation.z = 1.328125
+				$Camera.translation.y = player2.translation.y + 1
+			$Camera.translation.z = ORTH_DIST
 			$Camera.size = clamp(abs(player1.translation.x-player2.translation.x)/2, 3, 4)
-#			$Camera.translation.z = abs(player1.translation.x-player2.translation.x)/2
 		1: #focus player1
-			$Camera.translation.x = (player1.translation.x+(player2.translation.x * 0.05))/2
-			$Camera.translation.y = player1.translation.y
-			$Camera.translation.y += 1
-			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
-			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
-			$Camera.translation.z = 2
+			$Camera.translation.x = player1.translation.x
+			$Camera.translation.y = player1.translation.y + 1
+			$Camera.translation.z = ORTH_DIST
 		2: #focus player2
-			$Camera.translation.x = (player2.translation.x+(player1.translation.x * 0.05))/2
-			$Camera.translation.y = player2.translation.y
-			$Camera.translation.y += 1
-			$Camera.translation.x = clamp($Camera.translation.x, -cameraMaxX, cameraMaxX)
-			$Camera.translation.y = clamp($Camera.translation.y, 0, cameraMaxY)
-			$Camera.translation.z = 2
+			$Camera.translation.x = player2.translation.x
+			$Camera.translation.y = player2.translation.y + 1
+			$Camera.translation.z = ORTH_DIST
+		#3d modes
+		3: #default
+			$Camera.translation.x = (player1.translation.x+player2.translation.x)/2
+			if player1.translation.y >= player2.translation.y:
+				$Camera.translation.y = player1.translation.y + 1
+			else:
+				$Camera.translation.y = player2.translation.y + 1
+			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825)
+		4: #focus player1
+			$Camera.translation.x = player1.translation.x
+			$Camera.translation.y = player1.translation.y + 1
+			$Camera.translation.z = 1.5
+		5: #focus player2
+			$Camera.translation.x = player2.translation.x
+			$Camera.translation.y = player2.translation.y + 1
+			$Camera.translation.z = 1.5
+	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
+	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
 
 func handleInputs():
 	player1.heldButtons[0] = Input.is_action_pressed("first_up")
@@ -115,9 +127,9 @@ func characterActBasic():
 				if player2.stateCurrent == statesBase.Crouch:
 					player2.animStep = TURNAROUND_ANIMSTEP
 		player2.rotation_degrees.y = HALFPI * int(player2.rightFacing)
-	player1.translation.x = clamp(player1.translation.x, -movementBoundX, movementBoundX)
+	player1.translation.x = clamp(player1.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	player1.translation.y = max(0.0, player1.translation.y)
-	player2.translation.x = clamp(player2.translation.x, -movementBoundX, movementBoundX)
+	player2.translation.x = clamp(player2.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	player2.translation.y = max(0.0, player2.translation.y)
 	player1.distance = abs(player1.translation.x - player2.translation.x)
 	player2.distance = abs(player1.translation.x - player2.translation.x)
