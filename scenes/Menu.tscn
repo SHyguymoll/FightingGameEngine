@@ -17,6 +17,8 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="Camera" type="Camera" parent="."]
+current = true
+size = 3.5
 
 [node name="Logo" type="Spatial" parent="."]
 

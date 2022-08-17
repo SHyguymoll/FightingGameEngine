@@ -6,8 +6,10 @@
 script = ExtResource( 1 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26896, 7.74188 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.269, 7.742 )
 projection = 1
+current = true
+size = 3.5
 
 [node name="P1" type="CSGBox" parent="."]
 width = 1.0
