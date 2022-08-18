@@ -28,8 +28,8 @@ func startGame():
 func _ready():
 	stage = load("res://Content/Game/Stages/BlankStage.tscn")
 	add_child(stage.instance())
-	player1 = load(get_node("/root/CharactersDict").player1.tscnFile).instance()
-	player2 = load(get_node("/root/CharactersDict").player2.tscnFile).instance()
+	player1 = load(cDict.p1.tscnFile).instance()
+	player2 = load(cDict.p2.tscnFile).instance()
 	add_child(player1)
 	add_child(player2)
 	startGame()
@@ -75,21 +75,39 @@ func cameraControl(mode: int):
 	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
 	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
 
+func getInputHashes() -> Array: return [(int(cDict.p1Btns[0]) * 1) + (int(cDict.p1Btns.heldButtons[1]) * 2) + (int(cDict.p1Btns[2]) * 4) + (int(cDict.p1Btns.heldButtons[3]) * 8) + ((int(cDict.p1Btns[4]) - (cDict.p1.BUTTONCOUNT >= 1)) * 16) + ((int(cDict.p1Btns[5]) - (cDict.p1.BUTTONCOUNT >= 2)) * 32) + ((int(cDict.p1Btns[6]) - (cDict.p1.BUTTONCOUNT >= 3)) * 64) + ((int(cDict.p1Btns[7]) - (cDict.p1.BUTTONCOUNT >= 4)) * 128) + ((int(cDict.p1Btns[8]) - (cDict.p1.BUTTONCOUNT >= 5)) * 256) + ((int(cDict.p1Btns[9]) - (cDict.p1.BUTTONCOUNT >= 6)) * 512), (int(cDict.p2Btns[0]) * 1) + (int(cDict.p2Btns.heldButtons[1]) * 2) + (int(cDict.p2Btns[2]) * 4) + (int(cDict.p2Btns.heldButtons[3]) * 8) + ((int(cDict.p2Btns[4]) - (cDict.p2.BUTTONCOUNT >= 1)) * 16) + ((int(cDict.p2Btns[5]) - (cDict.p2.BUTTONCOUNT >= 2)) * 32) + ((int(cDict.p2Btns[6]) - (cDict.p2.BUTTONCOUNT >= 3)) * 64) + ((int(cDict.p2Btns[7]) - (cDict.p2.BUTTONCOUNT >= 4)) * 128) + ((int(cDict.p2Btns[8]) - (cDict.p2.BUTTONCOUNT >= 5)) * 256) + ((int(cDict.p2Btns[9]) - (cDict.p2.BUTTONCOUNT >= 6)) * 512)] #may god forgive me for this one liner
+
+func makeBuffers() -> Array:
+	var p1buf = []
+	for i in range(cDict.p1.BUFFERSIZE):
+		if cDict.p1curInpInd < cDict.p1.BUFFERSIZE - i:
+			p1buf.append([-1, 0]) #-1 = NULL INPUT
+		else:
+			p1buf.append(cDict.p1InpHan[cDict.p1.BUFFERSIZE - i])
+	
+	var p2buf = []
+	for i in range(cDict.p2.BUFFERSIZE):
+		if cDict.p2curInpInd < cDict.p2.BUFFERSIZE - i:
+			p2buf.append([-1, 0]) #-1 = NULL INPUT
+		else:
+			p2buf.append(cDict.p2InpHan[cDict.p2.BUFFERSIZE - i])
+	return [p1buf, p2buf]
 
 func handleInputs():
-	player1.heldButtons[0] = Input.is_action_pressed("first_up")
-	player1.heldButtons[1] = Input.is_action_pressed("first_down")
-	player1.heldButtons[2] = Input.is_action_pressed("first_left")
-	player1.heldButtons[3] = Input.is_action_pressed("first_right")
-	for button in range(player1.BUTTONCOUNT):
-		player1.heldButtons[button + 4] = Input.is_action_pressed("first_button" + str(button))
-	player2.heldButtons[0] = Input.is_action_pressed("second_up")
-	player2.heldButtons[1] = Input.is_action_pressed("second_down")
-	player2.heldButtons[2] = Input.is_action_pressed("second_left")
-	player2.heldButtons[3] = Input.is_action_pressed("second_right")
-	for button in range(player2.BUTTONCOUNT):
-		player2.heldButtons[button + 4] = Input.is_action_pressed("second_button" + str(button))
-	var calcHashes = [player1.getInputHash(), player2.getInputHash()]
+	cDict.p1Btns[0] = Input.is_action_pressed("first_up")
+	cDict.p1Btns[1] = Input.is_action_pressed("first_down")
+	cDict.p1Btns[2] = Input.is_action_pressed("first_left")
+	cDict.p1Btns[3] = Input.is_action_pressed("first_right")
+	for button in range(cDict.p1.BUTTONCOUNT):
+		cDict.p1Btns[button + 4] = Input.is_action_pressed("first_button" + str(button))
+	cDict.p2Btns[0] = Input.is_action_pressed("second_up")
+	cDict.p2Btns[1] = Input.is_action_pressed("second_down")
+	cDict.p2Btns[2] = Input.is_action_pressed("second_left")
+	cDict.p2Btns[3] = Input.is_action_pressed("second_right")
+	for button in range(cDict.p2.BUTTONCOUNT):
+		cDict.p2Btns[button + 4] = Input.is_action_pressed("second_button" + str(button))
+	
+	var calcHashes = getInputHashes()
 	if len(cDict.p1InpHan) == 0:
 		cDict.p1InpHan[cDict.p1curInpInd] = [calcHashes[0], 1]
 	if cDict.p1InpHan[cDict.p1curInpInd][0] != calcHashes[0]:
@@ -105,6 +123,7 @@ func handleInputs():
 		cDict.p2InpHan[cDict.p2curInpInd] = [calcHashes[1], 1]
 	else:
 		cDict.p2InpHan[cDict.p2curInpInd][1] = cDict.p2InpHan[cDict.p2curInpInd][1] + 1
+	var buffers = makeBuffers()
 	player1.handleInput()
 	player2.handleInput()
 

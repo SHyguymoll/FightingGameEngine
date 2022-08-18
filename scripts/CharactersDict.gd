@@ -4,8 +4,11 @@ var characters = {}
 
 var charMap = []
 
-var player1
-var player2
+var p1
+var p2
+
+var p1Btns = [false, false, false, false, false, false, false, false, false, false]
+var p2Btns = [false, false, false, false, false, false, false, false, false, false]
 
 var p1InpHan = {}
 var p2InpHan = {}
