@@ -8,28 +8,6 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "AnimationPlayer",
-"class": "NetworkAnimationPlayer",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkAnimationPlayer.gd"
-}, {
-"base": "Node",
-"class": "NetworkRandomNumberGenerator",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkRandomNumberGenerator.gd"
-}, {
-"base": "Node",
-"class": "NetworkTimer",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkTimer.gd"
-} ]
-_global_script_class_icons={
-"NetworkAnimationPlayer": "",
-"NetworkRandomNumberGenerator": "",
-"NetworkTimer": ""
-}
-
 [application]
 
 config/name="Open Fighting Game Engine"
@@ -38,7 +16,6 @@ config/icon="res://icon.png"
 
 [autoload]
 
-SyncManager="res://addons/godot-rollback-netcode/SyncManager.gd"
 CharactersDict="*res://scripts/CharactersDict.gd"
 
 [display]

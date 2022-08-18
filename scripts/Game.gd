@@ -96,23 +96,7 @@ func getInputHashes() -> Array: return [
 	max(0, ((int(cDict.p2Btns[7]) - int(player2.BUTTONCOUNT >= 4)) * 128)) + \
 	max(0, ((int(cDict.p2Btns[8]) - int(player2.BUTTONCOUNT >= 5)) * 256)) + \
 	max(0, ((int(cDict.p2Btns[9]) - int(player2.BUTTONCOUNT >= 6)) * 512))
-] #FIX THIS!!!
-
-func makeBuffers() -> Array:
-	var p1buf = []
-	for i in range(player1.BUFFERSIZE):
-		if cDict.p1curInpInd < player1.BUFFERSIZE - i:
-			p1buf.append([-1, 0]) #-1 = NULL INPUT
-		else:
-			p1buf.append(cDict.p1InpHan[player1.BUFFERSIZE - i])
-	
-	var p2buf = []
-	for i in range(player2.BUFFERSIZE):
-		if cDict.p2curInpInd < player2.BUFFERSIZE - i:
-			p2buf.append([-1, 0]) #-1 = NULL INPUT
-		else:
-			p2buf.append(cDict.p2InpHan[player2.BUFFERSIZE - i])
-	return [p1buf, p2buf]
+]
 
 func handleInputs():
 	cDict.p1Btns[0] = Input.is_action_pressed("first_up")
@@ -130,23 +114,23 @@ func handleInputs():
 	
 	var calcHashes = getInputHashes()
 	if len(cDict.p1InpHan) == 0:
-		cDict.p1InpHan[cDict.p1curInpInd] = [calcHashes[0], 1]
-	if cDict.p1InpHan[cDict.p1curInpInd][0] != calcHashes[0]:
+		cDict.p1InpHan.append([calcHashes[0], 1])
+	elif cDict.p1InpHan[cDict.p1curInpInd][0] != calcHashes[0]:
+		cDict.p1InpHan.append([calcHashes[0], 1])
 		cDict.p1curInpInd += 1
-		cDict.p1InpHan[cDict.p1curInpInd] = [calcHashes[0], 1]
 	else:
-		cDict.p1InpHan[cDict.p1curInpInd][1] = cDict.p1InpHan[cDict.p1curInpInd][1] + 1
+		cDict.p1InpHan[cDict.p1curInpInd][1] += 1
 	
 	if len(cDict.p2InpHan) == 0:
-		cDict.p2InpHan[cDict.p2curInpInd] = [calcHashes[1], 1]
-	if cDict.p2InpHan[cDict.p2curInpInd][0] != calcHashes[1]:
+		cDict.p2InpHan.append([calcHashes[1], 1])
+	elif cDict.p2InpHan[cDict.p2curInpInd][0] != calcHashes[1]:
+		cDict.p2InpHan.append([calcHashes[1], 1])
 		cDict.p2curInpInd += 1
-		cDict.p2InpHan[cDict.p2curInpInd] = [calcHashes[1], 1]
 	else:
-		cDict.p2InpHan[cDict.p2curInpInd][1] = cDict.p2InpHan[cDict.p2curInpInd][1] + 1
-	var buffers = makeBuffers()
-	player1.handleInput(buffers[0])
-	player2.handleInput(buffers[1])
+		cDict.p2InpHan[cDict.p2curInpInd][1] += 1
+	
+	player1.handleInput(cDict.p1InpHan.slice(max(0,cDict.p1curInpInd - player1.BUFFERSIZE),cDict.p1curInpInd))
+	player2.handleInput(cDict.p2InpHan.slice(max(0,cDict.p2curInpInd - player2.BUFFERSIZE),cDict.p2curInpInd))
 
 const HALFPI = 180
 const TURNAROUND_ANIMSTEP = 3
