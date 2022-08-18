@@ -1,8 +1,8 @@
 extends Spatial
 
-onready var player1 = get_node("/root/CharactersDict").player1
-onready var player2 = get_node("/root/CharactersDict").player2
-
+var player1
+var player2
+onready var cDict = get_node("/root/CharactersDict")
 var stage
 
 enum statesBase {
@@ -75,6 +75,7 @@ func cameraControl(mode: int):
 	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
 	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
 
+
 func handleInputs():
 	player1.heldButtons[0] = Input.is_action_pressed("first_up")
 	player1.heldButtons[1] = Input.is_action_pressed("first_down")
@@ -88,6 +89,22 @@ func handleInputs():
 	player2.heldButtons[3] = Input.is_action_pressed("second_right")
 	for button in range(player2.BUTTONCOUNT):
 		player2.heldButtons[button + 4] = Input.is_action_pressed("second_button" + str(button))
+	var calcHashes = [player1.getInputHash(), player2.getInputHash()]
+	if len(cDict.p1InpHan) == 0:
+		cDict.p1InpHan[cDict.p1curInpInd] = [calcHashes[0], 1]
+	if cDict.p1InpHan[cDict.p1curInpInd][0] != calcHashes[0]:
+		cDict.p1curInpInd += 1
+		cDict.p1InpHan[cDict.p1curInpInd] = [calcHashes[0], 1]
+	else:
+		cDict.p1InpHan[cDict.p1curInpInd][1] = cDict.p1InpHan[cDict.p1curInpInd][1] + 1
+	
+	if len(cDict.p2InpHan) == 0:
+		cDict.p2InpHan[cDict.p2curInpInd] = [calcHashes[1], 1]
+	if cDict.p2InpHan[cDict.p2curInpInd][0] != calcHashes[1]:
+		cDict.p2curInpInd += 1
+		cDict.p2InpHan[cDict.p2curInpInd] = [calcHashes[1], 1]
+	else:
+		cDict.p2InpHan[cDict.p2curInpInd][1] = cDict.p2InpHan[cDict.p2curInpInd][1] + 1
 	player1.handleInput()
 	player2.handleInput()
 
