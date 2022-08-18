@@ -78,24 +78,24 @@ func cameraControl(mode: int):
 func getInputHashes() -> Array: return [
 	(int(cDict.p1Btns[0]) * 1) + \
 	(int(cDict.p1Btns[1]) * 2) + \
-	(int(cDict.p1Btns[2]) * 4) + \
-	(int(cDict.p1Btns[3]) * 8) + \
-	max(0, ((int(cDict.p1Btns[4]) - int(player1.BUTTONCOUNT >= 1)) * 16)) + \
-	max(0, ((int(cDict.p1Btns[5]) - int(player1.BUTTONCOUNT >= 2)) * 32)) + \
-	max(0, ((int(cDict.p1Btns[6]) - int(player1.BUTTONCOUNT >= 3)) * 64)) + \
-	max(0, ((int(cDict.p1Btns[7]) - int(player1.BUTTONCOUNT >= 4)) * 128)) + \
-	max(0, ((int(cDict.p1Btns[8]) - int(player1.BUTTONCOUNT >= 5)) * 256)) + \
-	max(0, ((int(cDict.p1Btns[9]) - int(player1.BUTTONCOUNT >= 6)) * 512)),
+	(int(cDict.p1Btns[2]) * 3) + \
+	(int(cDict.p1Btns[3]) * 4) + \
+	max(0, ((int(cDict.p1Btns[4]) - int(player1.BUTTONCOUNT >= 1)) * 5)) + \
+	max(0, ((int(cDict.p1Btns[5]) - int(player1.BUTTONCOUNT >= 2)) * 6)) + \
+	max(0, ((int(cDict.p1Btns[6]) - int(player1.BUTTONCOUNT >= 3)) * 7)) + \
+	max(0, ((int(cDict.p1Btns[7]) - int(player1.BUTTONCOUNT >= 4)) * 8)) + \
+	max(0, ((int(cDict.p1Btns[8]) - int(player1.BUTTONCOUNT >= 5)) * 9)) + \
+	max(0, ((int(cDict.p1Btns[9]) - int(player1.BUTTONCOUNT >= 6)) * 10)),
 	(int(cDict.p2Btns[0]) * 1) + \
 	(int(cDict.p2Btns[1]) * 2) + \
-	(int(cDict.p2Btns[2]) * 4) + \
-	(int(cDict.p2Btns[3]) * 8) + \
-	max(0, ((int(cDict.p2Btns[4]) - int(player2.BUTTONCOUNT >= 1)) * 16)) + \
-	max(0, ((int(cDict.p2Btns[5]) - int(player2.BUTTONCOUNT >= 2)) * 32)) + \
-	max(0, ((int(cDict.p2Btns[6]) - int(player2.BUTTONCOUNT >= 3)) * 64)) + \
-	max(0, ((int(cDict.p2Btns[7]) - int(player2.BUTTONCOUNT >= 4)) * 128)) + \
-	max(0, ((int(cDict.p2Btns[8]) - int(player2.BUTTONCOUNT >= 5)) * 256)) + \
-	max(0, ((int(cDict.p2Btns[9]) - int(player2.BUTTONCOUNT >= 6)) * 512))
+	(int(cDict.p2Btns[2]) * 3) + \
+	(int(cDict.p2Btns[3]) * 4) + \
+	max(0, ((int(cDict.p2Btns[4]) - int(player2.BUTTONCOUNT >= 1)) * 5)) + \
+	max(0, ((int(cDict.p2Btns[5]) - int(player2.BUTTONCOUNT >= 2)) * 6)) + \
+	max(0, ((int(cDict.p2Btns[6]) - int(player2.BUTTONCOUNT >= 3)) * 7)) + \
+	max(0, ((int(cDict.p2Btns[7]) - int(player2.BUTTONCOUNT >= 4)) * 8)) + \
+	max(0, ((int(cDict.p2Btns[8]) - int(player2.BUTTONCOUNT >= 5)) * 9)) + \
+	max(0, ((int(cDict.p2Btns[9]) - int(player2.BUTTONCOUNT >= 6)) * 10))
 ]
 
 func handleInputs():
