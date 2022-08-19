@@ -1,6 +1,6 @@
 extends Node
 
-onready var characters = get_node("/root/CharactersDict").characters
+onready var characters = CharactersDict.characters
 onready var characterIcon = preload("res://scenes/CharacterIcon3D.tscn")
 onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
@@ -49,10 +49,10 @@ func _process(_delta):
 			charTopLeft.z
 		)
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
-			get_node("/root/CharactersDict").p1 = characters[
+			CharactersDict.p1 = characters[
 				CharactersDict.charMap[player1Cursor.selected.y][player1Cursor.selected.x]
 			]
-			get_node("/root/CharactersDict").p2 = characters[
+			CharactersDict.p2 = characters[
 				CharactersDict.charMap[player2Cursor.selected.y][player2Cursor.selected.x]
 			]
 			if get_tree().change_scene("res://scenes/Game.tscn"):
