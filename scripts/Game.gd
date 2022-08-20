@@ -88,7 +88,7 @@ func buildInputsTracked() -> void:
 		var hashVal = input[0]
 		var moveVal = hashVal % 16 #16 is first buttonx
 		var attackVal = hashVal >> 4 #shift for each directional input
-		var completeInput = directionDictionary[moveVal] + ("%02d " % attackVal) + String(input[1]) + "\n"
+		var completeInput = directionDictionary[moveVal] + ("%02d  " % attackVal) + String(input[1]) + "\n"
 		$HUD/P1Inputs.text += completeInput
 	pass
 

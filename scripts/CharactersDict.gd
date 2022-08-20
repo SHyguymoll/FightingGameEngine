@@ -4,6 +4,8 @@ var characters = {}
 
 var charMap = []
 
+var stage
+
 var p1
 var p2
 
