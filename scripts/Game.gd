@@ -76,7 +76,7 @@ func cameraControl(mode: int):
 	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
 	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
 
-var directionDictionary = { 0: "• ", 1: "↑ ", 2: "↓ ", 4: "← ", 8: "→ ", 5: "↖ ", 6: "↙ ", 9: "↗ ", 10: "↘ " }
+var directionDictionary = { 0: "•", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
 var attackDictionary = {}
 
 func buildInputsTracked() -> void:
@@ -85,12 +85,14 @@ func buildInputsTracked() -> void:
 	for input in latestInputs:
 		if input[0] < 0:
 			return
-		var hashVal = input[0]
-		var moveVal = hashVal % 16 #16 is first buttonx
-		var attackVal = hashVal >> 4 #shift for each directional input
-		var completeInput = directionDictionary[moveVal] + ("%02d  " % attackVal) + String(input[1]) + "\n"
-		$HUD/P1Inputs.text += completeInput
-	pass
+		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + (" %02d  " % (input[0] >> 4)) + String(input[1]) + "\n"
+	
+	latestInputs = CharactersDict.p2InpHan.slice(max(0,CharactersDict.p2curInpInd - player2.BUFFERSIZE),CharactersDict.p2curInpInd)
+	$HUD/P2Inputs.text = ""
+	for input in latestInputs:
+		if input[0] < 0:
+			return
+		$HUD/P2Inputs.text += String(input[1]) + ("  %02d " % (input[0] >> 4)) + directionDictionary[input[0] % 16] + "\n"
 
 func getInputHashes() -> Array: return [ #convert to hash to send less data (a single int compared to an array)
 	(int(CharactersDict.p1Btns[0]) * 1) + \
