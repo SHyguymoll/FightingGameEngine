@@ -7,5 +7,4 @@ size = Vector2( 0.75, 0.75 )
 
 [node name="Icon" type="MeshInstance"]
 mesh = SubResource( 1 )
-material/0 = null
 script = ExtResource( 1 )

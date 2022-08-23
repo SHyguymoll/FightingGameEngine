@@ -12,6 +12,8 @@ var maxY: int
 
 var choiceMade = false
 
+var animation = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -22,6 +24,7 @@ func move():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if !choiceMade:
+		get_surface_material(0).metallic = 0
 		if Input.is_action_just_pressed(playerList[player] + "_left"):
 			selected.x -= 1
 			if selected.x == -1:
@@ -60,5 +63,9 @@ func _process(_delta):
 						selected.y = 0
 		choiceMade = Input.is_action_just_pressed(playerList[player] + "_button0")
 	else:
+		get_surface_material(0).metallic = abs(animation)
+		animation += 0.01
+		if animation > 1:
+			animation = -1
 		if Input.is_action_just_pressed(playerList[player] + "_button1"):
 			choiceMade = false

@@ -118,16 +118,20 @@ func prepareGame() -> String:
 			mainScript.free()
 	return "Characters loaded successfully."
 
-func buildTexture(image: String) -> ImageTexture:
+func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	var iconTexture = ImageTexture.new()
-	var iconImage = Image.new()
-	iconImage.load(image)
+	var iconImage
+	if needsProcessing:
+		iconImage = Image.new()
+		iconImage.load(image)
+	else:
+		iconImage = ResourceLoader.load(image, "Image")
 	iconTexture.create_from_image(iconImage)
 	return iconTexture
 
-func buildAlbedo(image: String, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
+func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
 	var iconSpatial = SpatialMaterial.new()
-	var iconTexture = buildTexture(image)
+	var iconTexture = buildTexture(image, needsProcessing)
 	iconSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, iconTexture)
 	iconSpatial.flags_transparent = transparent
 	iconSpatial.flags_unshaded = unshaded
@@ -160,10 +164,11 @@ func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
 	return convertedArray
 
 func loadCharSelect():
-	$Background/Background.set_texture(buildTexture(contentFolder + "/Game/Menu/CharacterSelect/CharacterSelectBackground.png"))
+	var characterFolder = contentFolder + "/Game/Menu/CharacterSelect"
+	$Background/Background.set_texture(buildTexture(characterFolder + "/CharacterSelectBackground.png"))
 	CharactersDict.charMap = []
-	if folderManager.file_exists(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt"): #custom shape
-		fileManager.open(contentFolder + "/Game/Menu/CharacterSelect/Custom.txt", File.READ)
+	if folderManager.file_exists(characterFolder + "/Custom.txt"): #custom shape
+		fileManager.open(characterFolder + "/Custom.txt", File.READ)
 		var currentLine = fileManager.get_csv_line()
 		charTopLeft = Vector3(float(currentLine[0]), float(currentLine[1]), float(currentLine[2]))
 		currentLine = fileManager.get_csv_line()
@@ -177,7 +182,7 @@ func loadCharSelect():
 			var newIcon = characterIcon.instance()
 			newIcon.name = characters[character].charName
 			newIcon.characterData = characters[character].tscnFile
-			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon, false))
 			$CharSelectHolder.add_child(newIcon)
 			while currentSlice[currentIndex] == 0:
 				sliceBuilt.append(null)
@@ -227,7 +232,7 @@ func loadCharSelect():
 			var newIcon = characterIcon.instance()
 			newIcon.name = characters[character].charName
 			newIcon.characterData = characters[character].tscnFile
-			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon))
+			newIcon.set_surface_material(0,buildAlbedo(characters[character].charSelectIcon, false))
 			$CharSelectHolder.add_child(newIcon)
 			newIcon.translation = charTopLeft
 			charTopLeft.x += X_JUMP
@@ -255,7 +260,7 @@ func loadCharSelect():
 		if player1Cursor.selected.x == player1Cursor.maxX:
 			player1Cursor.selected.x = 0
 			player1Cursor.selected.y += 1
-	player1Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player1Select.png", true))
+	player1Cursor.set_surface_material(0,buildAlbedo(characterFolder + "/Player1Select.png", true, true))
 	$CharSelectHolder.add_child(player1Cursor)
 	player2Cursor = select.instance()
 	player2Cursor.name = "PlayerTwo"
@@ -268,7 +273,7 @@ func loadCharSelect():
 		if player2Cursor.selected.x == -1:
 			player2Cursor.selected.x = player2Cursor.maxX
 			player2Cursor.selected.y -= 1
-	player2Cursor.set_surface_material(0,buildAlbedo(contentFolder + "/Game/Menu/CharacterSelect/Player2Select.png", true))
+	player2Cursor.set_surface_material(0,buildAlbedo(characterFolder + "/Player2Select.png", true, true))
 	$CharSelectHolder.add_child(player2Cursor)
 	screen = "CharSelect"
 	return "Character Select loaded successfully."
