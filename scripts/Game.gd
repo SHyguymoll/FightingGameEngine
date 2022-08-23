@@ -16,11 +16,40 @@ const CAMERAMAXX = 6
 const CAMERAMAXY = 10
 const MOVEMENTBOUNDX = 8
 
+
+func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
+	var finalTexture = ImageTexture.new()
+	var processedImage
+	if needsProcessing:
+		processedImage = Image.new()
+		processedImage.load(image)
+	else:
+		processedImage = ResourceLoader.load(image, "Image")
+	finalTexture.create_from_image(processedImage)
+	return finalTexture
+
+func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
+	var finalSpatial = SpatialMaterial.new()
+	var intermediateTexture = buildTexture(image, needsProcessing)
+	finalSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, intermediateTexture)
+	finalSpatial.flags_transparent = transparent
+	finalSpatial.flags_unshaded = unshaded
+	return finalSpatial
+
+
 func startGame():
+	$HUD/P1Health.texture_under = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player1Background.png")
+	$HUD/P1Health.texture_progress = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player1Bar.png")
+	$HUD/P1Health.max_value = player1.health
+	$HUD/P1Health.value = player1.health
 	player1.translation = Vector3(player1.STARTXOFFSET * -1,0,0)
 	player1.rightFacing = true
 	player1.stateCurrent = statesBase.Idle
 	$HUD/P1Char.text = CharactersDict.p1.charName
+	$HUD/P2Health.texture_under = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Background.png")
+	$HUD/P2Health.texture_progress = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Bar.png")
+	$HUD/P2Health.max_value = player2.health
+	$HUD/P2Health.value = player2.health
 	player2.translation = Vector3(player2.STARTXOFFSET,0,0)
 	player2.rightFacing = false
 	player2.stateCurrent = statesBase.Idle

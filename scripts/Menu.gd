@@ -6,7 +6,6 @@ onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
 var fileManager = File.new()
 var folderManager = Directory.new()
-var contentFolder
 const reservedFolders = [ #Baseline folders in each Character
 	"Scripts",
 	"HelperScripts",
@@ -59,7 +58,7 @@ func _process(_delta):
 				printerr("game failed to load")
 
 func findContent(debug: bool) -> void:
-	contentFolder = "res://Content" if debug else OS.get_executable_path().get_base_dir() + "/Content"
+	CharactersDict.contentFolder = "res://Content" if debug else OS.get_executable_path().get_base_dir() + "/Content"
 
 func searchCharacterFolders(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
 	var folders = []
@@ -91,16 +90,16 @@ func searchCharacterPcks(dirs: Array) -> Array:
 	return pckNames
 
 func prepareGame() -> String:
-	if !folderManager.dir_exists(contentFolder): return "Content Folder missing."
-	if !folderManager.dir_exists(contentFolder + "/Characters"): return "Character folder missing."
-	if !folderManager.dir_exists(contentFolder + "/Game"): return "Game folder missing."
-	var characterFolder = searchCharacterFolders(contentFolder + "/Characters")
+	if !folderManager.dir_exists(CharactersDict.contentFolder): return "Content Folder missing."
+	if !folderManager.dir_exists(CharactersDict.contentFolder + "/Characters"): return "Character folder missing."
+	if !folderManager.dir_exists(CharactersDict.contentFolder + "/Game"): return "Game folder missing."
+	var characterFolder = searchCharacterFolders(CharactersDict.contentFolder + "/Characters")
 	var foundPcks = searchCharacterPcks(characterFolder)
 	var numberID = 0
 	for pck in foundPcks:
 		if ProjectSettings.load_resource_pack(pck):
-			if !fileManager.file_exists(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc"): return "FolderName.gdc missing in pck " + pck
-			var folderName = ResourceLoader.load(contentFolder.left(contentFolder.find_last("/Content")) + "/FolderName.gdc").new()
+			if !fileManager.file_exists(CharactersDict.contentFolder.left(CharactersDict.contentFolder.find_last("/Content")) + "/FolderName.gdc"): return "FolderName.gdc missing in pck " + pck
+			var folderName = ResourceLoader.load(CharactersDict.contentFolder.left(CharactersDict.contentFolder.find_last("/Content")) + "/FolderName.gdc").new()
 			if !("folder" in folderName):
 				folderName.free()
 				return "folder variable missing in FolderName.gdc for pck " + pck
@@ -119,26 +118,26 @@ func prepareGame() -> String:
 	return "Characters loaded successfully."
 
 func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
-	var iconTexture = ImageTexture.new()
-	var iconImage
+	var finalTexture = ImageTexture.new()
+	var processedImage
 	if needsProcessing:
-		iconImage = Image.new()
-		iconImage.load(image)
+		processedImage = Image.new()
+		processedImage.load(image)
 	else:
-		iconImage = ResourceLoader.load(image, "Image")
-	iconTexture.create_from_image(iconImage)
-	return iconTexture
+		processedImage = ResourceLoader.load(image, "Image")
+	finalTexture.create_from_image(processedImage)
+	return finalTexture
 
 func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
-	var iconSpatial = SpatialMaterial.new()
-	var iconTexture = buildTexture(image, needsProcessing)
-	iconSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, iconTexture)
-	iconSpatial.flags_transparent = transparent
-	iconSpatial.flags_unshaded = unshaded
-	return iconSpatial
+	var finalSpatial = SpatialMaterial.new()
+	var intermediateTexture = buildTexture(image, needsProcessing)
+	finalSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, intermediateTexture)
+	finalSpatial.flags_transparent = transparent
+	finalSpatial.flags_unshaded = unshaded
+	return finalSpatial
 
 func prepareMenu() -> String:
-	var menuFolder = contentFolder + "/Game/Menu"
+	var menuFolder = CharactersDict.contentFolder + "/Game/Menu"
 	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"): return "Menu Background missing."
 	if !folderManager.file_exists(menuFolder + "/Font.ttf"): return "Menu Font missing."
 	if !folderManager.file_exists(menuFolder + "/Logo/Logo.tscn"): return "Logo missing."
@@ -148,7 +147,7 @@ func prepareMenu() -> String:
 	if !folderManager.file_exists(charSelFolder + "/CharacterSelectBackground.png"): return "Character Select Background missing."
 	
 	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png"))
-	menuLogo = load(contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
+	menuLogo = load(CharactersDict.contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
 	menuLogo.set_translation(menuLogo.menuPos)
 	$Logo.add_child(menuLogo)
 	var dynamic_font = DynamicFont.new()
@@ -164,7 +163,7 @@ func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
 	return convertedArray
 
 func loadCharSelect():
-	var characterFolder = contentFolder + "/Game/Menu/CharacterSelect"
+	var characterFolder = CharactersDict.contentFolder + "/Game/Menu/CharacterSelect"
 	$Background/Background.set_texture(buildTexture(characterFolder + "/CharacterSelectBackground.png"))
 	CharactersDict.charMap = []
 	if folderManager.file_exists(characterFolder + "/Custom.txt"): #custom shape
