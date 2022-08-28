@@ -36,6 +36,11 @@ func buildAlbedo(image: String, needsProcessing = true, transparent: bool = fals
 	finalSpatial.flags_unshaded = unshaded
 	return finalSpatial
 
+func loadFont(font: String, size = 50):
+	var newFont = DynamicFont.new()
+	newFont.font_data = load(font)
+	newFont.size = size
+	return newFont
 
 func startGame():
 	$HUD/P1Health.texture_under = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player1Background.png")
@@ -45,6 +50,8 @@ func startGame():
 	player1.translation = Vector3(player1.STARTXOFFSET * -1,0,0)
 	player1.rightFacing = true
 	player1.stateCurrent = statesBase.Idle
+	$HUD/P1Char.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P1Inputs.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P1Char.text = CharactersDict.p1.charName
 	$HUD/P2Health.texture_under = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Background.png")
 	$HUD/P2Health.texture_progress = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Bar.png")
@@ -53,6 +60,8 @@ func startGame():
 	player2.translation = Vector3(player2.STARTXOFFSET,0,0)
 	player2.rightFacing = false
 	player2.stateCurrent = statesBase.Idle
+	$HUD/P2Char.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P2Inputs.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P2Char.text = CharactersDict.p2.charName
 
 func _ready():
@@ -105,8 +114,10 @@ func cameraControl(mode: int):
 	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
 	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
 
-var directionDictionary = { 0: "•", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
-var attackDictionary = {}
+var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
+
+func AttackValue(attackHash: int) -> String:
+	return (" Ø" if bool(attackHash % 2) else " 0") + ("Ø" if bool((attackHash >> 1) % 2) else "0") + ("Ø" if bool((attackHash >> 2) % 2) else "0") + ("Ø" if bool((attackHash >> 3) % 2) else "0") + ("Ø" if bool((attackHash >> 4) % 2) else "0") + ("Ø " if bool((attackHash >> 5) % 2) else "0 ")
 
 func buildInputsTracked() -> void:
 	var latestInputs = CharactersDict.p1InpHan.slice(max(0,CharactersDict.p1curInpInd - player1.BUFFERSIZE),CharactersDict.p1curInpInd)
@@ -114,14 +125,14 @@ func buildInputsTracked() -> void:
 	for input in latestInputs:
 		if input[0] < 0:
 			return
-		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + (" %02d  " % (input[0] >> 4)) + String(input[1]) + "\n"
+		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + AttackValue(input[0] >> 4) + String(input[1]) + "\n"
 	
 	latestInputs = CharactersDict.p2InpHan.slice(max(0,CharactersDict.p2curInpInd - player2.BUFFERSIZE),CharactersDict.p2curInpInd)
 	$HUD/P2Inputs.text = ""
 	for input in latestInputs:
 		if input[0] < 0:
 			return
-		$HUD/P2Inputs.text += String(input[1]) + ("  %02d " % (input[0] >> 4)) + directionDictionary[input[0] % 16] + "\n"
+		$HUD/P2Inputs.text += String(input[1]) + AttackValue(input[0] >> 4) + directionDictionary[input[0] % 16] + "\n"
 
 func getInputHashes() -> Array: return [ #convert to hash to send less data (a single int compared to an array)
 	(int(CharactersDict.p1Btns[0]) * 1) + \

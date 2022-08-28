@@ -136,6 +136,12 @@ func buildAlbedo(image: String, needsProcessing = true, transparent: bool = fals
 	finalSpatial.flags_unshaded = unshaded
 	return finalSpatial
 
+func loadFont(font: String, size = 50):
+	var newFont = DynamicFont.new()
+	newFont.font_data = load(font)
+	newFont.size = size
+	return newFont
+
 func prepareMenu() -> String:
 	var menuFolder = CharactersDict.contentFolder + "/Game/Menu"
 	if !folderManager.file_exists(menuFolder + "/MenuBackground.png"): return "Menu Background missing."
@@ -150,10 +156,7 @@ func prepareMenu() -> String:
 	menuLogo = load(CharactersDict.contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
 	menuLogo.set_translation(menuLogo.menuPos)
 	$Logo.add_child(menuLogo)
-	var dynamic_font = DynamicFont.new()
-	dynamic_font.font_data = load(menuFolder + "/Font.ttf")
-	dynamic_font.size = 50
-	$MenuButtons/Start.set("custom_fonts/font", dynamic_font)
+	$MenuButtons/Start.set("custom_fonts/font", loadFont(menuFolder + "/Font.ttf"))
 	return "Menu loaded successfully."
 
 func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
