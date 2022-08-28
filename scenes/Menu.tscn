@@ -38,4 +38,17 @@ margin_right = 356.0
 margin_bottom = 34.224
 text = "Player vs. Player"
 
+[node name="Credits" type="Label" parent="MenuButtons"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -213.0
+margin_top = -54.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Engine and Art by SHy, 2022
+Godot logo by Godot Engine"
+valign = 1
+
 [connection signal="pressed" from="MenuButtons/Start" to="." method="_on_Start_pressed"]

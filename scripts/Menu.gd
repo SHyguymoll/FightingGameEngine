@@ -152,11 +152,12 @@ func prepareMenu() -> String:
 	if !folderManager.file_exists(charSelFolder + "/Player2Select.png"): return "Player2Select icon missing."
 	if !folderManager.file_exists(charSelFolder + "/CharacterSelectBackground.png"): return "Character Select Background missing."
 	
-	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png"))
+	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png", true))
 	menuLogo = load(CharactersDict.contentFolder + "/Game/Menu/Logo/Logo.tscn").instance()
 	menuLogo.set_translation(menuLogo.menuPos)
 	$Logo.add_child(menuLogo)
 	$MenuButtons/Start.set("custom_fonts/font", loadFont(menuFolder + "/Font.ttf"))
+	$MenuButtons/Credits.set("custom_fonts/font", loadFont(menuFolder + "/Font.ttf", 32))
 	return "Menu loaded successfully."
 
 func convertPSArrayToNumberArray(PSArray: PoolStringArray) -> Array:
@@ -281,7 +282,7 @@ func loadCharSelect():
 	return "Character Select loaded successfully."
 
 func _on_Start_pressed():
-	$MenuButtons/Start.hide()
+	$MenuButtons.hide()
 	menuLogo.queue_free()
 	var errorRet = loadCharSelect()
 	if errorRet != "Character Select loaded successfully.":
