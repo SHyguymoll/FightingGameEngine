@@ -4,6 +4,6 @@
 
 [sub_resource type="QuadMesh" id=1]
 
-[node name="Icon" type="MeshInstance"]
+[node name="Icon" type="MeshInstance3D"]
 mesh = SubResource( 1 )
 script = ExtResource( 1 )

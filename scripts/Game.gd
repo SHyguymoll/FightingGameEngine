@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 var player1
 var player2
@@ -11,7 +11,7 @@ enum statesBase {
 	Crouch,
 }
 
-export var cameraMode = 0
+@export var cameraMode = 0
 const CAMERAMAXX = 6
 const CAMERAMAXY = 10
 const MOVEMENTBOUNDX = 8
@@ -28,16 +28,16 @@ func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	finalTexture.create_from_image(processedImage)
 	return finalTexture
 
-func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> SpatialMaterial:
-	var finalSpatial = SpatialMaterial.new()
+func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
+	var finalSpatial = StandardMaterial3D.new()
 	var intermediateTexture = buildTexture(image, needsProcessing)
-	finalSpatial.set_texture(SpatialMaterial.TEXTURE_ALBEDO, intermediateTexture)
+	finalSpatial.set_texture(StandardMaterial3D.TEXTURE_ALBEDO, intermediateTexture)
 	finalSpatial.flags_transparent = transparent
 	finalSpatial.flags_unshaded = unshaded
 	return finalSpatial
 
 func loadFont(font: String, size = 50):
-	var newFont = DynamicFont.new()
+	var newFont = FontFile.new()
 	newFont.font_data = load(font)
 	newFont.size = size
 	return newFont
@@ -47,28 +47,28 @@ func startGame():
 	$HUD/P1Health.texture_progress = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player1Bar.png")
 	$HUD/P1Health.max_value = player1.health
 	$HUD/P1Health.value = player1.health
-	player1.translation = Vector3(player1.STARTXOFFSET * -1,0,0)
+	player1.position = Vector3(player1.STARTXOFFSET * -1,0,0)
 	player1.rightFacing = true
 	player1.stateCurrent = statesBase.Idle
-	$HUD/P1Char.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P1Inputs.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P1Char.set("theme_override_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P1Inputs.set("theme_override_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P1Char.text = CharactersDict.p1.charName
 	$HUD/P2Health.texture_under = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Background.png")
 	$HUD/P2Health.texture_progress = buildTexture(CharactersDict.contentFolder + "/Game/HUD/Player2Bar.png")
 	$HUD/P2Health.max_value = player2.health
 	$HUD/P2Health.value = player2.health
-	player2.translation = Vector3(player2.STARTXOFFSET,0,0)
+	player2.position = Vector3(player2.STARTXOFFSET,0,0)
 	player2.rightFacing = false
 	player2.stateCurrent = statesBase.Idle
-	$HUD/P2Char.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P2Inputs.set("custom_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P2Char.set("theme_override_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P2Inputs.set("theme_override_fonts/font", loadFont(CharactersDict.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P2Char.text = CharactersDict.p2.charName
 
 func _ready():
 	stage = load("res://Content/Game/Stages/BlankStage.tscn")
-	add_child(stage.instance())
-	player1 = load(CharactersDict.p1.tscnFile).instance()
-	player2 = load(CharactersDict.p2.tscnFile).instance()
+	add_child(stage.instantiate())
+	player1 = load(CharactersDict.p1.tscnFile).instantiate()
+	player2 = load(CharactersDict.p2.tscnFile).instantiate()
 	add_child(player1)
 	add_child(player2)
 	startGame()
@@ -76,43 +76,43 @@ func _ready():
 const ORTH_DIST = 1.328125
 
 func cameraControl(mode: int):
-	$Camera.projection = 1 if mode < 3 else 0 #0 = Perspective, 1 = Orthagonal
+	$Camera3D.projection = 1 if mode < 3 else 0 #0 = Perspective, 1 = Orthagonal
 	match mode:
 		#2d modes
 		0: #default
-			$Camera.translation.x = (player1.translation.x+player2.translation.x)/2
-			if player1.translation.y >= player2.translation.y:
-				$Camera.translation.y = player1.translation.y + 1
+			$Camera3D.position.x = (player1.position.x+player2.position.x)/2
+			if player1.position.y >= player2.position.y:
+				$Camera3D.position.y = player1.position.y + 1
 			else:
-				$Camera.translation.y = player2.translation.y + 1
-			$Camera.translation.z = ORTH_DIST
-			$Camera.size = clamp(abs(player1.translation.x-player2.translation.x)/2, 3.5, 6)
+				$Camera3D.position.y = player2.position.y + 1
+			$Camera3D.position.z = ORTH_DIST
+			$Camera3D.size = clamp(abs(player1.position.x-player2.position.x)/2, 3.5, 6)
 		1: #focus player1
-			$Camera.translation.x = player1.translation.x
-			$Camera.translation.y = player1.translation.y + 1
-			$Camera.translation.z = ORTH_DIST
+			$Camera3D.position.x = player1.position.x
+			$Camera3D.position.y = player1.position.y + 1
+			$Camera3D.position.z = ORTH_DIST
 		2: #focus player2
-			$Camera.translation.x = player2.translation.x
-			$Camera.translation.y = player2.translation.y + 1
-			$Camera.translation.z = ORTH_DIST
+			$Camera3D.position.x = player2.position.x
+			$Camera3D.position.y = player2.position.y + 1
+			$Camera3D.position.z = ORTH_DIST
 		#3d modes
 		3: #default
-			$Camera.translation.x = (player1.translation.x+player2.translation.x)/2
-			if player1.translation.y >= player2.translation.y:
-				$Camera.translation.y = player1.translation.y + 1
+			$Camera3D.position.x = (player1.position.x+player2.position.x)/2
+			if player1.position.y >= player2.position.y:
+				$Camera3D.position.y = player1.position.y + 1
 			else:
-				$Camera.translation.y = player2.translation.y + 1
-			$Camera.translation.z = clamp(abs(player1.translation.x-player2.translation.x)/2, 1.5, 1.825) + 0.5
+				$Camera3D.position.y = player2.position.y + 1
+			$Camera3D.position.z = clamp(abs(player1.position.x-player2.position.x)/2, 1.5, 1.825) + 0.5
 		4: #focus player1
-			$Camera.translation.x = player1.translation.x
-			$Camera.translation.y = player1.translation.y + 1
-			$Camera.translation.z = 1.5
+			$Camera3D.position.x = player1.position.x
+			$Camera3D.position.y = player1.position.y + 1
+			$Camera3D.position.z = 1.5
 		5: #focus player2
-			$Camera.translation.x = player2.translation.x
-			$Camera.translation.y = player2.translation.y + 1
-			$Camera.translation.z = 1.5
-	$Camera.translation.x = clamp($Camera.translation.x, -CAMERAMAXX, CAMERAMAXX)
-	$Camera.translation.y = clamp($Camera.translation.y, 0, CAMERAMAXY)
+			$Camera3D.position.x = player2.position.x
+			$Camera3D.position.y = player2.position.y + 1
+			$Camera3D.position.z = 1.5
+	$Camera3D.position.x = clamp($Camera3D.position.x, -CAMERAMAXX, CAMERAMAXX)
+	$Camera3D.position.y = clamp($Camera3D.position.y, 0, CAMERAMAXY)
 
 var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
 
@@ -210,7 +210,7 @@ const TURNAROUND_ANIMSTEP = 3
 
 func characterActBasic():
 	if player1.stateCurrent in statesBase:
-		if player1.translation < player2.translation:
+		if player1.position < player2.position:
 			if player1.rightFacing != true:
 				player1.rightFacing = true
 				if player1.stateCurrent == statesBase.Idle:
@@ -226,7 +226,7 @@ func characterActBasic():
 					player1.animStep = TURNAROUND_ANIMSTEP
 		player1.rotation_degrees.y = HALFPI * int(player1.rightFacing)
 	if player2.stateCurrent in statesBase:
-		if player2.translation < player1.translation:
+		if player2.position < player1.position:
 			if player2.rightFacing != true:
 				player2.rightFacing = true
 				if player2.stateCurrent == statesBase.Idle:
@@ -241,10 +241,10 @@ func characterActBasic():
 				if player2.stateCurrent == statesBase.Crouch:
 					player2.animStep = TURNAROUND_ANIMSTEP
 		player2.rotation_degrees.y = HALFPI * int(player2.rightFacing)
-	player1.translation.x = clamp(player1.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	player2.translation.x = clamp(player2.translation.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	player1.distance = abs(player1.translation.x - player2.translation.x)
-	player2.distance = abs(player1.translation.x - player2.translation.x)
+	player1.position.x = clamp(player1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+	player2.position.x = clamp(player2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+	player1.distance = abs(player1.position.x - player2.position.x)
+	player2.distance = abs(player1.position.x - player2.position.x)
 	
 
 func _physics_process(_delta):

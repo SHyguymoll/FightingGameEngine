@@ -5,6 +5,6 @@
 [sub_resource type="QuadMesh" id=1]
 size = Vector2( 0.75, 0.75 )
 
-[node name="Icon" type="MeshInstance"]
+[node name="Icon" type="MeshInstance3D"]
 mesh = SubResource( 1 )
 script = ExtResource( 1 )
