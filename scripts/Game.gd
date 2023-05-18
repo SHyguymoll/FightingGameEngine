@@ -1,8 +1,8 @@
 extends Node3D
 
-var player1
-var player2
-var stage
+var player1 : Fighter
+var player2 : Fighter
+var stage : Stage
 
 enum statesBase {
 	Idle = 3,
@@ -65,8 +65,7 @@ func startGame():
 	$HUD/P2Char.text = CharactersDict.p2.charName
 
 func _ready():
-	stage = load("res://Content/Game/Stages/BlankStage.tscn")
-	add_child(stage.instantiate())
+	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
 	player1 = load(CharactersDict.p1.tscnFile).instantiate()
 	player2 = load(CharactersDict.p2.tscnFile).instantiate()
 	add_child(player1)
