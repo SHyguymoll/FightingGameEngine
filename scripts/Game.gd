@@ -163,6 +163,7 @@ func handle_inputs():
 		InputHandle.p1_buttons[3] = false
 	for button in range(Content.p1.BUTTONCOUNT):
 		InputHandle.p1_buttons[button + 4] = Input.is_action_pressed("first_button" + str(button))
+	
 	InputHandle.p2_buttons[0] = Input.is_action_pressed("second_up")
 	InputHandle.p2_buttons[1] = Input.is_action_pressed("second_down")
 	if InputHandle.p2_buttons[0] == InputHandle.p2_buttons[1]: #no conflicting directions

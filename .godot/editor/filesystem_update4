@@ -6,3 +6,4 @@ res://scripts/Game.gd
 res://scripts/InputHandle.gd
 res://scripts/Content.gd
 res://scenes/Game.tscn
+res://scripts/Menu.gd

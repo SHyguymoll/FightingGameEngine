@@ -1,9 +1,9 @@
 class_name Fighter
 extends CharacterBody3D
 
-var fighterName : String
-var tscnFile : String
-var charSelectIcon : String
+var fighter_name : String
+var tscn_file : String
+var char_select_icon : String
 
 var input_buffer_len : int
 
@@ -38,10 +38,10 @@ enum states {
 var state_start: states = states.idle
 var state_current: states
 
-func update_state(new_state: states, new_animation_timer: int):
+func update_state(new_state: states, new_animation_timer: int) -> void:
 	state_current = new_state
 	if new_animation_timer != -1:
-		anim_timer = new_animation_timer
+		step_timer = new_animation_timer
 
 # attack format:
 #"<Name>":
@@ -55,6 +55,7 @@ func update_state(new_state: states, new_animation_timer: int):
 #	}
 
 var attacks = {}
+var current_attack: String
 
 # Animations are handled manually and controlled by the game engine during the physics_process step.
 # Therefore, all animations top out at 60 FPS, which is a small constraint for now.
@@ -69,9 +70,9 @@ var attacks = {}
 var animations = {}
 
 var current_animation: String
-var anim_timer = 0
+var step_timer = 0
 
-func anim():
+func anim() -> void:
 	pass
 
 # Hitboxes and Hurtboxes are handled through a dictionary for easy reuse.
@@ -89,9 +90,13 @@ var hitboxes = {}
 #TODO: hurtboxes
 var hurtboxes = {}
 
-var tooClose = false
+var too_close = false
 
-enum inputs {Up = 1, Down = 2, Left = 4, Right = 8, A = 16, B = 32, C = 64}
+enum inputs {
+	Up = 1, Down = 2, Left = 4, Right = 8,
+	button0 = 16, button1 = 32, button2 = 64,
+	button3 = 128, button4 = 256, button5 = 512,
+	} #buttons go up to 5
 
 func decodeHash(inputHash: int) -> Array:
 	var decodedHash = [false, false, false, false, false, false, false, false]
@@ -102,9 +107,10 @@ func decodeHash(inputHash: int) -> Array:
 			decodedHash[i] = true
 	return decodedHash
 
-func action(inputs):
+func action(inputs) -> void:
 	pass
 
-func step(inputs):
+func step(inputs) -> void:
 	action(inputs)
 	anim()
+	step_timer += 1
