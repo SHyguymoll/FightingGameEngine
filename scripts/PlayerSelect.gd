@@ -29,8 +29,8 @@ func _process(_delta):
 			selected.x -= 1
 			if selected.x == -1:
 				selected.x = maxX - 1
-			if CharactersDict.charMap[selected.y][selected.x] == null:
-				while CharactersDict.charMap[selected.y][selected.x] == null:
+			if Content.charMap[selected.y][selected.x] == null:
+				while Content.charMap[selected.y][selected.x] == null:
 					selected.x -= 1
 					if selected.x == -1:
 						selected.x = maxX - 1
@@ -38,8 +38,8 @@ func _process(_delta):
 			selected.x += 1
 			if selected.x == maxX:
 				selected.x = 0
-			if CharactersDict.charMap[selected.y][selected.x] == null:
-				while CharactersDict.charMap[selected.y][selected.x] == null:
+			if Content.charMap[selected.y][selected.x] == null:
+				while Content.charMap[selected.y][selected.x] == null:
 					selected.x += 1
 					if selected.x == maxX:
 						selected.x = 0
@@ -47,8 +47,8 @@ func _process(_delta):
 			selected.y -= 1
 			if selected.y == -1:
 				selected.y = maxY - 1
-			if CharactersDict.charMap[selected.y][selected.x] == null:
-				while CharactersDict.charMap[selected.y][selected.x] == null:
+			if Content.charMap[selected.y][selected.x] == null:
+				while Content.charMap[selected.y][selected.x] == null:
 					selected.y -= 1
 					if selected.y == -1:
 						selected.y = maxY - 1
@@ -56,8 +56,8 @@ func _process(_delta):
 			selected.y += 1
 			if selected.y == maxY:
 				selected.y = 0
-			if CharactersDict.charMap[selected.y][selected.x] == null:
-				while CharactersDict.charMap[selected.y][selected.x] == null:
+			if Content.charMap[selected.y][selected.x] == null:
+				while Content.charMap[selected.y][selected.x] == null:
 					selected.y += 1
 					if selected.y == maxY:
 						selected.y = 0

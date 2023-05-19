@@ -99,7 +99,10 @@ func initialize_boxes(player: bool) -> void:
 
 enum actions {set, add, remove}
 
-func update_hitboxes(hitboxes: Array[String], mode: actions) -> void:
+func update_hitboxes(_new_hitboxes: Array[String], _action: actions) -> void:
+	pass
+
+func update_hurtboxes(_new_hurtboxes: Array[String], _action: actions) -> void:
 	pass
 
 var too_close = false
@@ -119,10 +122,10 @@ func decodeHash(inputHash: int) -> Array:
 			decodedHash[i] = true
 	return decodedHash
 
-func action(inputs) -> void:
+func action(_input_buffer) -> void:
 	pass
 
-func step(inputs) -> void:
-	action(inputs)
+func step(input_buffer) -> void:
+	action(input_buffer)
 	anim()
 	step_timer += 1

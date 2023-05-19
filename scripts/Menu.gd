@@ -42,23 +42,26 @@ func _ready():
 func prepare_game() -> String:
 	#Loads all characters into character roster via resource pack loading and ResourceLoader
 	DirIOManager = DirAccess.open(Content.contentFolder)
-	if !DirIOManager.dir_exists(Content.contentFolder): return "Content Folder missing."
-	if !DirIOManager.dir_exists(Content.contentFolder + "/Characters"): return "Character folder missing."
-	if !DirIOManager.dir_exists(Content.contentFolder + "/Game"): return "Game folder missing."
+	if !DirIOManager.dir_exists(Content.contentFolder):
+		return "Content Folder missing."
+	if !DirIOManager.dir_exists(Content.contentFolder + "/Characters"):
+		return "Character folder missing."
+	if !DirIOManager.dir_exists(Content.contentFolder + "/Game"):
+		return "Game folder missing."
 	var pcks = search_for_pcks(search_character_folder(Content.contentFolder + "/Characters"))
 	var numberID = 0
 	var rootFolder = Content.contentFolder.left(Content.contentFolder.rfind("/Content"))
 	for pck in pcks:
 		#needs reworking
 		if ProjectSettings.load_resource_pack(pck):
-			if !FileAccess.file_exists("FolderName.gdc"): return "FolderName.gdc missing in pck " + pck
-			var folderName = load("FolderName.gdc").new()
+			if !ResourceLoader.exists("FolderName.gd"):
+				return "FolderName.gd missing in pck " + pck
+			var folderName = load("FolderName.gd").new()
 			if !("folder" in folderName):
-				return "folder variable missing in FolderName.gdc for pck " + pck
-			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gdc"): return "MainScript.gdc missing in pck " + pck
-			var mainScript = ResourceLoader.load(
-				"res://" + folderName.folder + "/MainScript.gdc"
-			).new()
+				return "folder variable missing in FolderName.gd for pck " + pck
+			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gd"):
+				return "MainScript.gd missing in pck " + pck
+			var mainScript = load("res://" + folderName.folder + "/MainScript.gd").new()
 			folderName.free()
 			Content.characters[numberID] = {
 				charName = mainScript.fighterName,
