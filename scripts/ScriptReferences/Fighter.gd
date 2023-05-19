@@ -5,21 +5,21 @@ var fighterName : String
 var tscnFile : String
 var charSelectIcon : String
 
-const BUFFERSIZE = 10
+var input_buffer_len : int
 
 @export var health : float
 @export var walkSpeed : float
 
-@export var GRAVITY : float
-@export var MIN_FALL_VEL : float
+@export var gravity : float
+@export var min_fall_vel : float
 
 var distance : float
-var rightFacing : bool
-var attackEnded : bool
-var damageMultiplier : float
-var defenseMultiplier : float
-var knockbackHorizontal : float
-var knockbackVertical : float
+var right_facing : bool
+var attack_ended : bool
+var damage_mult : float
+var defense_mult : float
+var kback_hori : float
+var kback_vert : float
 
 var start_x_offset : float
 const BUTTONCOUNT = 4
@@ -35,12 +35,13 @@ enum states {
 	hurt_high, hurt_low, hurt_crouch, #not handling getting attacked well
 	hurt_fall, hurt_lie, hurt_bounce, #REALLY not handling getting attacked well
 	}
-var state_current: states = states.idle
+var state_start: states = states.idle
+var state_current: states
 
-func update_state(new_state: states, reset_animation: bool):
+func update_state(new_state: states, new_animation_timer: int):
 	state_current = new_state
-	if reset_animation:
-		anim_timer = 0
+	if new_animation_timer != -1:
+		anim_timer = new_animation_timer
 
 # attack format:
 #"<Name>":
@@ -74,16 +75,19 @@ func anim():
 	pass
 
 # Hitboxes and Hurtboxes are handled through a dictionary for easy reuse.
-# hitbox format:
+# box format:
 #"<Name>":
 #	{
-#		"hitboxes": [<hitbox path>, ...],
-#		"hurtboxes": [<hurtbox path>, ...],
+#		"boxes": [<path>, ...],
 #		"mode": either "add" or "set",
 #		"extra": ... This one is up to whatever
 #	}
 
-var boxes = {}
+#TODO: hitboxes
+var hitboxes = {}
+
+#TODO: hurtboxes
+var hurtboxes = {}
 
 var tooClose = false
 
@@ -98,9 +102,9 @@ func decodeHash(inputHash: int) -> Array:
 			decodedHash[i] = true
 	return decodedHash
 
-func action():
+func action(inputs):
 	pass
 
-func step():
-	action()
+func step(inputs):
+	action(inputs)
 	anim()

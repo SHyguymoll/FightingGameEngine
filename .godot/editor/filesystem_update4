@@ -1,7 +1,8 @@
 res://default_env.tres
-res://scenes/Game.tscn
-res://scripts/ScriptReferences/Fighter.gd
-res://scripts/Game.gd
 res://Content/Game/Stages/BlankStage.tscn
-res://scripts/ScriptReferences/Stage.gd
+res://scripts/ScriptReferences/Fighter.gd
 res://scripts/CharactersDict.gd
+res://scripts/Game.gd
+res://scripts/InputHandle.gd
+res://scripts/Content.gd
+res://scenes/Game.tscn
