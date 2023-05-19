@@ -80,7 +80,6 @@ func anim() -> void:
 #"<Name>":
 #	{
 #		"boxes": [<path>, ...],
-#		"mode": either "add" or "set",
 #		"extra": ... This one is up to whatever
 #	}
 
@@ -89,6 +88,19 @@ var hitboxes = {}
 
 #TODO: hurtboxes
 var hurtboxes = {}
+
+func initialize_boxes(player: bool) -> void:
+	if player:
+		$Hurtboxes.collision_layer = 2
+		$Hitboxes.collision_mask = 4
+	else:
+		$Hurtboxes.collision_layer = 4
+		$Hitboxes.collision_mask = 2
+
+enum actions {set, add, remove}
+
+func update_hitboxes(hitboxes: Array[String], mode: actions) -> void:
+	pass
 
 var too_close = false
 
