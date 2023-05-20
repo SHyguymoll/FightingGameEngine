@@ -12,8 +12,8 @@ const reservedFolders = [ #Baseline folders in each Character
 	"Sprites"
 ]
 var menuLogo
-var player1Cursor = null
-var player2Cursor = null
+var player1Cursor : PlayerSelect
+var player2Cursor : PlayerSelect
 var charTopLeft
 var jumpDists
 const WIDTH = 5
@@ -117,6 +117,8 @@ func _process(_delta):
 			Content.p2 = load(Content.characters[
 				Content.charMap[player2Cursor.selected.y][player2Cursor.selected.x]
 			]["tscn_file"])
+			for character_icon_instance in $CharSelectHolder.get_children():
+				character_icon_instance.queue_free()
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
 				printerr("game failed to load")
 

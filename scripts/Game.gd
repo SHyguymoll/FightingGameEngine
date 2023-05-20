@@ -21,8 +21,7 @@ func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
 		processedImage.load(image)
 	else:
 		processedImage = ResourceLoader.load(image, "Image")
-	finalTexture.create_from_image(processedImage)
-	return finalTexture
+	return ImageTexture.create_from_image(processedImage)
 
 func build_albedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
 	var finalSpatial = StandardMaterial3D.new()
@@ -55,12 +54,12 @@ func make_hud():
 	$HUD/P2Char.text = Content.p2.char_name
 
 func init_fighters():
-	Content.p1.position = Vector3(Content.p1.STARTXOFFSET * -1,0,0)
+	Content.p1.position = Vector3(Content.p1.start_x_offset * -1,0,0)
 	Content.p1.right_facing = true
 	Content.p1.update_state(Content.p1.state_start, 0)
 	Content.p1.initialize_boxes(true)
 	
-	Content.p2.position = Vector3(Content.p2.STARTXOFFSET,0,0)
+	Content.p2.position = Vector3(Content.p2.start_x_offset,0,0)
 	Content.p2.rightFacing = false
 	Content.p2.update_state(Content.p2.state_start, 0)
 	Content.p2.initialize_boxes(false)

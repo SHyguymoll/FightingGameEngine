@@ -1,3 +1,4 @@
+class_name PlayerSelect
 extends MeshInstance3D
 
 var playerList = [

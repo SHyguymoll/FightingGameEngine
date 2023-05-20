@@ -1,10 +1,8 @@
 res://default_env.tres
-res://Content/Game/Stages/BlankStage.tscn
-res://scripts/Menu.gd
 res://scenes/Game.tscn
-res://Content/Game/Menu/Logo/Logo.tscn
-res://scripts/Logo.gd
 res://scenes/Menu.tscn
+res://scenes/PlayerSelect.tscn
+res://scripts/Menu.gd
+res://scripts/PlayerSelect.gd
 res://scripts/Game.gd
-res://scripts/Content.gd
-res://scripts/ScriptReferences/Fighter.gd
+res://scripts/ScriptReferences/Stage.gd
