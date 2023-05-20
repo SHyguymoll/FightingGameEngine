@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/Menu.gd" id="1"]
 
 [sub_resource type="Environment" id="2"]
-background_mode = 4
-background_canvas_max_layer = -100
+background_mode = 3
+background_canvas_max_layer = 1
 
 [node name="Node" type="Node"]
 script = ExtResource("1")
@@ -20,14 +20,18 @@ offset_bottom = 40.0
 current = true
 size = 3.5
 
-[node name="Logo" type="Node3D" parent="."]
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("2")
 
+[node name="LogoLayer" type="CanvasLayer" parent="."]
+
+[node name="Logo" type="Node3D" parent="LogoLayer"]
+
 [node name="CharSelectHolder" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="MenuButtons" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="Start" type="Button" parent="MenuButtons"]
 anchors_preset = -1

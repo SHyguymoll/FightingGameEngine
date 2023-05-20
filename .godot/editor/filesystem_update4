@@ -4,3 +4,4 @@ res://scripts/Menu.gd
 res://scenes/Game.tscn
 res://Content/Game/Menu/Logo/Logo.tscn
 res://scripts/Logo.gd
+res://scenes/Menu.tscn

@@ -67,9 +67,9 @@ func prepare_game() -> String:
 			if !ResourceLoader.exists("res://" + fighter_details.folder + "/MainScript.gd"):
 				return "MainScript.gd missing in pck " + pck
 			Content.characters[numberID] = {
-				charName = fighter_details.fighter_name,
-				tscnFile = fighter_details.tscn_file,
-				charSelectIcon = fighter_details.char_select_icon
+				char_name = fighter_details.fighter_name,
+				tscn_file = fighter_details.tscn_file,
+				char_select_icon = fighter_details.char_select_icon
 			}
 			numberID += 1
 	return "Success"
@@ -91,11 +91,11 @@ func prepare_menu() -> String:
 	if !FileAccess.file_exists(char_folder + "/CharacterSelectBackground.png"):
 		return "Character Select Background missing."
 	
-	$Background/Background.set_texture(buildTexture(menu_folder + "/MenuBackground.png", true))
+	$Background/Background.set_texture(build_texture(menu_folder + "/MenuBackground.png", true))
 	menuLogo = load(Content.contentFolder + "/Game/Menu/Logo/Logo.tscn")
-	$Logo.add_child(menuLogo.instantiate())
-	$MenuButtons/Start.set("theme_override_fonts/font", loadFont(menu_folder + "/Font.ttf"))
-	$MenuButtons/Credits.set("theme_override_fonts/font", loadFont(menu_folder + "/Font.ttf", 32))
+	$LogoLayer/Logo.add_child(menuLogo.instantiate())
+	$MenuButtons/Start.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf"))
+	$MenuButtons/Credits.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf", 32))
 	return "Success"
 
 func _process(_delta):
@@ -149,7 +149,7 @@ func search_for_pcks(dirs: Array) -> Array:
 	DirIOManager.list_dir_end()
 	return pckNames
 
-func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
+func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	var processedImage
 	if needsProcessing:
 		processedImage = Image.new()
@@ -158,19 +158,19 @@ func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
 		processedImage = ResourceLoader.load(image, "Image")
 	return ImageTexture.create_from_image(processedImage)
 
-func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
+func build_albedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
 	var finalSpatial = StandardMaterial3D.new()
-	var intermediateTexture = buildTexture(image, needsProcessing)
+	var intermediateTexture = build_texture(image, needsProcessing)
 	finalSpatial.set_texture(StandardMaterial3D.TEXTURE_ALBEDO, intermediateTexture)
 	finalSpatial.flags_transparent = transparent
 	finalSpatial.flags_unshaded = unshaded
 	return finalSpatial
 
-func loadFont(font: String, size = 50):
-	var newFont = FontFile.new()
-	newFont.font_data = load(font)
-	newFont.size = size
-	return newFont
+func load_font(font: String, size = 50):
+	var new_font : FontFile = FontFile.new()
+	new_font.font_data = load(font)
+	new_font.fixed_size = size
+	return new_font
 
 func convertPSArrayToNumberArray(PSArray: PackedStringArray) -> Array:
 	var convertedArray = []
@@ -180,7 +180,7 @@ func convertPSArrayToNumberArray(PSArray: PackedStringArray) -> Array:
 
 func loadCharSelect():
 	var characterFolder = Content.contentFolder + "/Game/Menu/CharacterSelect"
-	$Background/Background.set_texture(buildTexture(characterFolder + "/CharacterSelectBackground.png"))
+	$Background/Background.set_texture(build_texture(characterFolder + "/CharacterSelectBackground.png"))
 	Content.charMap = []
 	if FileAccess.file_exists(characterFolder + "/Custom.txt"): #custom shape
 		FileIOManager = FileAccess.open(characterFolder + "/Custom.txt", FileAccess.READ)
@@ -197,7 +197,7 @@ func loadCharSelect():
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
 			icon.characterData = Content.characters[character].tscn_file
-			icon.set_surface_override_material(0,buildAlbedo(Content.characters[character].char_select_icon, false))
+			icon.set_surface_override_material(0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			while currentSlice[currentIndex] == 0:
 				sliceBuilt.append(null)
@@ -247,7 +247,7 @@ func loadCharSelect():
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
 			icon.characterData = Content.characters[character].tscn_file
-			icon.set_surface_override_material(0,buildAlbedo(Content.characters[character].char_select_icon, false))
+			icon.set_surface_override_material(0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			icon.position = charTopLeft
 			charTopLeft.x += X_JUMP
@@ -275,7 +275,7 @@ func loadCharSelect():
 		if player1Cursor.selected.x == player1Cursor.maxX:
 			player1Cursor.selected.x = 0
 			player1Cursor.selected.y += 1
-	player1Cursor.set_surface_override_material(0,buildAlbedo(characterFolder + "/Player1Select.png", true, true))
+	player1Cursor.set_surface_override_material(0,build_albedo(characterFolder + "/Player1Select.png", true, true))
 	$CharSelectHolder.add_child(player1Cursor)
 	player2Cursor = select.instantiate()
 	player2Cursor.name = "PlayerTwo"
@@ -288,12 +288,12 @@ func loadCharSelect():
 		if player2Cursor.selected.x == -1:
 			player2Cursor.selected.x = player2Cursor.maxX
 			player2Cursor.selected.y -= 1
-	player2Cursor.set_surface_override_material(0,buildAlbedo(characterFolder + "/Player2Select.png", true, true))
+	player2Cursor.set_surface_override_material(0,build_albedo(characterFolder + "/Player2Select.png", true, true))
 	$CharSelectHolder.add_child(player2Cursor)
 	screen = "CharSelect"
 	return "Success"
 
 func _on_Start_pressed():
 	$MenuButtons.hide()
-	menuLogo.queue_free()
+	$LogoLayer/Logo.get_children()[0].queue_free() #this is safe I promise
 	check_success(loadCharSelect())
