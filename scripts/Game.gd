@@ -181,6 +181,7 @@ func handle_inputs():
 	var calcHashes = getInputHashes()
 	if len(InputHandle.p1_inputs) == 0:
 		InputHandle.p1_inputs.append([calcHashes[0], 1])
+		InputHandle.p1_input_index += 1
 	elif InputHandle.p1_inputs[InputHandle.p1_input_index][0] != calcHashes[0]:
 		InputHandle.p1_inputs.append([calcHashes[0], 1])
 		InputHandle.p1_input_index += 1
@@ -189,6 +190,7 @@ func handle_inputs():
 	
 	if len(InputHandle.p2_inputs) == 0:
 		InputHandle.p2_inputs.append([calcHashes[1], 1])
+		InputHandle.p2_input_index += 1
 	elif InputHandle.p2_inputs[InputHandle.p2_input_index][0] != calcHashes[1]:
 		InputHandle.p2_inputs.append([calcHashes[1], 1])
 		InputHandle.p2_input_index += 1
