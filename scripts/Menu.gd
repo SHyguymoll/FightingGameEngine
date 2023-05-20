@@ -56,20 +56,23 @@ func prepare_game() -> String:
 		if ProjectSettings.load_resource_pack(pck):
 			if !ResourceLoader.exists("FolderName.gd"):
 				return "FolderName.gd missing in pck " + pck
-			var folderName = load("FolderName.gd").new()
-			if !("folder" in folderName):
-				return "folder variable missing in FolderName.gd for pck " + pck
-			if !ResourceLoader.exists("res://" + folderName.folder + "/MainScript.gd"):
+			var fighter_details = load("FighterDetails.gd").new()
+			if !("folder" in fighter_details):
+				return "folder variable missing in FighterDetails.gd for pck " + pck
+			if !("fighter_name" in fighter_details):
+				return "fighter_name variable missing in FighterDetails.gd for pck " + pck
+			if !("tscn_file" in fighter_details):
+				return "tscn_file variable missing in FighterDetails.gd for pck " + pck
+			if !("char_select_icon" in fighter_details):
+				return "char_select_icon variable missing in FighterDetails.gd for pck " + pck
+			if !ResourceLoader.exists("res://" + fighter_details.folder + "/MainScript.gd"):
 				return "MainScript.gd missing in pck " + pck
-			var mainScript = load("res://" + folderName.folder + "/MainScript.gd").new()
-			folderName.free()
 			Content.characters[numberID] = {
-				charName = mainScript.fighterName,
-				tscnFile = mainScript.tscnFile,
-				charSelectIcon = mainScript.charSelectIcon
+				charName = fighter_details.fighter_name,
+				tscnFile = fighter_details.tscn_file,
+				charSelectIcon = fighter_details.char_select_icon
 			}
 			numberID += 1
-			mainScript.free()
 	return "Success"
 
 func prepare_menu() -> String:
