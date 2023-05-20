@@ -60,7 +60,7 @@ func init_fighters():
 	Content.p1.initialize_boxes(true)
 	
 	Content.p2.position = Vector3(Content.p2.start_x_offset,0,0)
-	Content.p2.rightFacing = false
+	Content.p2.right_facing = false
 	Content.p2.update_state(Content.p2.state_start, 0)
 	Content.p2.initialize_boxes(false)
 
@@ -83,7 +83,7 @@ func camera_control(mode: int):
 			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
 			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
 			$Camera3D.position.z = ORTH_DIST
-			$Camera3D.size = clamp(abs(Content.p1.position.x - Content.p1.position.x)/2, 3.5, 6)
+			$Camera3D.size = clamp(abs(Content.p1.position.x - Content.p2.position.x)/2, 3.5, 6)
 		1: #focus player1
 			$Camera3D.position.x = Content.p1.position.x
 			$Camera3D.position.y = Content.p1.position.y + 1
