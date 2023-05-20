@@ -54,8 +54,8 @@ func prepare_game() -> String:
 	for pck in pcks:
 		#needs reworking
 		if ProjectSettings.load_resource_pack(pck):
-			if !ResourceLoader.exists("FolderName.gd"):
-				return "FolderName.gd missing in pck " + pck
+			if !ResourceLoader.exists("FighterDetails.gd"):
+				return "FighterDetails.gd missing in pck " + pck
 			var fighter_details = load("FighterDetails.gd").new()
 			if !("folder" in fighter_details):
 				return "folder variable missing in FighterDetails.gd for pck " + pck
