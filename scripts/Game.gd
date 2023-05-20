@@ -45,14 +45,14 @@ func make_hud():
 	$HUD/P1Health.value = Content.p1.health
 	$HUD/P1Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
 	$HUD/P1Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
-	$HUD/P1Char.text = Content.p1.charName
+	$HUD/P1Char.text = Content.p1.char_name
 	$HUD/P2Health.texture_under = build_texture(Content.contentFolder + "/Game/HUD/Player2Background.png")
 	$HUD/P2Health.texture_progress = build_texture(Content.contentFolder + "/Game/HUD/Player2Bar.png")
 	$HUD/P2Health.max_value = Content.p2.health
 	$HUD/P2Health.value = Content.p2.health
 	$HUD/P2Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
 	$HUD/P2Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
-	$HUD/P2Char.text = Content.p2.charName
+	$HUD/P2Char.text = Content.p2.char_name
 
 func init_fighters():
 	Content.p1.position = Vector3(Content.p1.STARTXOFFSET * -1,0,0)
@@ -67,10 +67,10 @@ func init_fighters():
 
 func _ready():
 	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
+	Content.p1 = load(Content.p1).instantiate()
+	Content.p2 = load(Content.p2).instantiate()
 	make_hud()
 	init_fighters()
-	Content.p1 = load(Content.p1.tscnFile).instantiate()
-	Content.p2 = load(Content.p2.tscnFile).instantiate()
 	add_child(Content.p1)
 	add_child(Content.p2)
 
