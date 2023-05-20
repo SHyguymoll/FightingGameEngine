@@ -110,25 +110,30 @@ func camera_control(mode: int):
 
 var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
 
-func AttackValue(attackHash: int) -> String:
-	return (" Ø" if bool(attackHash % 2) else " 0") + ("Ø" if bool((attackHash >> 1) % 2) else "0") + ("Ø" if bool((attackHash >> 2) % 2) else "0") + ("Ø" if bool((attackHash >> 3) % 2) else "0") + ("Ø" if bool((attackHash >> 4) % 2) else "0") + ("Ø " if bool((attackHash >> 5) % 2) else "0 ")
+func attack_value(attackHash: int) -> String:
+	return (" Ø" if bool(attackHash % 2) else " 0") + \
+	("Ø" if bool((attackHash >> 1) % 2) else "0") + \
+	("Ø" if bool((attackHash >> 2) % 2) else "0") + \
+	("Ø" if bool((attackHash >> 3) % 2) else "0") + \
+	("Ø" if bool((attackHash >> 4) % 2) else "0") + \
+	("Ø " if bool((attackHash >> 5) % 2) else "0 ")
 
-func buildInputsTracked() -> void:
+func build_inputs_tracked() -> void:
 	var latestInputs = InputHandle.p1_inputs.slice(max(0,InputHandle.p1_input_index - Content.p1.input_buffer_len), InputHandle.p1_input_index)
 	$HUD/P1Inputs.text = ""
 	for input in latestInputs:
 		if input[0] < 0:
 			return
-		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + AttackValue(input[0] >> 4) + String(input[1]) + "\n"
+		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + attack_value(input[0] >> 4) + String(input[1]) + "\n"
 	
 	latestInputs = InputHandle.p2_inputs.slice(max(0,InputHandle.p2_input_index - Content.p2.input_buffer_len), InputHandle.p2_input_index)
 	$HUD/P2Inputs.text = ""
 	for input in latestInputs:
 		if input[0] < 0:
 			return
-		$HUD/P2Inputs.text += String(input[1]) + AttackValue(input[0] >> 4) + directionDictionary[input[0] % 16] + "\n"
+		$HUD/P2Inputs.text += String(input[1]) + attack_value(input[0] >> 4) + directionDictionary[input[0] % 16] + "\n"
 
-func getInputHashes() -> Array: return [ #convert to hash to send less data (a single int compared to an array)
+func get_input_hashes() -> Array: return [ #convert to hash to send less data (a single int compared to an array)
 	(int(InputHandle.p1_buttons[0]) * 1) + \
 	(int(InputHandle.p1_buttons[1]) * 2) + \
 	(int(InputHandle.p1_buttons[2]) * 4) + \
@@ -178,7 +183,7 @@ func handle_inputs():
 	for button in range(Content.p2.BUTTONCOUNT):
 		InputHandle.p2_buttons[button + 4] = Input.is_action_pressed("second_button" + str(button))
 	
-	var calcHashes = getInputHashes()
+	var calcHashes = get_input_hashes()
 	if len(InputHandle.p1_inputs) == 0:
 		InputHandle.p1_inputs.append([calcHashes[0], 1])
 		InputHandle.p1_input_index += 1
@@ -197,7 +202,7 @@ func handle_inputs():
 	else:
 		InputHandle.p2_inputs[InputHandle.p2_input_index][1] += 1
 	
-	buildInputsTracked()
+	build_inputs_tracked()
 	
 	var p1_buf = InputHandle.p1_inputs.slice(max(0, InputHandle.p1_input_index - Content.p1.input_buffer_len), InputHandle.p1_input_index)
 	var p2_buf = InputHandle.p2_inputs.slice(max(0, InputHandle.p2_input_index - Content.p2.input_buffer_len), InputHandle.p1_input_index)
