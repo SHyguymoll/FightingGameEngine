@@ -35,7 +35,7 @@ func build_albedo(image: String, needsProcessing = true, transparent: bool = fal
 func load_font(font: String, size = 50):
 	var newFont = FontFile.new()
 	newFont.font_data = load(font)
-	newFont.size = size
+	newFont.fixed_size = size
 	return newFont
 
 func make_hud():
@@ -67,8 +67,8 @@ func init_fighters():
 
 func _ready():
 	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
-	Content.p1 = load(Content.p1).instantiate()
-	Content.p2 = load(Content.p2).instantiate()
+	Content.p1 = Content.p1.instantiate()
+	Content.p2 = Content.p2.instantiate()
 	make_hud()
 	init_fighters()
 	add_child(Content.p1)
