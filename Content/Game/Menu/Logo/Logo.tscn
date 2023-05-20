@@ -1,9 +1,14 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://dsbw58c55oan3"]
 
-[ext_resource path="res://scripts/Logo.gd" type="Script" id=2]
+[ext_resource type="Texture2D" uid="uid://dxptcemjwa3q" path="res://Content/Game/Menu/Logo/Logo.png" id="1_c2cfo"]
+[ext_resource type="Script" path="res://scripts/Logo.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://bof52q6woju7x" path="res://Content/Game/Menu/Logo/LogoShadow.png" id="3_1qqix"]
 
 [node name="Icon" type="Sprite3D"]
-script = ExtResource( 2 )
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+texture = ExtResource("1_c2cfo")
+script = ExtResource("2")
 
 [node name="Outline" type="Sprite3D" parent="."]
 alpha_cut = 1
+texture = ExtResource("3_1qqix")

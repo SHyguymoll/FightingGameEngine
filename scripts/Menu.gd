@@ -52,7 +52,6 @@ func prepare_game() -> String:
 	var numberID = 0
 	var rootFolder = Content.contentFolder.left(Content.contentFolder.rfind("/Content"))
 	for pck in pcks:
-		#needs reworking
 		if ProjectSettings.load_resource_pack(pck):
 			if !ResourceLoader.exists("FighterDetails.gd"):
 				return "FighterDetails.gd missing in pck " + pck
@@ -77,21 +76,26 @@ func prepare_game() -> String:
 
 func prepare_menu() -> String:
 	#Loads all menu elements
-	var menuFolder = Content.contentFolder + "/Game/Menu"
-	if !FileAccess.file_exists(menuFolder + "/MenuBackground.png"): return "Menu Background missing."
-	if !FileAccess.file_exists(menuFolder + "/Font.ttf"): return "Menu Font missing."
-	if !FileAccess.file_exists(menuFolder + "/Logo/Logo.tscn"): return "Logo missing."
-	var charSelFolder = menuFolder + "/CharacterSelect"
-	if !FileAccess.file_exists(charSelFolder + "/Player1Select.png"): return "Player1Select icon missing."
-	if !FileAccess.file_exists(charSelFolder + "/Player2Select.png"): return "Player2Select icon missing."
-	if !FileAccess.file_exists(charSelFolder + "/CharacterSelectBackground.png"): return "Character Select Background missing."
+	var menu_folder = Content.contentFolder + "/Game/Menu"
+	if !FileAccess.file_exists(menu_folder + "/MenuBackground.png"):
+		return "Menu Background missing."
+	if !FileAccess.file_exists(menu_folder + "/Font.ttf"):
+		return "Menu Font missing."
+	if !FileAccess.file_exists(menu_folder + "/Logo/Logo.tscn"):
+		return "Logo missing."
+	var char_folder = menu_folder + "/CharacterSelect"
+	if !FileAccess.file_exists(char_folder + "/Player1Select.png"):
+		return "Player1Select icon missing."
+	if !FileAccess.file_exists(char_folder + "/Player2Select.png"):
+		return "Player2Select icon missing."
+	if !FileAccess.file_exists(char_folder + "/CharacterSelectBackground.png"):
+		return "Character Select Background missing."
 	
-	$Background/Background.set_texture(buildTexture(menuFolder + "/MenuBackground.png", true))
-	menuLogo = load(Content.contentFolder + "/Game/Menu/Logo/Logo.tscn").instantiate()
-	menuLogo.set_position(menuLogo.menuPos)
-	$Logo.add_child(menuLogo)
-	$MenuButtons/Start.set("theme_override_fonts/font", loadFont(menuFolder + "/Font.ttf"))
-	$MenuButtons/Credits.set("theme_override_fonts/font", loadFont(menuFolder + "/Font.ttf", 32))
+	$Background/Background.set_texture(buildTexture(menu_folder + "/MenuBackground.png", true))
+	menuLogo = load(Content.contentFolder + "/Game/Menu/Logo/Logo.tscn")
+	$Logo.add_child(menuLogo.instantiate())
+	$MenuButtons/Start.set("theme_override_fonts/font", loadFont(menu_folder + "/Font.ttf"))
+	$MenuButtons/Credits.set("theme_override_fonts/font", loadFont(menu_folder + "/Font.ttf", 32))
 	return "Success"
 
 func _process(_delta):

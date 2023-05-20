@@ -2,3 +2,5 @@ res://default_env.tres
 res://Content/Game/Stages/BlankStage.tscn
 res://scripts/Menu.gd
 res://scenes/Game.tscn
+res://Content/Game/Menu/Logo/Logo.tscn
+res://scripts/Logo.gd
