@@ -1,5 +1,10 @@
-class_name Fighter
+class_name FighterRef
 extends CharacterBody3D
+
+# DO NOT USE THIS FOR MAKING YOUR CHARACTER! This file is present purely
+# for reference when I'm making the engine, hence the classname "FighterRef"
+# (The previous name "Fighter" caused a few (many) problems when loading actual
+# characters), so DON'T USE IT!
 
 var fighter_name : String
 var tscn_file : String

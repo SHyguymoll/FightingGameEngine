@@ -111,12 +111,12 @@ func _process(_delta):
 			charTopLeft.z
 		)
 		if player1Cursor.choiceMade and player2Cursor.choiceMade:
-			Content.p1 = Content.characters[
+			Content.p1 = load(Content.characters[
 				Content.charMap[player1Cursor.selected.y][player1Cursor.selected.x]
-			]
-			Content.p2 = Content.characters[
+			]["tscn_file"])
+			Content.p2 = load(Content.characters[
 				Content.charMap[player2Cursor.selected.y][player2Cursor.selected.x]
-			]
+			]["tscn_file"])
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
 				printerr("game failed to load")
 

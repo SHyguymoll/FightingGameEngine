@@ -5,3 +5,6 @@ res://scenes/Game.tscn
 res://Content/Game/Menu/Logo/Logo.tscn
 res://scripts/Logo.gd
 res://scenes/Menu.tscn
+res://scripts/Game.gd
+res://scripts/Content.gd
+res://scripts/ScriptReferences/Fighter.gd

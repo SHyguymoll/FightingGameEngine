@@ -13,7 +13,7 @@ const CAMERAMAXY = 10
 const MOVEMENTBOUNDX = 8
 
 
-func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
+func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	var finalTexture = ImageTexture.new()
 	var processedImage
 	if needsProcessing:
@@ -24,34 +24,34 @@ func buildTexture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	finalTexture.create_from_image(processedImage)
 	return finalTexture
 
-func buildAlbedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
+func build_albedo(image: String, needsProcessing = true, transparent: bool = false, unshaded: bool = true) -> StandardMaterial3D:
 	var finalSpatial = StandardMaterial3D.new()
-	var intermediateTexture = buildTexture(image, needsProcessing)
+	var intermediateTexture = build_texture(image, needsProcessing)
 	finalSpatial.set_texture(StandardMaterial3D.TEXTURE_ALBEDO, intermediateTexture)
 	finalSpatial.flags_transparent = transparent
 	finalSpatial.flags_unshaded = unshaded
 	return finalSpatial
 
-func loadFont(font: String, size = 50):
+func load_font(font: String, size = 50):
 	var newFont = FontFile.new()
 	newFont.font_data = load(font)
 	newFont.size = size
 	return newFont
 
 func make_hud():
-	$HUD/P1Health.texture_under = buildTexture(Content.contentFolder + "/Game/HUD/Player1Background.png")
-	$HUD/P1Health.texture_progress = buildTexture(Content.contentFolder + "/Game/HUD/Player1Bar.png")
+	$HUD/P1Health.texture_under = build_texture(Content.contentFolder + "/Game/HUD/Player1Background.png")
+	$HUD/P1Health.texture_progress = build_texture(Content.contentFolder + "/Game/HUD/Player1Bar.png")
 	$HUD/P1Health.max_value = Content.p1.health
 	$HUD/P1Health.value = Content.p1.health
-	$HUD/P1Char.set("theme_override_fonts/font", loadFont(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P1Inputs.set("theme_override_fonts/font", loadFont(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P1Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P1Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P1Char.text = Content.p1.charName
-	$HUD/P2Health.texture_under = buildTexture(Content.contentFolder + "/Game/HUD/Player2Background.png")
-	$HUD/P2Health.texture_progress = buildTexture(Content.contentFolder + "/Game/HUD/Player2Bar.png")
+	$HUD/P2Health.texture_under = build_texture(Content.contentFolder + "/Game/HUD/Player2Background.png")
+	$HUD/P2Health.texture_progress = build_texture(Content.contentFolder + "/Game/HUD/Player2Bar.png")
 	$HUD/P2Health.max_value = Content.p2.health
 	$HUD/P2Health.value = Content.p2.health
-	$HUD/P2Char.set("theme_override_fonts/font", loadFont(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P2Inputs.set("theme_override_fonts/font", loadFont(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P2Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
+	$HUD/P2Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
 	$HUD/P2Char.text = Content.p2.charName
 
 func init_fighters():
