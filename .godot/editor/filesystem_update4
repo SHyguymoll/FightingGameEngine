@@ -6,3 +6,4 @@ res://scripts/Menu.gd
 res://scripts/PlayerSelect.gd
 res://scripts/Game.gd
 res://scripts/ScriptReferences/Stage.gd
+res://scripts/ScriptReferences/Fighter.gd

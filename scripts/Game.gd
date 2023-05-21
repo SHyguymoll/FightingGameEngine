@@ -121,14 +121,14 @@ func attack_value(attackHash: int) -> String:
 	("Ø " if bool((attackHash >> 5) % 2) else "0 ")
 
 func build_inputs_tracked() -> void:
-	var latestInputs = InputHandle.p1_inputs.slice(max(0,InputHandle.p1_input_index - Content.p1.input_buffer_len), InputHandle.p1_input_index)
+	var latestInputs = InputHandle.p1_inputs.slice(max(0,InputHandle.p1_input_index - Content.p1.input_buffer_len), InputHandle.p1_input_index + 1)
 	$HUD/P1Inputs.text = ""
 	for input in latestInputs:
 		if input[0] < 0:
 			return
 		$HUD/P1Inputs.text += directionDictionary[input[0] % 16] + attack_value(input[0] >> 4) + str(input[1]) + "\n"
 	
-	latestInputs = InputHandle.p2_inputs.slice(max(0,InputHandle.p2_input_index - Content.p2.input_buffer_len), InputHandle.p2_input_index)
+	latestInputs = InputHandle.p2_inputs.slice(max(0,InputHandle.p2_input_index - Content.p2.input_buffer_len), InputHandle.p2_input_index + 1)
 	$HUD/P2Inputs.text = ""
 	for input in latestInputs:
 		if input[0] < 0:
@@ -187,35 +187,33 @@ func handle_inputs():
 	
 	var calcHashes = get_input_hashes()
 	if len(InputHandle.p1_inputs) == 0:
-		InputHandle.p1_inputs.append([calcHashes[0], 1])
+		InputHandle.p1_inputs.append([calcHashes[0], 1, InputHandle.p1_input_index])
 	elif InputHandle.p1_inputs[InputHandle.p1_input_index][0] != calcHashes[0]:
-		InputHandle.p1_inputs.append([calcHashes[0], 1])
+		InputHandle.p1_inputs.append([calcHashes[0], 1, InputHandle.p1_input_index])
 		InputHandle.p1_input_index += 1
 	else:
 		InputHandle.p1_inputs[InputHandle.p1_input_index][1] += 1
 	
 	if len(InputHandle.p2_inputs) == 0:
-		InputHandle.p2_inputs.append([calcHashes[1], 1])
+		InputHandle.p2_inputs.append([calcHashes[1], 1, InputHandle.p2_input_index])
 	elif InputHandle.p2_inputs[InputHandle.p2_input_index][0] != calcHashes[1]:
-		InputHandle.p2_inputs.append([calcHashes[1], 1])
+		InputHandle.p2_inputs.append([calcHashes[1], 1, InputHandle.p2_input_index])
 		InputHandle.p2_input_index += 1
 	else:
 		InputHandle.p2_inputs[InputHandle.p2_input_index][1] += 1
 	
 	build_inputs_tracked()
 	
-	var max_p1_ind = max(0, InputHandle.p1_input_index - Content.p1.input_buffer_len)
 	var p1_buf
 	var p2_buf
-	if InputHandle.p1_input_index - max_p1_ind == 0:
-		p1_buf = InputHandle.p1_inputs.slice(max_p1_ind, InputHandle.p1_input_index + 1)
-	else:
-		p1_buf = InputHandle.p1_inputs.slice(max_p1_ind, InputHandle.p1_input_index)
-	var max_p2_ind = max(0, InputHandle.p2_input_index - Content.p2.input_buffer_len)
-	if InputHandle.p2_input_index - max_p2_ind == 0:
-		p2_buf = InputHandle.p2_inputs.slice(max_p2_ind, InputHandle.p1_input_index + 1)
-	else:
-		p2_buf = InputHandle.p2_inputs.slice(max_p2_ind, InputHandle.p2_input_index)
+	p1_buf = InputHandle.p1_inputs.slice(
+		max(0, InputHandle.p1_input_index - Content.p1.input_buffer_len),
+		InputHandle.p1_input_index + 1
+	)
+	p2_buf = InputHandle.p2_inputs.slice(
+		max(0, InputHandle.p2_input_index - Content.p2.input_buffer_len),
+		InputHandle.p1_input_index + 1
+	)
 	
 	Content.p1.step(p1_buf)
 	Content.p2.step(p2_buf)

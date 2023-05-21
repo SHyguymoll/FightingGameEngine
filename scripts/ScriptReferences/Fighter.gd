@@ -30,17 +30,8 @@ var start_x_offset : float
 const BUTTONCOUNT = 4
 
 #State transitions are handled by a FSM implemented as match statements
-enum states {
-	intro, round_win, set_win, #round stuff
-	idle, crouch, #basic basics
-	walk_forward, walk_back, #lateral movement
-	jump_forward, jump_neutral, jump_back, #aerial movement
-	attack, post_attack, #handling attacks
-	block_high, block_low, get_up, #handling getting attacked well
-	hurt_high, hurt_low, hurt_crouch, #not handling getting attacked well
-	hurt_fall, hurt_lie, hurt_bounce, #REALLY not handling getting attacked well
-	}
-var state_start: states = states.idle
+enum states {}
+var state_start: states
 var state_current: states
 
 func update_state(new_state: states, new_animation_timer: int) -> void:
