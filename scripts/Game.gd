@@ -83,7 +83,7 @@ func camera_control(mode: int):
 			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
 			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
 			$Camera3D.position.z = ORTH_DIST
-			$Camera3D.size = clamp(abs(Content.p1.position.x - Content.p2.position.x)/2, 3.5, 6)
+			$Camera3D.size = clampf(abs(Content.p1.position.x - Content.p2.position.x)/2, 3.5, 6)
 		1: #focus player1
 			$Camera3D.position.x = Content.p1.position.x
 			$Camera3D.position.y = Content.p1.position.y + 1
@@ -96,7 +96,7 @@ func camera_control(mode: int):
 		3: #default
 			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
 			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
-			$Camera3D.position.z = clamp(abs(Content.p1.position.x - Content.p2.position.x)/2, 1.5, 1.825) + 0.5
+			$Camera3D.position.z = clampf(abs(Content.p1.position.x - Content.p2.position.x)/2, 1.5, 1.825) + 0.5
 		4: #focus player1
 			$Camera3D.position.x = Content.p1.position.x
 			$Camera3D.position.y = Content.p1.position.y + 1
@@ -105,8 +105,10 @@ func camera_control(mode: int):
 			$Camera3D.position.x = Content.p2.position.x
 			$Camera3D.position.y = Content.p2.position.y + 1
 			$Camera3D.position.z = 1.5
-	$Camera3D.position.x = clamp($Camera3D.position.x, -CAMERAMAXX, CAMERAMAXX)
-	$Camera3D.position.y = clamp($Camera3D.position.y, 0, CAMERAMAXY)
+	$Camera3D.position.clamp(
+		Vector3(-CAMERAMAXX, 0, $Camera3D.position.z),
+		Vector3(CAMERAMAXX, CAMERAMAXY, $Camera3D.position.z)
+	)
 
 var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
 
