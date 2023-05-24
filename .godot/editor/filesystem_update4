@@ -1,9 +1,4 @@
+res://scripts/InputHandle.gd
 res://default_env.tres
-res://scenes/Game.tscn
 res://scenes/Menu.tscn
-res://scenes/PlayerSelect.tscn
-res://scripts/Menu.gd
-res://scripts/PlayerSelect.gd
 res://scripts/Game.gd
-res://scripts/ScriptReferences/Stage.gd
-res://scripts/ScriptReferences/Fighter.gd
