@@ -14,13 +14,13 @@ config/name="Open Fighting Game Engine"
 run/main_scene="res://scenes/Menu.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="OFGEAlpha"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.2")
 config/icon="res://icon.png"
 
 [autoload]
 
-Content="*res://scripts/Content.gd"
-InputHandle="*res://scripts/InputHandle.gd"
+Content="*res://scripts/content.gd"
+GameGlobal="*res://scripts/game_global.gd"
 
 [display]
 

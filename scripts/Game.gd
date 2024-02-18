@@ -1,16 +1,8 @@
 extends Node3D
 
-enum statesBase {
-	Idle = 3,
-	WalkForward,
-	WalkBack,
-	Crouch,
-}
-
-@export var cameraMode = 0
-const CAMERAMAXX = 6
-const CAMERAMAXY = 10
-const MOVEMENTBOUNDX = 8
+@export var camera_mode = 0
+const CAMERA_MAX = Vector2(6, 10)
+const MOVEMENT_BOUNDS_X = 8
 
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
@@ -58,7 +50,7 @@ func init_fighters():
 	Content.p1.right_facing = true
 	Content.p1.update_state(Content.p1.state_start, 0)
 	Content.p1.initialize_boxes(true)
-	
+
 	Content.p2.position = Vector3(Content.p2.start_x_offset,0,0)
 	Content.p2.right_facing = false
 	Content.p2.update_state(Content.p2.state_start, 0)
@@ -66,8 +58,8 @@ func init_fighters():
 
 func _ready():
 	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
-	Content.p1 = Content.p1.instantiate()
-	Content.p2 = Content.p2.instantiate()
+	Content.p1 = Content.p1_resource.instantiate()
+	Content.p2 = Content.p2_resource.instantiate()
 	make_hud()
 	init_fighters()
 	add_child(Content.p1)
@@ -106,8 +98,8 @@ func camera_control(mode: int):
 			$Camera3D.position.y = Content.p2.position.y + 1
 			$Camera3D.position.z = 1.5
 	$Camera3D.position.clamp(
-		Vector3(-CAMERAMAXX, 0, $Camera3D.position.z),
-		Vector3(CAMERAMAXX, CAMERAMAXY, $Camera3D.position.z)
+		Vector3(-CAMERA_MAX.x, 0, $Camera3D.position.z),
+		Vector3(CAMERA_MAX.x, CAMERA_MAX.y, $Camera3D.position.z)
 	)
 
 var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
@@ -134,20 +126,20 @@ func slice_input_dictionary(input_dict: Dictionary, from: int, to: int):
 
 func build_inputs_tracked() -> void:
 	var latest_input_set = slice_input_dictionary(
-		InputHandle.p1_inputs,
-		max(0, InputHandle.p1_input_index - InputHandle.p1.input_buffer_len),
-		InputHandle.p1_input_index + 1
+		GameGlobal.p1_inputs,
+		max(0, GameGlobal.p1_input_index - GameGlobal.p1.input_buffer_len),
+		GameGlobal.p1_input_index + 1
 	)
 	$HUD/P1Inputs.text = ""
 	for i in range(len(latest_input_set.up)):
 		for button in latest_input_set:
 			$HUD/P1Inputs.text += str(latest_input_set[button][i])
 		$HUD/P1Inputs.text += "\n"
-	
+
 	latest_input_set = slice_input_dictionary(
-		InputHandle.p2_inputs,
-		max(0, InputHandle.p2_input_index - InputHandle.p2.input_buffer_len),
-		InputHandle.p2_input_index + 1
+		GameGlobal.p2_inputs,
+		max(0, GameGlobal.p2_input_index - GameGlobal.p2.input_buffer_len),
+		GameGlobal.p2_input_index + 1
 	)
 	$HUD/P2Inputs.text = ""
 	for i in range(len(latest_input_set.up)):
@@ -157,26 +149,26 @@ func build_inputs_tracked() -> void:
 
 #convert to hash to simplify comparisons
 func get_current_input_hashes() -> Array: return [
-	(int(InputHandle.p1_buttons[0]) * 1) + \
-	(int(InputHandle.p1_buttons[1]) * 2) + \
-	(int(InputHandle.p1_buttons[2]) * 4) + \
-	(int(InputHandle.p1_buttons[3]) * 8) + \
-	max(0, ((int(InputHandle.p1_buttons[4]) - int(Content.p1.BUTTONCOUNT < 1)) * 16)) + \
-	max(0, ((int(InputHandle.p1_buttons[5]) - int(Content.p1.BUTTONCOUNT < 2)) * 32)) + \
-	max(0, ((int(InputHandle.p1_buttons[6]) - int(Content.p1.BUTTONCOUNT < 3)) * 64)) + \
-	max(0, ((int(InputHandle.p1_buttons[7]) - int(Content.p1.BUTTONCOUNT < 4)) * 128)) + \
-	max(0, ((int(InputHandle.p1_buttons[8]) - int(Content.p1.BUTTONCOUNT < 5)) * 256)) + \
-	max(0, ((int(InputHandle.p1_buttons[9]) - int(Content.p1.BUTTONCOUNT < 6)) * 512)),
-	(int(InputHandle.p2_buttons[0]) * 1) + \
-	(int(InputHandle.p2_buttons[1]) * 2) + \
-	(int(InputHandle.p2_buttons[2]) * 4) + \
-	(int(InputHandle.p2_buttons[3]) * 8) + \
-	max(0, ((int(InputHandle.p2_buttons[4]) - int(Content.p2.BUTTONCOUNT < 1)) * 16)) + \
-	max(0, ((int(InputHandle.p2_buttons[5]) - int(Content.p2.BUTTONCOUNT < 2)) * 32)) + \
-	max(0, ((int(InputHandle.p2_buttons[6]) - int(Content.p2.BUTTONCOUNT < 3)) * 64)) + \
-	max(0, ((int(InputHandle.p2_buttons[7]) - int(Content.p2.BUTTONCOUNT < 4)) * 128)) + \
-	max(0, ((int(InputHandle.p2_buttons[8]) - int(Content.p2.BUTTONCOUNT < 5)) * 256)) + \
-	max(0, ((int(InputHandle.p2_buttons[9]) - int(Content.p2.BUTTONCOUNT < 6)) * 512))
+	(int(GameGlobal.p1_buttons[0]) * 1) + \
+	(int(GameGlobal.p1_buttons[1]) * 2) + \
+	(int(GameGlobal.p1_buttons[2]) * 4) + \
+	(int(GameGlobal.p1_buttons[3]) * 8) + \
+	max(0, ((int(GameGlobal.p1_buttons[4]) - int(Content.p1.BUTTONCOUNT < 1)) * 16)) + \
+	max(0, ((int(GameGlobal.p1_buttons[5]) - int(Content.p1.BUTTONCOUNT < 2)) * 32)) + \
+	max(0, ((int(GameGlobal.p1_buttons[6]) - int(Content.p1.BUTTONCOUNT < 3)) * 64)) + \
+	max(0, ((int(GameGlobal.p1_buttons[7]) - int(Content.p1.BUTTONCOUNT < 4)) * 128)) + \
+	max(0, ((int(GameGlobal.p1_buttons[8]) - int(Content.p1.BUTTONCOUNT < 5)) * 256)) + \
+	max(0, ((int(GameGlobal.p1_buttons[9]) - int(Content.p1.BUTTONCOUNT < 6)) * 512)),
+	(int(GameGlobal.p2_buttons[0]) * 1) + \
+	(int(GameGlobal.p2_buttons[1]) * 2) + \
+	(int(GameGlobal.p2_buttons[2]) * 4) + \
+	(int(GameGlobal.p2_buttons[3]) * 8) + \
+	max(0, ((int(GameGlobal.p2_buttons[4]) - int(Content.p2.BUTTONCOUNT < 1)) * 16)) + \
+	max(0, ((int(GameGlobal.p2_buttons[5]) - int(Content.p2.BUTTONCOUNT < 2)) * 32)) + \
+	max(0, ((int(GameGlobal.p2_buttons[6]) - int(Content.p2.BUTTONCOUNT < 3)) * 64)) + \
+	max(0, ((int(GameGlobal.p2_buttons[7]) - int(Content.p2.BUTTONCOUNT < 4)) * 128)) + \
+	max(0, ((int(GameGlobal.p2_buttons[8]) - int(Content.p2.BUTTONCOUNT < 5)) * 256)) + \
+	max(0, ((int(GameGlobal.p2_buttons[9]) - int(Content.p2.BUTTONCOUNT < 6)) * 512))
 ]
 
 func generate_prior_input_hash(player_inputs: Dictionary):
@@ -202,70 +194,70 @@ func create_new_input_set(player_inputs: Dictionary, new_inputs: Array):
 		ind += 1
 
 func handle_inputs():
-	InputHandle.p1_buttons[0] = Input.is_action_pressed("first_up")
-	InputHandle.p1_buttons[1] = Input.is_action_pressed("first_down")
-	if InputHandle.p1_buttons[0] == InputHandle.p1_buttons[1]: #no conflicting directions
-		InputHandle.p1_buttons[0] = false
-		InputHandle.p1_buttons[1] = false
-	InputHandle.p1_buttons[2] = Input.is_action_pressed("first_left")
-	InputHandle.p1_buttons[3] = Input.is_action_pressed("first_right")
-	if InputHandle.p1_buttons[2] == InputHandle.p1_buttons[3]: #ditto
-		InputHandle.p1_buttons[2] = false
-		InputHandle.p1_buttons[3] = false
+	GameGlobal.p1_buttons[0] = Input.is_action_pressed("first_up")
+	GameGlobal.p1_buttons[1] = Input.is_action_pressed("first_down")
+	if GameGlobal.p1_buttons[0] == GameGlobal.p1_buttons[1]: #no conflicting directions
+		GameGlobal.p1_buttons[0] = false
+		GameGlobal.p1_buttons[1] = false
+	GameGlobal.p1_buttons[2] = Input.is_action_pressed("first_left")
+	GameGlobal.p1_buttons[3] = Input.is_action_pressed("first_right")
+	if GameGlobal.p1_buttons[2] == GameGlobal.p1_buttons[3]: #ditto
+		GameGlobal.p1_buttons[2] = false
+		GameGlobal.p1_buttons[3] = false
 	for button in range(Content.p1.BUTTONCOUNT):
-		InputHandle.p1_buttons[button + 4] = Input.is_action_pressed("first_button" + str(button))
-	
-	InputHandle.p2_buttons[0] = Input.is_action_pressed("second_up")
-	InputHandle.p2_buttons[1] = Input.is_action_pressed("second_down")
-	if InputHandle.p2_buttons[0] == InputHandle.p2_buttons[1]: #no conflicting directions
-		InputHandle.p2_buttons[0] = false
-		InputHandle.p2_buttons[1] = false
-	InputHandle.p2_buttons[2] = Input.is_action_pressed("second_left")
-	InputHandle.p2_buttons[3] = Input.is_action_pressed("second_right")
-	if InputHandle.p2_buttons[2] == InputHandle.p2_buttons[3]: #ditto
-		InputHandle.p2_buttons[2] = false
-		InputHandle.p2_buttons[3] = false
+		GameGlobal.p1_buttons[button + 4] = Input.is_action_pressed("first_button" + str(button))
+
+	GameGlobal.p2_buttons[0] = Input.is_action_pressed("second_up")
+	GameGlobal.p2_buttons[1] = Input.is_action_pressed("second_down")
+	if GameGlobal.p2_buttons[0] == GameGlobal.p2_buttons[1]: #no conflicting directions
+		GameGlobal.p2_buttons[0] = false
+		GameGlobal.p2_buttons[1] = false
+	GameGlobal.p2_buttons[2] = Input.is_action_pressed("second_left")
+	GameGlobal.p2_buttons[3] = Input.is_action_pressed("second_right")
+	if GameGlobal.p2_buttons[2] == GameGlobal.p2_buttons[3]: #ditto
+		GameGlobal.p2_buttons[2] = false
+		GameGlobal.p2_buttons[3] = false
 	for button in range(Content.p2.BUTTONCOUNT):
-		InputHandle.p2_buttons[button + 4] = Input.is_action_pressed("second_button" + str(button))
-	
+		GameGlobal.p2_buttons[button + 4] = Input.is_action_pressed("second_button" + str(button))
+
 	var calcHashes = get_current_input_hashes()
-	
-	if generate_prior_input_hash(InputHandle.p1_inputs) != calcHashes[0]:
-		create_new_input_set(InputHandle.p1_inputs, InputHandle.p1_buttons)
-		InputHandle.p1_input_index += 1
+
+	if generate_prior_input_hash(GameGlobal.p1_inputs) != calcHashes[0]:
+		create_new_input_set(GameGlobal.p1_inputs, GameGlobal.p1_buttons)
+		GameGlobal.p1_input_index += 1
 	else:
-		increment_inputs(InputHandle.p1_inputs)
-	
-	if generate_prior_input_hash(InputHandle.p2_inputs) != calcHashes[1]:
-		create_new_input_set(InputHandle.p2_inputs, InputHandle.p2_buttons)
-		InputHandle.p2_input_index += 1
+		increment_inputs(GameGlobal.p1_inputs)
+
+	if generate_prior_input_hash(GameGlobal.p2_inputs) != calcHashes[1]:
+		create_new_input_set(GameGlobal.p2_inputs, GameGlobal.p2_buttons)
+		GameGlobal.p2_input_index += 1
 	else:
-		increment_inputs(InputHandle.p2_inputs)
-	
+		increment_inputs(GameGlobal.p2_inputs)
+
 	build_inputs_tracked()
 	var p1_buf = slice_input_dictionary(
-		InputHandle.p1_inputs,
-		max(0, InputHandle.p1_input_index - InputHandle.p1.input_buffer_len),
-		InputHandle.p1_input_index + 1
+		GameGlobal.p1_inputs,
+		max(0, GameGlobal.p1_input_index - GameGlobal.p1.input_buffer_len),
+		GameGlobal.p1_input_index + 1
 	)
 	var p2_buf = slice_input_dictionary(
-		InputHandle.p2_inputs,
-		max(0, InputHandle.p2_input_index - InputHandle.p2.input_buffer_len),
-		InputHandle.p2_input_index + 1
+		GameGlobal.p2_inputs,
+		max(0, GameGlobal.p2_input_index - GameGlobal.p2.input_buffer_len),
+		GameGlobal.p2_input_index + 1
 	)
-	
-	Content.p1.step(p1_buf, InputHandle.p1_input_index)
-	Content.p2.step(p2_buf, InputHandle.p2_input_index)
+
+	Content.p1.step(p1_buf, GameGlobal.p1_input_index)
+	Content.p2.step(p2_buf, GameGlobal.p2_input_index)
 
 func character_positioning():
-	Content.p1.position.x = clamp(Content.p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	Content.p2.position.x = clamp(Content.p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+	Content.p1.position.x = clamp(Content.p1.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
+	Content.p2.position.x = clamp(Content.p2.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
 	Content.p1.distance = Content.p1.position.x - Content.p2.position.x
 	Content.p2.distance = Content.p2.position.x - Content.p1.position.x
 	Content.p1.reset_facing()
 	Content.p2.reset_facing()
 
 func _physics_process(_delta):
-	camera_control(cameraMode)
+	camera_control(camera_mode)
 	handle_inputs()
 	character_positioning()

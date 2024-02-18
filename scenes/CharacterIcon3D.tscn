@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource path="res://scripts/CharacterIcon3D.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://scripts/character_icon_3d.gd" id="1"]
 
 [sub_resource type="QuadMesh" id=1]
 size = Vector2( 0.75, 0.75 )

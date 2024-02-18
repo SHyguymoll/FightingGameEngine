@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cd77r01gxs0ud"]
 
-[ext_resource type="Script" path="res://scripts/Game.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1")
@@ -21,7 +21,6 @@ offset_bottom = 272.0
 text = "Player 1 Character"
 
 [node name="P1Inputs" type="Label" parent="HUD"]
-anchors_preset = -1
 offset_top = 272.0
 offset_right = 495.0
 offset_bottom = 352.0
