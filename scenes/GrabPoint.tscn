@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b3qx5aofxylc7"]
 
-[ext_resource type="Script" path="res://scripts/ScriptReferences/grab_point.gd" id="1_tn05e"]
+[ext_resource type="Script" path="res://scripts/grab_point.gd" id="1_tn05e"]
 [ext_resource type="Texture2D" uid="uid://b1qv7arcwllia" path="res://icon.svg" id="2_vxqbi"]
 
 [node name="Node3D" type="Node3D"]
