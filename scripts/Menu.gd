@@ -23,77 +23,92 @@ const Z_POSITION = -4
 const X_JUMP = 1.25
 const Y_JUMP = 1
 
-func get_content_folder(debug: bool) -> void:
-	Content.content_folder = "res://Content" if debug else "user://Content"
+enum ReturnState {
+	SUCCESS,
+	CONTENT_MISSING,
+	CHARACTERS_MISSING,
+	GAME_MISSING,
+	INVALID_FIGHTER,
+	MENU_ELEMENT_MISSING,
+	GAME_ELEMENT_MISSING,
+}
 
-func check_success(ret: String):
-	if ret != "Success":
-		push_error(ret)
-		$MenuButtons/Start.hide()
+func get_content_folder() -> void:
+	Content.content_folder = "res://Content" if OS.has_feature("editor") else "user://Content"
 
 func _ready():
-	get_content_folder(OS.has_feature("editor"))
-	check_success(prepare_game())
-	check_success(prepare_menu())
+	get_content_folder()
+	if prepare_game() != ReturnState.SUCCESS or prepare_menu() != ReturnState.SUCCESS:
+		$MenuButtons/Start.hide()
 
-func prepare_game() -> String:
+func prepare_game() -> ReturnState:
 	# Loads all characters into character roster via resource pack loading and ResourceLoader
 	dir_manager = DirAccess.open(Content.content_folder)
 	if !dir_manager.dir_exists(Content.content_folder):
-		return "Content Folder missing."
-	if !dir_manager.dir_exists(Content.content_folder + "/Characters"):
-		return "Character folder missing."
-	if !dir_manager.dir_exists(Content.content_folder + "/Game"):
-		return "Game folder missing."
-	var pcks = search_for_pcks(search_character_folder(Content.content_folder + "/Characters"))
+		return ReturnState.CONTENT_MISSING
+	if !dir_manager.dir_exists(Content.content_folder.path_join("Characters")):
+		return ReturnState.CHARACTERS_MISSING
+	if !dir_manager.dir_exists(Content.content_folder.path_join("Game")):
+		return ReturnState.GAME_MISSING
+	var pcks = search_for_pcks(
+			search_character_folder(Content.content_folder.path_join("Characters")))
 	var number_id = 0
 	var root_folder = Content.content_folder.left(Content.content_folder.rfind("/Content"))
 	for pck in pcks:
 		if ProjectSettings.load_resource_pack(pck):
 			if !ResourceLoader.exists("FighterDetails.gd"):
-				return "FighterDetails.gd missing in pck " + pck
+				push_error("FighterDetails.gd missing in pck " + pck)
+				return ReturnState.INVALID_FIGHTER
 			var fighter_details = load("FighterDetails.gd").new()
 			if !("folder" in fighter_details):
-				return "folder variable missing in FighterDetails.gd for pck " + pck
+				push_error("folder variable missing in FighterDetails.gd for pck " + pck)
+				return ReturnState.INVALID_FIGHTER
 			if !("fighter_name" in fighter_details):
-				return "fighter_name variable missing in FighterDetails.gd for pck " + pck
+				push_error("fighter_name variable missing in FighterDetails.gd for pck " + pck)
+				return ReturnState.INVALID_FIGHTER
 			if !("tscn_file" in fighter_details):
-				return "tscn_file variable missing in FighterDetails.gd for pck " + pck
+				push_error("tscn_file variable missing in FighterDetails.gd for pck " + pck)
+				return ReturnState.INVALID_FIGHTER
 			if !("char_select_icon" in fighter_details):
-				return "char_select_icon variable missing in FighterDetails.gd for pck " + pck
-			if !ResourceLoader.exists("res://" + fighter_details.folder + "/MainScript.gd"):
-				return "MainScript.gd missing in pck " + pck
+				push_error("char_select_icon variable missing in FighterDetails.gd for pck " + pck)
+				return ReturnState.INVALID_FIGHTER
 			Content.characters[number_id] = {
 				char_name = fighter_details.fighter_name,
 				tscn_file = fighter_details.tscn_file,
 				char_select_icon = fighter_details.char_select_icon
 			}
 			number_id += 1
-	return "Success"
+	return ReturnState.SUCCESS
 
-func prepare_menu() -> String:
+func prepare_menu() -> ReturnState:
 	#Loads all menu elements
 	var menu_folder = Content.content_folder + "/Game/Menu"
 	if !FileAccess.file_exists(menu_folder + "/MenuBackground.png"):
-		return "Menu Background missing."
+		push_error("Menu Background missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 	if !FileAccess.file_exists(menu_folder + "/Font.ttf"):
-		return "Menu Font missing."
+		push_error("Menu Font missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 	if !FileAccess.file_exists(menu_folder + "/Logo/Logo.tscn"):
-		return "Logo missing."
+		push_error("Logo missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 	var char_folder = menu_folder + "/CharacterSelect"
 	if !FileAccess.file_exists(char_folder + "/Player1Select.png"):
-		return "Player1Select icon missing."
+		push_error("Player1Select icon missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 	if !FileAccess.file_exists(char_folder + "/Player2Select.png"):
-		return "Player2Select icon missing."
+		push_error("Player2Select icon missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 	if !FileAccess.file_exists(char_folder + "/CharacterSelectBackground.png"):
-		return "Character Select Background missing."
+		push_error("Character Select Background missing.")
+		return ReturnState.MENU_ELEMENT_MISSING
 
 	$Background/Background.set_texture(build_texture(menu_folder + "/MenuBackground.png", true))
 	menuLogo = load(Content.content_folder + "/Game/Menu/Logo/Logo.tscn")
 	$LogoLayer/Logo.add_child(menuLogo.instantiate())
 	$MenuButtons/Start.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf"))
 	$MenuButtons/Credits.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf", 32))
-	return "Success"
+	return ReturnState.SUCCESS
 
 func _process(_delta):
 	if screen == "CharSelect":
@@ -289,4 +304,4 @@ func loadCharSelect():
 func _on_Start_pressed():
 	$MenuButtons.hide()
 	$LogoLayer/Logo.get_children()[0].queue_free() #this is safe I promise
-	check_success(loadCharSelect())
+	loadCharSelect()
