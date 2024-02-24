@@ -3,14 +3,8 @@ extends Node
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
-var file_manager: FileAccess
-var dir_manager: DirAccess
-const RESERVED_FOLDERS = [ #Baseline folders in each Character
-	"Scripts",
-	"HelperScripts",
-	"Sounds",
-	"Sprites"
-]
+var dir_io: DirAccess
+var file_io: FileAccess
 var menuLogo
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
@@ -44,12 +38,12 @@ func _ready():
 
 func prepare_game() -> ReturnState:
 	# Loads all characters into character roster via resource pack loading and ResourceLoader
-	dir_manager = DirAccess.open(Content.content_folder)
-	if !dir_manager.dir_exists(Content.content_folder):
+	dir_io = DirAccess.open(Content.content_folder)
+	if !dir_io.dir_exists(Content.content_folder):
 		return ReturnState.CONTENT_MISSING
-	if !dir_manager.dir_exists(Content.content_folder.path_join("Characters")):
+	if !dir_io.dir_exists(Content.content_folder.path_join("Characters")):
 		return ReturnState.CHARACTERS_MISSING
-	if !dir_manager.dir_exists(Content.content_folder.path_join("Game")):
+	if !dir_io.dir_exists(Content.content_folder.path_join("Game")):
 		return ReturnState.GAME_MISSING
 	var pcks = search_for_pcks(
 			search_character_folder(Content.content_folder.path_join("Characters")))
@@ -138,8 +132,8 @@ func _process(_delta):
 #Recursive depth-first search in /Content/Characters
 func search_character_folder(start_dir: String) -> Array:
 	var folders = [start_dir]
-	dir_manager = DirAccess.open(start_dir)
-	var directories = dir_manager.get_directories()
+	dir_io = DirAccess.open(start_dir)
+	var directories = dir_io.get_directories()
 	for directory in directories:
 		folders.append_array(search_character_folder(start_dir + "/" + directory))
 	return folders
@@ -147,11 +141,11 @@ func search_character_folder(start_dir: String) -> Array:
 func search_for_pcks(dirs: Array) -> Array:
 	var pck_names = []
 	for dir in dirs:
-		dir_manager = DirAccess.open(dir)
-		var files = dir_manager.get_files()
+		dir_io = DirAccess.open(dir)
+		var files = dir_io.get_files()
 		for file in files:
 			if file.get_extension() == "pck" or file.get_extension() == "zip":
-				pck_names.append(dir_manager.get_current_dir() + "/" + file)
+				pck_names.append(dir_io.get_current_dir().path_join(file))
 	return pck_names
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
@@ -178,16 +172,17 @@ func load_font(font: String, size = 50):
 	return new_font
 
 func loadCharSelect():
-	var character_folder = Content.content_folder + "/Game/Menu/CharacterSelect"
-	$Background/Background.set_texture(build_texture(character_folder + "/CharacterSelectBackground.png"))
+	var character_folder = Content.content_folder.path_join("/Game/Menu/CharacterSelect")
+	$Background/Background.set_texture(
+			build_texture(character_folder.path_join("CharacterSelectBackground.png")))
 	Content.char_map = []
-	if FileAccess.file_exists(character_folder + "/Custom.txt"): #custom shape
-		file_manager = FileAccess.open(character_folder + "/Custom.txt", FileAccess.READ)
-		var currentLine = file_manager.get_csv_line()
+	if FileAccess.file_exists(character_folder.path_join("Custom.txt")): #custom shape
+		file_io = FileAccess.open(character_folder.path_join("Custom.txt"), FileAccess.READ)
+		var currentLine = file_io.get_csv_line()
 		char_top_left = Vector3(float(currentLine[0]), float(currentLine[1]), float(currentLine[2]))
-		currentLine = file_manager.get_csv_line()
+		currentLine = file_io.get_csv_line()
 		jump_dists = Vector2(float(currentLine[0]), float(currentLine[1]))
-		var cur_slice = Array(file_manager.get_csv_line())
+		var cur_slice = Array(file_io.get_csv_line())
 		var slice_built = []
 		var prev_slice = cur_slice.duplicate()
 		var cur_index = 0
@@ -196,7 +191,8 @@ func loadCharSelect():
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
 			icon.characterData = Content.characters[character].tscn_file
-			icon.set_surface_override_material(0,build_albedo(Content.characters[character].char_select_icon, false))
+			icon.set_surface_override_material(
+					0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			while cur_slice[cur_index] == "0":
 				slice_built.append(null)
@@ -204,8 +200,8 @@ func loadCharSelect():
 				if cur_index == len(cur_slice):
 					Content.char_map.append(slice_built)
 					slice_built = []
-					if file_manager.get_position() < file_manager.get_length():
-						cur_slice = Array(file_manager.get_csv_line())
+					if file_io.get_position() < file_io.get_length():
+						cur_slice = Array(file_io.get_csv_line())
 						if !len(cur_slice) == len(prev_slice):
 							push_error("ERROR: shape must occupy a rectangle of space")
 							return ReturnState.INVALID_SHAPE
@@ -228,8 +224,8 @@ func loadCharSelect():
 				if cur_index == len(cur_slice):
 					Content.char_map.append(slice_built)
 					slice_built = []
-					if file_manager.get_position() < file_manager.get_length():
-						cur_slice = Array(file_manager.get_csv_line())
+					if file_io.get_position() < file_io.get_length():
+						cur_slice = Array(file_io.get_csv_line())
 						if !len(cur_slice) == len(prev_slice):
 							push_error("ERROR: shape must occupy a rectangle of space")
 							return ReturnState.INVALID_SHAPE
@@ -254,7 +250,8 @@ func loadCharSelect():
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
 			icon.characterData = Content.characters[character].tscn_file
-			icon.set_surface_override_material(0,build_albedo(Content.characters[character].char_select_icon, false))
+			icon.set_surface_override_material(
+					0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			icon.position = char_top_left
 			char_top_left.x += X_JUMP
@@ -282,12 +279,15 @@ func loadCharSelect():
 		if p1_cursor.selected.x == p1_cursor.max_x:
 			p1_cursor.selected.x = 0
 			p1_cursor.selected.y += 1
-	p1_cursor.set_surface_override_material(0,build_albedo(character_folder + "/Player1Select.png", true, true))
+	p1_cursor.set_surface_override_material(
+			0,build_albedo(character_folder.path_join("Player1Select.png"), true, true))
 	$CharSelectHolder.add_child(p1_cursor)
 	p2_cursor = select.instantiate()
 	p2_cursor.name = "PlayerTwo"
 	p2_cursor.player = 1
-	p2_cursor.selected = Vector2(len(Content.char_map[0]) - 1,len(Content.char_map) - 1) #places at rightbottommost spot
+	p2_cursor.selected = Vector2(
+			len(Content.char_map[0]) - 1,
+			len(Content.char_map) - 1) #places at rightbottommost spot
 	p2_cursor.max_x = len(Content.char_map[0])
 	p2_cursor.max_y = len(Content.char_map)
 	while Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x] == null:
@@ -295,7 +295,8 @@ func loadCharSelect():
 		if p2_cursor.selected.x == -1:
 			p2_cursor.selected.x = p2_cursor.max_x
 			p2_cursor.selected.y -= 1
-	p2_cursor.set_surface_override_material(0,build_albedo(character_folder + "/Player2Select.png", true, true))
+	p2_cursor.set_surface_override_material(
+			0,build_albedo(character_folder.path_join("Player2Select.png"), true, true))
 	$CharSelectHolder.add_child(p2_cursor)
 	screen = "CharSelect"
 	return ReturnState.SUCCESS
