@@ -53,7 +53,7 @@ func prepare_game() -> ReturnState:
 	var pcks = search_for_pcks(
 			search_character_folder(Content.content_folder.path_join("Characters")))
 	var number_id = 0
-	var root_folder = Content.content_folder.left(Content.content_folder.rfind("/Content"))
+	var root_folder = Content.content_folder.get_base_dir()
 	for pck in pcks:
 		if ProjectSettings.load_resource_pack(pck):
 			if !ResourceLoader.exists("FighterDetails.gd"):
@@ -132,35 +132,25 @@ func _process(_delta):
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
-				printerr("game failed to load")
+				push_error("game failed to load")
 
-func search_character_folder(start_dir: String) -> Array: #Recursive breadth-first search in /Content/Characters
-	var folders = []
+#Recursive depth-first search in /Content/Characters
+func search_character_folder(start_dir: String) -> Array:
+	var folders = [start_dir]
 	dir_manager = DirAccess.open(start_dir)
-	dir_manager.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-	while true:
-		var folder = dir_manager.get_next()
-		if folder == "":
-			if len(folders):
-				for entry in folders:
-					folders.append_array(search_character_folder(entry))
-			break
-		if dir_manager.current_is_dir() and !RESERVED_FOLDERS.has(folder): #Avoid files for recursion loops, and common directories for speed
-			folders.append(start_dir + "/" + folder)
+	var directories = dir_manager.get_directories()
+	for directory in directories:
+		folders.append_array(search_character_folder(start_dir + "/" + directory))
 	return folders
 
 func search_for_pcks(dirs: Array) -> Array:
 	var pck_names = []
 	for dir in dirs:
 		dir_manager = DirAccess.open(dir)
-		dir_manager.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-		while true:
-			var file = dir_manager.get_next()
+		var files = dir_manager.get_files()
+		for file in files:
 			if file.get_extension() == "pck" or file.get_extension() == "zip":
 				pck_names.append(dir_manager.get_current_dir() + "/" + file)
-			if file == "":
-				break
-	dir_manager.list_dir_end()
 	return pck_names
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
