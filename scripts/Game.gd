@@ -30,19 +30,31 @@ func load_font(font: String, size = 50):
 	return newFont
 
 func make_hud():
-	$HUD/P1Health.texture_under = build_texture(Content.contentFolder + "/Game/HUD/Player1Background.png")
-	$HUD/P1Health.texture_progress = build_texture(Content.contentFolder + "/Game/HUD/Player1Bar.png")
+	$HUD/P1Health.texture_under = build_texture(
+			Content.content_folder.path_join("/Game/HUD/Player1Background.png"))
+	$HUD/P1Health.texture_progress = build_texture(
+			Content.content_folder.path_join("/Game/HUD/Player1Bar.png"))
 	$HUD/P1Health.max_value = Content.p1.health
 	$HUD/P1Health.value = Content.p1.health
-	$HUD/P1Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P1Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P1Char.set(
+			"theme_override_fonts/font",
+			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 64))
+	$HUD/P1Inputs.set(
+			"theme_override_fonts/font",
+			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 48))
 	$HUD/P1Char.text = Content.p1.char_name
-	$HUD/P2Health.texture_under = build_texture(Content.contentFolder + "/Game/HUD/Player2Background.png")
-	$HUD/P2Health.texture_progress = build_texture(Content.contentFolder + "/Game/HUD/Player2Bar.png")
+	$HUD/P2Health.texture_under = build_texture(
+			Content.content_folder.path_join("/Game/HUD/Player2Background.png"))
+	$HUD/P2Health.texture_progress = build_texture(
+			Content.content_folder.path_join("/Game/HUD/Player2Bar.png"))
 	$HUD/P2Health.max_value = Content.p2.health
 	$HUD/P2Health.value = Content.p2.health
-	$HUD/P2Char.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 64))
-	$HUD/P2Inputs.set("theme_override_fonts/font", load_font(Content.contentFolder + "/Game/HUD/PlayerFont.ttf", 48))
+	$HUD/P2Char.set(
+			"theme_override_fonts/font",
+			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 64))
+	$HUD/P2Inputs.set(
+			"theme_override_fonts/font",
+			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 48))
 	$HUD/P2Char.text = Content.p2.char_name
 
 func init_fighters():
@@ -88,7 +100,8 @@ func camera_control(mode: int):
 		3: #default
 			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
 			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
-			$Camera3D.position.z = clampf(abs(Content.p1.position.x - Content.p2.position.x)/2, 1.5, 1.825) + 0.5
+			$Camera3D.position.z = clampf(
+					abs(Content.p1.position.x - Content.p2.position.x)/2, 1.5, 1.825) + 0.5
 		4: #focus player1
 			$Camera3D.position.x = Content.p1.position.x
 			$Camera3D.position.y = Content.p1.position.y + 1
@@ -102,7 +115,17 @@ func camera_control(mode: int):
 		Vector3(CAMERA_MAX.x, CAMERA_MAX.y, $Camera3D.position.z)
 	)
 
-var directionDictionary = { 0: "x", 1: "↑", 2: "↓", 4: "←", 8: "→", 5: "↖", 6: "↙", 9: "↗", 10: "↘" }
+var directionDictionary = {
+	0: "x",
+	1: "↑",
+	2: "↓",
+	4: "←",
+	8: "→",
+	5: "↖",
+	6: "↙",
+	9: "↗",
+	10: "↘",
+}
 
 func attack_value(attackHash: int) -> String:
 	return (" Ø" if bool(attackHash % 2) else " 0") + \
