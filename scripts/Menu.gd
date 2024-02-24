@@ -31,6 +31,7 @@ enum ReturnState {
 	INVALID_FIGHTER,
 	MENU_ELEMENT_MISSING,
 	GAME_ELEMENT_MISSING,
+	INVALID_SHAPE,
 }
 
 func get_content_folder() -> void:
@@ -205,11 +206,15 @@ func loadCharSelect():
 					slice_built = []
 					if file_manager.get_position() < file_manager.get_length():
 						cur_slice = Array(file_manager.get_csv_line())
-						if !len(cur_slice) == len(prev_slice): return "ERROR: shape must occupy a rectangle of space"
+						if !len(cur_slice) == len(prev_slice):
+							push_error("ERROR: shape must occupy a rectangle of space")
+							return ReturnState.INVALID_SHAPE
 						prev_slice = cur_slice.duplicate()
 					else:
 						cur_slice = prev_slice.duplicate()
-						if !cur_slice.count(0) != len(cur_slice): return "ERROR: shape must not end with empty line"
+						if !cur_slice.count(0) != len(cur_slice):
+							push_error("ERROR: shape must not end with empty line")
+							return ReturnState.INVALID_SHAPE
 					cur_index = 0
 					yIndex += 1
 			if cur_slice[cur_index] == "1":
@@ -225,11 +230,15 @@ func loadCharSelect():
 					slice_built = []
 					if file_manager.get_position() < file_manager.get_length():
 						cur_slice = Array(file_manager.get_csv_line())
-						if !len(cur_slice) == len(prev_slice): return "ERROR: shape must occupy a rectangle of space"
+						if !len(cur_slice) == len(prev_slice):
+							push_error("ERROR: shape must occupy a rectangle of space")
+							return ReturnState.INVALID_SHAPE
 						prev_slice = cur_slice.duplicate()
 					else:
 						cur_slice = prev_slice.duplicate()
-						if !cur_slice.count(0) != len(cur_slice): return "ERROR: shape must not end with empty line"
+						if !cur_slice.count(0) != len(cur_slice):
+							push_error("ERROR: shape must not end with empty line")
+							return ReturnState.INVALID_SHAPE
 					cur_index = 0
 					yIndex += 1
 		if cur_index != len(cur_slice): #set the rest to 0 to stop floating
@@ -289,7 +298,7 @@ func loadCharSelect():
 	p2_cursor.set_surface_override_material(0,build_albedo(character_folder + "/Player2Select.png", true, true))
 	$CharSelectHolder.add_child(p2_cursor)
 	screen = "CharSelect"
-	return "Success"
+	return ReturnState.SUCCESS
 
 func _on_Start_pressed():
 	$MenuButtons.hide()
