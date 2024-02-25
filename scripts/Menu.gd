@@ -172,7 +172,7 @@ func _process(_delta):
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
 				push_error("game failed to load")
 
-#Recursive depth-first search in /Content/Characters
+#Recursive depth-first search
 func search_folder_recurs(start_dir: String) -> Array:
 	var folders = [start_dir]
 	dir_io = DirAccess.open(start_dir)
