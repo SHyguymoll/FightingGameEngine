@@ -39,11 +39,11 @@ func _ready():
 func prepare_game() -> ReturnState:
 	# Loads all characters into character roster via resource pack loading and ResourceLoader
 	dir_io = DirAccess.open(Content.content_folder)
-	if !dir_io.dir_exists(Content.content_folder):
+	if not dir_io.dir_exists(Content.content_folder):
 		return ReturnState.CONTENT_MISSING
-	if !dir_io.dir_exists(Content.content_folder.path_join("Characters")):
+	if not dir_io.dir_exists(Content.content_folder.path_join("Characters")):
 		return ReturnState.CHARACTERS_MISSING
-	if !dir_io.dir_exists(Content.content_folder.path_join("Game")):
+	if not dir_io.dir_exists(Content.content_folder.path_join("Game")):
 		return ReturnState.GAME_MISSING
 	var pcks = search_for_pcks(
 			search_folder_recurs(Content.content_folder.path_join("Characters")))
