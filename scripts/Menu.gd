@@ -21,6 +21,7 @@ enum ReturnState {
 	SUCCESS,
 	CONTENT_MISSING,
 	CHARACTERS_MISSING,
+	STAGES_MISSING,
 	GAME_MISSING,
 	INVALID_FIGHTER,
 	MENU_ELEMENT_MISSING,
@@ -37,7 +38,8 @@ func _ready():
 		$MenuButtons/Start.hide()
 
 func prepare_game() -> ReturnState:
-	# Loads all characters into character roster via resource pack loading and ResourceLoader
+	# Loads all characters and stages into character roster
+	# via resource pack loading and ResourceLoader
 	dir_io = DirAccess.open(Content.content_folder)
 	if not dir_io.dir_exists(Content.content_folder):
 		return ReturnState.CONTENT_MISSING
@@ -45,6 +47,10 @@ func prepare_game() -> ReturnState:
 		return ReturnState.CHARACTERS_MISSING
 	if not dir_io.dir_exists(Content.content_folder.path_join("Game")):
 		return ReturnState.GAME_MISSING
+	if not dir_io.dir_exists(Content.content_folder.path_join("Game/Stages")):
+		return ReturnState.STAGES_MISSING
+
+	# Characters
 	var pcks = search_for_pcks(
 			search_folder_recurs(Content.content_folder.path_join("Characters")))
 	var number_id = 0
@@ -90,6 +96,15 @@ func prepare_game() -> ReturnState:
 						(fighter_details.folder.path_join(fighter_details.char_select_icon))),
 			}
 			number_id += 1
+
+	# Stages
+	pcks = search_for_pcks(
+			search_folder_recurs(Content.content_folder.path_join("Game/Stages")))
+	number_id = 0
+	for pck in pcks:
+		if ProjectSettings.load_resource_pack(pck):
+			number_id += 1
+
 	return ReturnState.SUCCESS
 
 func prepare_menu() -> ReturnState:
