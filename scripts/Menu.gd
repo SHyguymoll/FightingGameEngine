@@ -3,8 +3,6 @@ extends Node
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
-var dir_io: DirAccess
-var file_io: FileAccess
 var menuLogo
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
@@ -40,20 +38,20 @@ func _ready():
 func prepare_game() -> ReturnState:
 	# Loads all characters and stages into character roster
 	# via resource pack loading and ResourceLoader
-	dir_io = DirAccess.open(Content.content_folder)
-	if not dir_io.dir_exists(Content.content_folder):
-		dir_io.make_dir(Content.content_folder)
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game"))
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/HUD"))
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Menu"))
-	if not dir_io.dir_exists(Content.content_folder.path_join("Characters")):
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
-	if not dir_io.dir_exists(Content.content_folder.path_join("Game")):
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game"))
-	if not dir_io.dir_exists(Content.content_folder.path_join("Game/Stages")):
-		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
+	var content_io = DirAccess.open(Content.content_folder)
+	if not content_io.dir_exists(Content.content_folder):
+		content_io.make_dir(Content.content_folder)
+		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game/HUD"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Menu"))
+	if not content_io.dir_exists(Content.content_folder.path_join("Characters")):
+		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
+	if not content_io.dir_exists(Content.content_folder.path_join("Game")):
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game"))
+	if not content_io.dir_exists(Content.content_folder.path_join("Game/Stages")):
+		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
 
 	# Characters
 	var character_files = search_for_pcks(
@@ -174,12 +172,12 @@ func _process(_delta):
 
 #Recursive depth-first search
 func search_folder_recurs(start_dir: String) -> Array:
-	var folders = [start_dir]
-	dir_io = DirAccess.open(start_dir)
+	var search_folders = DirAccess.open(start_dir)
 	if DirAccess.get_open_error():
 		push_error(start_dir + " failed to open, aborting search.")
 		return []
-	var directories = dir_io.get_directories()
+	var folders = [start_dir]
+	var directories = search_folders.get_directories()
 	for directory in directories:
 		folders.append_array(search_folder_recurs(start_dir + "/" + directory))
 	return folders
@@ -187,14 +185,14 @@ func search_folder_recurs(start_dir: String) -> Array:
 func search_for_pcks(dirs: Array) -> Array:
 	var pck_names = []
 	for dir in dirs:
-		dir_io = DirAccess.open(dir)
+		var search_packs = DirAccess.open(dir)
 		if DirAccess.get_open_error():
 			push_error(dir + " failed to open, aborting search.")
 			continue
-		var files = dir_io.get_files()
+		var files = search_packs.get_files()
 		for file in files:
 			if file.get_extension() == "pck" or file.get_extension() == "zip":
-				pck_names.append(dir_io.get_current_dir().path_join(file))
+				pck_names.append(search_packs.get_current_dir().path_join(file))
 	return pck_names
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
@@ -226,7 +224,7 @@ func load_character_select():
 			build_texture(character_select.path_join("CharacterSelectBackground.png")))
 	Content.char_map = []
 	if FileAccess.file_exists(character_select.path_join("Custom.txt")): #custom shape
-		file_io = FileAccess.open(character_select.path_join("Custom.txt"), FileAccess.READ)
+		var file_io = FileAccess.open(character_select.path_join("Custom.txt"), FileAccess.READ)
 		var currentLine = file_io.get_csv_line()
 		char_top_left = Vector3(float(currentLine[0]), float(currentLine[1]), float(currentLine[2]))
 		currentLine = file_io.get_csv_line()
