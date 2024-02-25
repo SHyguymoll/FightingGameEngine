@@ -1,5 +1,9 @@
 extends Node3D
 
+var p1: Fighter
+var p2: Fighter
+var stage : Stage
+
 @export var camera_mode = 0
 const CAMERA_MAX = Vector2(6, 10)
 const MOVEMENT_BOUNDS_X = 8
@@ -34,48 +38,49 @@ func make_hud():
 			Content.content_folder.path_join("/Game/HUD/Player1Background.png"))
 	$HUD/P1Health.texture_progress = build_texture(
 			Content.content_folder.path_join("/Game/HUD/Player1Bar.png"))
-	$HUD/P1Health.max_value = Content.p1.health
-	$HUD/P1Health.value = Content.p1.health
+	$HUD/P1Health.max_value = p1.health
+	$HUD/P1Health.value = p1.health
 	$HUD/P1Char.set(
 			"theme_override_fonts/font",
 			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 64))
 	$HUD/P1Inputs.set(
 			"theme_override_fonts/font",
 			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 48))
-	$HUD/P1Char.text = Content.p1.char_name
+	$HUD/P1Char.text = p1.char_name
 	$HUD/P2Health.texture_under = build_texture(
 			Content.content_folder.path_join("/Game/HUD/Player2Background.png"))
 	$HUD/P2Health.texture_progress = build_texture(
 			Content.content_folder.path_join("/Game/HUD/Player2Bar.png"))
-	$HUD/P2Health.max_value = Content.p2.health
-	$HUD/P2Health.value = Content.p2.health
+	$HUD/P2Health.max_value = p2.health
+	$HUD/P2Health.value = p2.health
 	$HUD/P2Char.set(
 			"theme_override_fonts/font",
 			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 64))
 	$HUD/P2Inputs.set(
 			"theme_override_fonts/font",
 			load_font(Content.content_folder.path_join("/Game/HUD/PlayerFont.ttf"), 48))
-	$HUD/P2Char.text = Content.p2.char_name
+	$HUD/P2Char.text = p2.char_name
 
 func init_fighters():
-	Content.p1.position = Vector3(Content.p1.start_x_offset * -1,0,0)
-	Content.p1.right_facing = true
-	Content.p1.update_state(Content.p1.state_start, 0)
-	Content.p1.initialize_boxes(true)
+	p1.position = Vector3(abs(p1.start_x_offset) * -1,0,0)
+	p1.right_facing = true
+	p1.update_state(p1.state_start, 0)
+	p1.initialize_boxes(true)
 
-	Content.p2.position = Vector3(Content.p2.start_x_offset,0,0)
-	Content.p2.right_facing = false
-	Content.p2.update_state(Content.p2.state_start, 0)
-	Content.p2.initialize_boxes(false)
+	p2.position = Vector3(abs(p2.start_x_offset),0,0)
+	p2.right_facing = false
+	p2.update_state(p2.state_start, 0)
+	p2.initialize_boxes(false)
 
 func _ready():
 	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
-	Content.p1 = Content.p1_resource.instantiate()
-	Content.p2 = Content.p2_resource.instantiate()
+	stage = Content.stage_resource.instantiate()
+	p1 = Content.p1_resource.instantiate()
+	p2 = Content.p2_resource.instantiate()
 	make_hud()
 	init_fighters()
-	add_child(Content.p1)
-	add_child(Content.p2)
+	add_child(p1)
+	add_child(p2)
 
 const ORTH_DIST = 1.328125
 
@@ -84,31 +89,31 @@ func camera_control(mode: int):
 	match mode:
 		#2d modes
 		0: #default
-			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
-			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
+			$Camera3D.position.x = (p1.position.x + p2.position.x)/2
+			$Camera3D.position.y = max(p1.position.y + 1, p2.position.y + 1)
 			$Camera3D.position.z = ORTH_DIST
-			$Camera3D.size = clampf(abs(Content.p1.position.x - Content.p2.position.x)/2, 3.5, 6)
+			$Camera3D.size = clampf(abs(p1.position.x - p2.position.x)/2, 3.5, 6)
 		1: #focus player1
-			$Camera3D.position.x = Content.p1.position.x
-			$Camera3D.position.y = Content.p1.position.y + 1
+			$Camera3D.position.x = p1.position.x
+			$Camera3D.position.y = p1.position.y + 1
 			$Camera3D.position.z = ORTH_DIST
 		2: #focus player2
-			$Camera3D.position.x = Content.p2.position.x
-			$Camera3D.position.y = Content.p2.position.y + 1
+			$Camera3D.position.x = p2.position.x
+			$Camera3D.position.y = p2.position.y + 1
 			$Camera3D.position.z = ORTH_DIST
 		#3d modes
 		3: #default
-			$Camera3D.position.x = (Content.p1.position.x + Content.p2.position.x)/2
-			$Camera3D.position.y = max(Content.p1.position.y + 1, Content.p2.position.y + 1)
+			$Camera3D.position.x = (p1.position.x + p2.position.x)/2
+			$Camera3D.position.y = max(p1.position.y + 1, p2.position.y + 1)
 			$Camera3D.position.z = clampf(
-					abs(Content.p1.position.x - Content.p2.position.x)/2, 1.5, 1.825) + 0.5
+					abs(p1.position.x - p2.position.x)/2, 1.5, 1.825) + 0.5
 		4: #focus player1
-			$Camera3D.position.x = Content.p1.position.x
-			$Camera3D.position.y = Content.p1.position.y + 1
+			$Camera3D.position.x = p1.position.x
+			$Camera3D.position.y = p1.position.y + 1
 			$Camera3D.position.z = 1.5
 		5: #focus player2
-			$Camera3D.position.x = Content.p2.position.x
-			$Camera3D.position.y = Content.p2.position.y + 1
+			$Camera3D.position.x = p2.position.x
+			$Camera3D.position.y = p2.position.y + 1
 			$Camera3D.position.z = 1.5
 	$Camera3D.position.clamp(
 		Vector3(-CAMERA_MAX.x, 0, $Camera3D.position.z),
@@ -176,22 +181,22 @@ func get_current_input_hashes() -> Array: return [
 	(int(GameGlobal.p1_buttons[1]) * 2) + \
 	(int(GameGlobal.p1_buttons[2]) * 4) + \
 	(int(GameGlobal.p1_buttons[3]) * 8) + \
-	max(0, ((int(GameGlobal.p1_buttons[4]) - int(Content.p1.BUTTONCOUNT < 1)) * 16)) + \
-	max(0, ((int(GameGlobal.p1_buttons[5]) - int(Content.p1.BUTTONCOUNT < 2)) * 32)) + \
-	max(0, ((int(GameGlobal.p1_buttons[6]) - int(Content.p1.BUTTONCOUNT < 3)) * 64)) + \
-	max(0, ((int(GameGlobal.p1_buttons[7]) - int(Content.p1.BUTTONCOUNT < 4)) * 128)) + \
-	max(0, ((int(GameGlobal.p1_buttons[8]) - int(Content.p1.BUTTONCOUNT < 5)) * 256)) + \
-	max(0, ((int(GameGlobal.p1_buttons[9]) - int(Content.p1.BUTTONCOUNT < 6)) * 512)),
+	max(0, ((int(GameGlobal.p1_buttons[4]) - int(p1.BUTTONCOUNT < 1)) * 16)) + \
+	max(0, ((int(GameGlobal.p1_buttons[5]) - int(p1.BUTTONCOUNT < 2)) * 32)) + \
+	max(0, ((int(GameGlobal.p1_buttons[6]) - int(p1.BUTTONCOUNT < 3)) * 64)) + \
+	max(0, ((int(GameGlobal.p1_buttons[7]) - int(p1.BUTTONCOUNT < 4)) * 128)) + \
+	max(0, ((int(GameGlobal.p1_buttons[8]) - int(p1.BUTTONCOUNT < 5)) * 256)) + \
+	max(0, ((int(GameGlobal.p1_buttons[9]) - int(p1.BUTTONCOUNT < 6)) * 512)),
 	(int(GameGlobal.p2_buttons[0]) * 1) + \
 	(int(GameGlobal.p2_buttons[1]) * 2) + \
 	(int(GameGlobal.p2_buttons[2]) * 4) + \
 	(int(GameGlobal.p2_buttons[3]) * 8) + \
-	max(0, ((int(GameGlobal.p2_buttons[4]) - int(Content.p2.BUTTONCOUNT < 1)) * 16)) + \
-	max(0, ((int(GameGlobal.p2_buttons[5]) - int(Content.p2.BUTTONCOUNT < 2)) * 32)) + \
-	max(0, ((int(GameGlobal.p2_buttons[6]) - int(Content.p2.BUTTONCOUNT < 3)) * 64)) + \
-	max(0, ((int(GameGlobal.p2_buttons[7]) - int(Content.p2.BUTTONCOUNT < 4)) * 128)) + \
-	max(0, ((int(GameGlobal.p2_buttons[8]) - int(Content.p2.BUTTONCOUNT < 5)) * 256)) + \
-	max(0, ((int(GameGlobal.p2_buttons[9]) - int(Content.p2.BUTTONCOUNT < 6)) * 512))
+	max(0, ((int(GameGlobal.p2_buttons[4]) - int(p2.BUTTONCOUNT < 1)) * 16)) + \
+	max(0, ((int(GameGlobal.p2_buttons[5]) - int(p2.BUTTONCOUNT < 2)) * 32)) + \
+	max(0, ((int(GameGlobal.p2_buttons[6]) - int(p2.BUTTONCOUNT < 3)) * 64)) + \
+	max(0, ((int(GameGlobal.p2_buttons[7]) - int(p2.BUTTONCOUNT < 4)) * 128)) + \
+	max(0, ((int(GameGlobal.p2_buttons[8]) - int(p2.BUTTONCOUNT < 5)) * 256)) + \
+	max(0, ((int(GameGlobal.p2_buttons[9]) - int(p2.BUTTONCOUNT < 6)) * 512))
 ]
 
 func generate_prior_input_hash(player_inputs: Dictionary):
@@ -227,7 +232,7 @@ func handle_inputs():
 	if GameGlobal.p1_buttons[2] == GameGlobal.p1_buttons[3]: #ditto
 		GameGlobal.p1_buttons[2] = false
 		GameGlobal.p1_buttons[3] = false
-	for button in range(Content.p1.BUTTONCOUNT):
+	for button in range(p1.BUTTONCOUNT):
 		GameGlobal.p1_buttons[button + 4] = Input.is_action_pressed("first_button" + str(button))
 
 	GameGlobal.p2_buttons[0] = Input.is_action_pressed("second_up")
@@ -240,7 +245,7 @@ func handle_inputs():
 	if GameGlobal.p2_buttons[2] == GameGlobal.p2_buttons[3]: #ditto
 		GameGlobal.p2_buttons[2] = false
 		GameGlobal.p2_buttons[3] = false
-	for button in range(Content.p2.BUTTONCOUNT):
+	for button in range(p2.BUTTONCOUNT):
 		GameGlobal.p2_buttons[button + 4] = Input.is_action_pressed("second_button" + str(button))
 
 	var calcHashes = get_current_input_hashes()
@@ -269,16 +274,16 @@ func handle_inputs():
 		GameGlobal.p2_input_index + 1
 	)
 
-	Content.p1.step(p1_buf, GameGlobal.p1_input_index)
-	Content.p2.step(p2_buf, GameGlobal.p2_input_index)
+	p1.step(p1_buf, GameGlobal.p1_input_index)
+	p2.step(p2_buf, GameGlobal.p2_input_index)
 
 func character_positioning():
-	Content.p1.position.x = clamp(Content.p1.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
-	Content.p2.position.x = clamp(Content.p2.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
-	Content.p1.distance = Content.p1.position.x - Content.p2.position.x
-	Content.p2.distance = Content.p2.position.x - Content.p1.position.x
-	Content.p1.reset_facing()
-	Content.p2.reset_facing()
+	p1.position.x = clamp(p1.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
+	p2.position.x = clamp(p2.position.x, -MOVEMENT_BOUNDS_X, MOVEMENT_BOUNDS_X)
+	p1.distance = p1.position.x - p2.position.x
+	p2.distance = p2.position.x - p1.position.x
+	p1.reset_facing()
+	p2.reset_facing()
 
 func _physics_process(_delta):
 	camera_control(camera_mode)
