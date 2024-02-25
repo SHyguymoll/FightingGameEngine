@@ -46,7 +46,7 @@ func prepare_game() -> ReturnState:
 	if !dir_io.dir_exists(Content.content_folder.path_join("Game")):
 		return ReturnState.GAME_MISSING
 	var pcks = search_for_pcks(
-			search_character_folder(Content.content_folder.path_join("Characters")))
+			search_folder_recurs(Content.content_folder.path_join("Characters")))
 	var number_id = 0
 	for pck in pcks:
 		if ProjectSettings.load_resource_pack(pck):
@@ -147,12 +147,12 @@ func _process(_delta):
 				push_error("game failed to load")
 
 #Recursive depth-first search in /Content/Characters
-func search_character_folder(start_dir: String) -> Array:
+func search_folder_recurs(start_dir: String) -> Array:
 	var folders = [start_dir]
 	dir_io = DirAccess.open(start_dir)
 	var directories = dir_io.get_directories()
 	for directory in directories:
-		folders.append_array(search_character_folder(start_dir + "/" + directory))
+		folders.append_array(search_folder_recurs(start_dir + "/" + directory))
 	return folders
 
 func search_for_pcks(dirs: Array) -> Array:
