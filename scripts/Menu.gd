@@ -42,13 +42,18 @@ func prepare_game() -> ReturnState:
 	# via resource pack loading and ResourceLoader
 	dir_io = DirAccess.open(Content.content_folder)
 	if not dir_io.dir_exists(Content.content_folder):
-		return ReturnState.CONTENT_MISSING
+		dir_io.make_dir(Content.content_folder)
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game"))
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/HUD"))
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Menu"))
 	if not dir_io.dir_exists(Content.content_folder.path_join("Characters")):
-		return ReturnState.CHARACTERS_MISSING
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
 	if not dir_io.dir_exists(Content.content_folder.path_join("Game")):
-		return ReturnState.GAME_MISSING
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game"))
 	if not dir_io.dir_exists(Content.content_folder.path_join("Game/Stages")):
-		return ReturnState.STAGES_MISSING
+		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
 
 	# Characters
 	var pcks = search_for_pcks(
