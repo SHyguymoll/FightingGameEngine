@@ -68,8 +68,10 @@ func prepare_game() -> ReturnState:
 				return ReturnState.INVALID_FIGHTER
 			Content.characters[number_id] = {
 				char_name = fighter_details.fighter_name,
-				tscn_file = fighter_details.tscn_file,
-				char_select_icon = fighter_details.char_select_icon
+				fighter_file = Content.character_folder.path_join(
+						(fighter_details.folder.path_join(fighter_details.fighter_file))),
+				char_select_icon = Content.character_folder.path_join(
+						(fighter_details.folder.path_join(fighter_details.char_select_icon))),
 			}
 			number_id += 1
 	return ReturnState.SUCCESS
@@ -119,10 +121,10 @@ func _process(_delta):
 		if p1_cursor.choice_made and p2_cursor.choice_made:
 			Content.p1_resource = load(Content.characters[
 				Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x]
-			]["tscn_file"])
+			]["fighter_file"])
 			Content.p2_resource = load(Content.characters[
 				Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x]
-			]["tscn_file"])
+			]["fighter_file"])
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
@@ -189,7 +191,7 @@ func loadCharSelect():
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
-			icon.characterData = Content.characters[character].tscn_file
+			icon.characterData = Content.characters[character].fighter_file
 			icon.set_surface_override_material(
 					0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
@@ -248,7 +250,7 @@ func loadCharSelect():
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
 			icon.name = Content.characters[character].char_name
-			icon.characterData = Content.characters[character].tscn_file
+			icon.characterData = Content.characters[character].fighter_file
 			icon.set_surface_override_material(
 					0,build_albedo(Content.characters[character].char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
