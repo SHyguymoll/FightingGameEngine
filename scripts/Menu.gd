@@ -28,11 +28,11 @@ enum ReturnState {
 	INVALID_SHAPE,
 }
 
-func get_content_folder() -> void:
+func get_content_folders() -> void:
 	Content.content_folder = "res://Content" if OS.has_feature("editor") else "user://Content"
 
 func _ready():
-	get_content_folder()
+	get_content_folders()
 	if prepare_game() != ReturnState.SUCCESS or prepare_menu() != ReturnState.SUCCESS:
 		$MenuButtons/Start.hide()
 
