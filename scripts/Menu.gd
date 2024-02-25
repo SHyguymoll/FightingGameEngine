@@ -54,18 +54,34 @@ func prepare_game() -> ReturnState:
 				push_error("FighterDetails.gd missing in pck " + pck)
 				return ReturnState.INVALID_FIGHTER
 			var fighter_details = load("FighterDetails.gd").new()
-			if !("folder" in fighter_details):
+			if not "folder" in fighter_details:
 				push_error("folder variable missing in FighterDetails.gd for pck " + pck)
 				return ReturnState.INVALID_FIGHTER
-			if !("fighter_name" in fighter_details):
+			else:
+				if not fighter_details.folder is String:
+					push_error("folder variable is wrong type, aborting pck" + pck)
+					return ReturnState.INVALID_FIGHTER
+			if not "fighter_name" in fighter_details:
 				push_error("fighter_name variable missing in FighterDetails.gd for pck " + pck)
 				return ReturnState.INVALID_FIGHTER
-			if !("tscn_file" in fighter_details):
-				push_error("tscn_file variable missing in FighterDetails.gd for pck " + pck)
+			else:
+				if not fighter_details.fighter_name is String:
+					push_error("fighter_name variable is wrong type, aborting pck" + pck)
+					return ReturnState.INVALID_FIGHTER
+			if not "fighter_file" in fighter_details:
+				push_error("fighter_file variable missing in FighterDetails.gd for pck " + pck)
 				return ReturnState.INVALID_FIGHTER
-			if !("char_select_icon" in fighter_details):
+			else:
+				if not fighter_details.fighter_file is String:
+					push_error("fighter_file variable is wrong type, aborting pck" + pck)
+					return ReturnState.INVALID_FIGHTER
+			if not "char_select_icon" in fighter_details:
 				push_error("char_select_icon variable missing in FighterDetails.gd for pck " + pck)
 				return ReturnState.INVALID_FIGHTER
+			else:
+				if not fighter_details.char_select_icon is String:
+					push_error("char_select_icon variable is wrong type, aborting pck" + pck)
+					return ReturnState.INVALID_FIGHTER
 			Content.characters[number_id] = {
 				char_name = fighter_details.fighter_name,
 				fighter_file = Content.character_folder.path_join(
