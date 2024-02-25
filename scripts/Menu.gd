@@ -56,42 +56,48 @@ func prepare_game() -> ReturnState:
 		dir_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
 
 	# Characters
-	var pcks = search_for_pcks(
+	var character_files = search_for_pcks(
 			search_folder_recurs(Content.content_folder.path_join("Characters")))
 	var number_id = 0
-	for pck in pcks:
-		if ProjectSettings.load_resource_pack(pck):
+	for c_file in character_files:
+		if ProjectSettings.load_resource_pack(c_file):
 			if !ResourceLoader.exists("FighterDetails.gd"):
-				push_error("FighterDetails.gd missing in pck " + pck)
+				push_error("FighterDetails.gd missing in c_file " + c_file)
 				return ReturnState.INVALID_FIGHTER
 			var fighter_details = load("FighterDetails.gd").new()
 			if not "folder" in fighter_details:
-				push_error("folder variable missing in FighterDetails.gd for pck " + pck)
+				push_error("folder variable missing in FighterDetails.gd for c_file " + c_file)
 				return ReturnState.INVALID_FIGHTER
 			else:
 				if not fighter_details.folder is String:
-					push_error("folder variable is wrong type, aborting pck" + pck)
+					push_error("folder variable is wrong type, aborting c_file" + c_file)
 					return ReturnState.INVALID_FIGHTER
 			if not "fighter_name" in fighter_details:
-				push_error("fighter_name variable missing in FighterDetails.gd for pck " + pck)
+				push_error(
+						"fighter_name variable missing in FighterDetails.gd for c_file " + c_file)
 				return ReturnState.INVALID_FIGHTER
 			else:
 				if not fighter_details.fighter_name is String:
-					push_error("fighter_name variable is wrong type, aborting pck" + pck)
+					push_error(
+							"fighter_name variable is wrong type, aborting c_file" + c_file)
 					return ReturnState.INVALID_FIGHTER
 			if not "fighter_file" in fighter_details:
-				push_error("fighter_file variable missing in FighterDetails.gd for pck " + pck)
+				push_error(
+						"fighter_file variable missing in FighterDetails.gd for c_file " + c_file)
 				return ReturnState.INVALID_FIGHTER
 			else:
 				if not fighter_details.fighter_file is String:
-					push_error("fighter_file variable is wrong type, aborting pck" + pck)
+					push_error(
+							"fighter_file variable is wrong type, aborting c_file" + c_file)
 					return ReturnState.INVALID_FIGHTER
 			if not "char_select_icon" in fighter_details:
-				push_error("char_select_icon variable missing in FighterDetails.gd for pck " + pck)
+				push_error(
+						"char_select_icon variable missing in FighterDetails.gd for c_file " + c_file)
 				return ReturnState.INVALID_FIGHTER
 			else:
 				if not fighter_details.char_select_icon is String:
-					push_error("char_select_icon variable is wrong type, aborting pck" + pck)
+					push_error(
+							"char_select_icon variable is wrong type, aborting c_file" + c_file)
 					return ReturnState.INVALID_FIGHTER
 			Content.characters[number_id] = {
 				char_name = fighter_details.fighter_name,
@@ -103,11 +109,11 @@ func prepare_game() -> ReturnState:
 			number_id += 1
 
 	# Stages
-	pcks = search_for_pcks(
+	var stage_files = search_for_pcks(
 			search_folder_recurs(Content.content_folder.path_join("Game/Stages")))
 	number_id = 0
-	for pck in pcks:
-		if ProjectSettings.load_resource_pack(pck):
+	for s_file in stage_files:
+		if ProjectSettings.load_resource_pack(s_file):
 			number_id += 1
 
 	return ReturnState.SUCCESS
