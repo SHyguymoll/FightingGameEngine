@@ -48,7 +48,6 @@ func prepare_game() -> ReturnState:
 	var pcks = search_for_pcks(
 			search_character_folder(Content.content_folder.path_join("Characters")))
 	var number_id = 0
-	var root_folder = Content.content_folder.get_base_dir()
 	for pck in pcks:
 		if ProjectSettings.load_resource_pack(pck):
 			if !ResourceLoader.exists("FighterDetails.gd"):
