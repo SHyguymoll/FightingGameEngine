@@ -165,6 +165,9 @@ func _process(_delta):
 func search_folder_recurs(start_dir: String) -> Array:
 	var folders = [start_dir]
 	dir_io = DirAccess.open(start_dir)
+	if DirAccess.get_open_error():
+		push_error(start_dir + " failed to open, aborting search.")
+		return []
 	var directories = dir_io.get_directories()
 	for directory in directories:
 		folders.append_array(search_folder_recurs(start_dir + "/" + directory))
@@ -174,6 +177,9 @@ func search_for_pcks(dirs: Array) -> Array:
 	var pck_names = []
 	for dir in dirs:
 		dir_io = DirAccess.open(dir)
+		if DirAccess.get_open_error():
+			push_error(dir + " failed to open, aborting search.")
+			continue
 		var files = dir_io.get_files()
 		for file in files:
 			if file.get_extension() == "pck" or file.get_extension() == "zip":
