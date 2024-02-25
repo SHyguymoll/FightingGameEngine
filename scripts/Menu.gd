@@ -35,27 +35,31 @@ func _ready():
 	if prepare_game() != ReturnState.SUCCESS or prepare_menu() != ReturnState.SUCCESS:
 		$MenuButtons/Start.hide()
 
+func check_folders():
+	if not DirAccess.dir_exists_absolute(Content.content_folder):
+		DirAccess.make_dir_recursive_absolute(Content.content_folder)
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Characters"))
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Game"))
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Stages"))
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Art/HUD"))
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Art/Menu"))
+	if not DirAccess.dir_exists_absolute(Content.content_folder.path_join("Characters")):
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Characters"))
+	if not DirAccess.dir_exists_absolute(Content.content_folder.path_join("Art")):
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Art"))
+	if not DirAccess.dir_exists_absolute(Content.content_folder.path_join("Stages")):
+		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Stages"))
+
 func prepare_game() -> ReturnState:
-	# Loads all characters and stages into character roster
-	# via resource pack loading and ResourceLoader
-	var content_io = DirAccess.open(Content.content_folder)
-	if not content_io.dir_exists(Content.content_folder):
-		content_io.make_dir(Content.content_folder)
-		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Stages"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Art/HUD"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Art/Menu"))
-	if not content_io.dir_exists(Content.content_folder.path_join("Characters")):
-		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
-	if not content_io.dir_exists(Content.content_folder.path_join("Art")):
-		content_io.make_dir_recursive(Content.content_folder.path_join("Art"))
-	if not content_io.dir_exists(Content.content_folder.path_join("Stages")):
-		content_io.make_dir_recursive(Content.content_folder.path_join("Stages"))
+	# Loads all user content into character roster via ResourceLoader
+	#I/O Stuff
+	check_folders()
+	var character_file_folders = search_folder_recurs(Content.content_folder.path_join("Characters"))
+	var stage_file_folders = search_folder_recurs(Content.content_folder.path_join("Stages"))
+	var character_files = search_for_pcks(character_file_folders)
+	var stage_files = search_for_pcks(stage_file_folders)
 
 	# Characters
-	var character_files = search_for_pcks(
-			search_folder_recurs(Content.content_folder.path_join("Characters")))
 	var number_id = 0
 	for c_file in character_files:
 		if ProjectSettings.load_resource_pack(c_file):
@@ -107,12 +111,9 @@ func prepare_game() -> ReturnState:
 			number_id += 1
 
 	# Stages
-	var stage_files = search_for_pcks(
-			search_folder_recurs(Content.content_folder.path_join("Stages")))
-	number_id = 0
 	for s_file in stage_files:
 		if ProjectSettings.load_resource_pack(s_file):
-			number_id += 1
+			pass
 
 	return ReturnState.SUCCESS
 
@@ -171,28 +172,26 @@ func _process(_delta):
 				push_error("game failed to load")
 
 #Recursive depth-first search
-func search_folder_recurs(start_dir: String) -> Array:
-	var search_folders = DirAccess.open(start_dir)
-	if DirAccess.get_open_error():
-		push_error(start_dir + " failed to open, aborting search.")
+func search_folder_recurs(current_directory: String) -> Array:
+	if not DirAccess.dir_exists_absolute(current_directory):
+		push_error(current_directory + " failed to open, aborting search.")
 		return []
-	var folders = [start_dir]
-	var directories = search_folders.get_directories()
+	var folders = [current_directory]
+	var directories = DirAccess.get_directories_at(current_directory)
 	for directory in directories:
-		folders.append_array(search_folder_recurs(start_dir + "/" + directory))
+		folders.append_array(search_folder_recurs(current_directory + "/" + directory))
 	return folders
 
 func search_for_pcks(dirs: Array) -> Array:
 	var pck_names = []
 	for dir in dirs:
-		var search_packs = DirAccess.open(dir)
-		if DirAccess.get_open_error():
-			push_error(dir + " failed to open, aborting search.")
+		if not DirAccess.dir_exists_absolute(dir):
+			push_error(dir + " failed to open, aborting this search.")
 			continue
-		var files = search_packs.get_files()
+		var files = DirAccess.get_files_at(dir)
 		for file in files:
 			if file.get_extension() == "pck" or file.get_extension() == "zip":
-				pck_names.append(search_packs.get_current_dir().path_join(file))
+				pck_names.append(dir.path_join(file))
 	return pck_names
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
