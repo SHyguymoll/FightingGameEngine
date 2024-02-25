@@ -43,15 +43,15 @@ func prepare_game() -> ReturnState:
 		content_io.make_dir(Content.content_folder)
 		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
 		content_io.make_dir_recursive(Content.content_folder.path_join("Game"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game/HUD"))
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Menu"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Stages"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Art/HUD"))
+		content_io.make_dir_recursive(Content.content_folder.path_join("Art/Menu"))
 	if not content_io.dir_exists(Content.content_folder.path_join("Characters")):
 		content_io.make_dir_recursive(Content.content_folder.path_join("Characters"))
-	if not content_io.dir_exists(Content.content_folder.path_join("Game")):
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game"))
-	if not content_io.dir_exists(Content.content_folder.path_join("Game/Stages")):
-		content_io.make_dir_recursive(Content.content_folder.path_join("Game/Stages"))
+	if not content_io.dir_exists(Content.content_folder.path_join("Art")):
+		content_io.make_dir_recursive(Content.content_folder.path_join("Art"))
+	if not content_io.dir_exists(Content.content_folder.path_join("Stages")):
+		content_io.make_dir_recursive(Content.content_folder.path_join("Stages"))
 
 	# Characters
 	var character_files = search_for_pcks(
@@ -108,7 +108,7 @@ func prepare_game() -> ReturnState:
 
 	# Stages
 	var stage_files = search_for_pcks(
-			search_folder_recurs(Content.content_folder.path_join("Game/Stages")))
+			search_folder_recurs(Content.content_folder.path_join("Stages")))
 	number_id = 0
 	for s_file in stage_files:
 		if ProjectSettings.load_resource_pack(s_file):
@@ -118,32 +118,32 @@ func prepare_game() -> ReturnState:
 
 func prepare_menu() -> ReturnState:
 	#Loads all menu elements
-	var menu_folder = Content.content_folder + "/Game/Menu"
-	if !FileAccess.file_exists(menu_folder + "/MenuBackground.png"):
+	var menu_folder = Content.content_folder.path_join("Art/Menu")
+	if !FileAccess.file_exists(menu_folder.path_join("MenuBackground.png")):
 		push_error("Menu Background missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
-	if !FileAccess.file_exists(menu_folder + "/Font.ttf"):
+	if !FileAccess.file_exists(menu_folder.path_join("Font.ttf")):
 		push_error("Menu Font missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
-	if !FileAccess.file_exists(menu_folder + "/Logo/Logo.tscn"):
+	if !FileAccess.file_exists(menu_folder.path_join("Logo/Logo.tscn")):
 		push_error("Logo missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
-	var char_folder = menu_folder + "/CharacterSelect"
-	if !FileAccess.file_exists(char_folder + "/Player1Select.png"):
+	var char_folder = menu_folder.path_join("CharacterSelect")
+	if !FileAccess.file_exists(char_folder.path_join("Player1Select.png")):
 		push_error("Player1Select icon missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
-	if !FileAccess.file_exists(char_folder + "/Player2Select.png"):
+	if !FileAccess.file_exists(char_folder.path_join("Player2Select.png")):
 		push_error("Player2Select icon missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
-	if !FileAccess.file_exists(char_folder + "/CharacterSelectBackground.png"):
+	if !FileAccess.file_exists(char_folder.path_join("CharacterSelectBackground.png")):
 		push_error("Character Select Background missing.")
 		return ReturnState.MENU_ELEMENT_MISSING
 
-	$Background/Background.set_texture(build_texture(menu_folder + "/MenuBackground.png", true))
-	menuLogo = load(Content.content_folder + "/Game/Menu/Logo/Logo.tscn")
+	$Background/Background.set_texture(build_texture(menu_folder.path_join("MenuBackground.png"), true))
+	menuLogo = load(Content.content_folder.path_join("Game/Menu/Logo/Logo.tscn"))
 	$LogoLayer/Logo.add_child(menuLogo.instantiate())
-	$MenuButtons/Start.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf"))
-	$MenuButtons/Credits.set("theme_override_fonts/font", load_font(menu_folder + "/Font.ttf", 32))
+	$MenuButtons/Start.set("theme_override_fonts/font", load_font(menu_folder.path_join("Font.ttf")))
+	$MenuButtons/Credits.set("theme_override_fonts/font", load_font(menu_folder.path_join("Font.ttf"), 32))
 	return ReturnState.SUCCESS
 
 func _process(_delta):
@@ -219,7 +219,7 @@ func load_font(font: String, size = 50):
 	return new_font
 
 func load_character_select():
-	var character_select = Content.content_folder.path_join("/Game/Menu/CharacterSelect")
+	var character_select = Content.content_folder.path_join("Game/Menu/CharacterSelect")
 	$Background/Background.set_texture(
 			build_texture(character_select.path_join("CharacterSelectBackground.png")))
 	Content.char_map = []

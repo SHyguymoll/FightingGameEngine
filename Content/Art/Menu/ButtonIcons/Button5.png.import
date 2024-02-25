@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byjay84lsnxmn"
-path="res://.godot/imported/Player2Background.png-8929dd695b5b132ea05ff30407cc2ee3.ctex"
+uid="uid://bil4tw3wmxmly"
+path="res://.godot/imported/Button5.png-725a8739b5c3592edc1f68ce3471c2f3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Content/Game/HUD/Player2Background.png"
-dest_files=["res://.godot/imported/Player2Background.png-8929dd695b5b132ea05ff30407cc2ee3.ctex"]
+source_file="res://Content/Art/Menu/ButtonIcons/Button5.png"
+dest_files=["res://.godot/imported/Button5.png-725a8739b5c3592edc1f68ce3471c2f3.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dn7ttv07qkaml"
-path="res://.godot/imported/ArrowR.png-7e15dc098293a19cf4aaad6f6eb6a10c.ctex"
+uid="uid://rn80docoblmo"
+path="res://.godot/imported/Player1Bar.png-ac90901d8b16239ac5b500bb08178ad9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Content/Game/Menu/ButtonIcons/ArrowR.png"
-dest_files=["res://.godot/imported/ArrowR.png-7e15dc098293a19cf4aaad6f6eb6a10c.ctex"]
+source_file="res://Content/Art/HUD/Player1Bar.png"
+dest_files=["res://.godot/imported/Player1Bar.png-ac90901d8b16239ac5b500bb08178ad9.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcw0jd2sssv4q"
-path="res://.godot/imported/CharacterSelectBackground.png-e5c402c0827c9f074f2d0dc7075f796f.ctex"
+uid="uid://dn7ttv07qkaml"
+path="res://.godot/imported/ArrowR.png-ff0417ebda6da1a8655d2dee7bd025a7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Content/Game/Menu/CharacterSelect/CharacterSelectBackground.png"
-dest_files=["res://.godot/imported/CharacterSelectBackground.png-e5c402c0827c9f074f2d0dc7075f796f.ctex"]
+source_file="res://Content/Art/Menu/ButtonIcons/ArrowR.png"
+dest_files=["res://.godot/imported/ArrowR.png-ff0417ebda6da1a8655d2dee7bd025a7.ctex"]
 
 [params]
 

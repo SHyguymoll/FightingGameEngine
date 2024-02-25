@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bil4tw3wmxmly"
-path="res://.godot/imported/Button5.png-728ab8cfff52aaa23cc6c87b95f1fa00.ctex"
+uid="uid://b87mqmfxihpyt"
+path="res://.godot/imported/ArrowL.png-e1b4c41779aa1d2b3af7a0c958731238.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Content/Game/Menu/ButtonIcons/Button5.png"
-dest_files=["res://.godot/imported/Button5.png-728ab8cfff52aaa23cc6c87b95f1fa00.ctex"]
+source_file="res://Content/Art/Menu/ButtonIcons/ArrowL.png"
+dest_files=["res://.godot/imported/ArrowL.png-e1b4c41779aa1d2b3af7a0c958731238.ctex"]
 
 [params]
 

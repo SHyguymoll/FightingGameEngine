@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rn80docoblmo"
-path="res://.godot/imported/Player1Bar.png-9759a8e4cebc759848bb31285d67f9e5.ctex"
+uid="uid://cfv2oj5ulwqx8"
+path="res://.godot/imported/Player2Select.png-7e11778d601f95231d765f2666ba2d90.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Content/Game/HUD/Player1Bar.png"
-dest_files=["res://.godot/imported/Player1Bar.png-9759a8e4cebc759848bb31285d67f9e5.ctex"]
+source_file="res://Content/Art/Menu/CharacterSelect/Player2Select.png"
+dest_files=["res://.godot/imported/Player2Select.png-7e11778d601f95231d765f2666ba2d90.ctex"]
 
 [params]
 
