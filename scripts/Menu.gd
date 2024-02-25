@@ -188,13 +188,13 @@ func load_font(font: String, size = 50):
 	new_font.fixed_size = size
 	return new_font
 
-func loadCharSelect():
-	var character_folder = Content.content_folder.path_join("/Game/Menu/CharacterSelect")
+func load_character_select():
+	var character_select = Content.content_folder.path_join("/Game/Menu/CharacterSelect")
 	$Background/Background.set_texture(
-			build_texture(character_folder.path_join("CharacterSelectBackground.png")))
+			build_texture(character_select.path_join("CharacterSelectBackground.png")))
 	Content.char_map = []
-	if FileAccess.file_exists(character_folder.path_join("Custom.txt")): #custom shape
-		file_io = FileAccess.open(character_folder.path_join("Custom.txt"), FileAccess.READ)
+	if FileAccess.file_exists(character_select.path_join("Custom.txt")): #custom shape
+		file_io = FileAccess.open(character_select.path_join("Custom.txt"), FileAccess.READ)
 		var currentLine = file_io.get_csv_line()
 		char_top_left = Vector3(float(currentLine[0]), float(currentLine[1]), float(currentLine[2]))
 		currentLine = file_io.get_csv_line()
@@ -297,7 +297,7 @@ func loadCharSelect():
 			p1_cursor.selected.x = 0
 			p1_cursor.selected.y += 1
 	p1_cursor.set_surface_override_material(
-			0,build_albedo(character_folder.path_join("Player1Select.png"), true, true))
+			0,build_albedo(character_select.path_join("Player1Select.png"), true, true))
 	$CharSelectHolder.add_child(p1_cursor)
 	p2_cursor = select.instantiate()
 	p2_cursor.name = "PlayerTwo"
@@ -313,7 +313,7 @@ func loadCharSelect():
 			p2_cursor.selected.x = p2_cursor.max_x
 			p2_cursor.selected.y -= 1
 	p2_cursor.set_surface_override_material(
-			0,build_albedo(character_folder.path_join("Player2Select.png"), true, true))
+			0,build_albedo(character_select.path_join("Player2Select.png"), true, true))
 	$CharSelectHolder.add_child(p2_cursor)
 	screen = "CharSelect"
 	return ReturnState.SUCCESS
@@ -321,4 +321,4 @@ func loadCharSelect():
 func _on_Start_pressed():
 	$MenuButtons.hide()
 	$LogoLayer/Logo.get_children()[0].queue_free() #this is safe I promise
-	loadCharSelect()
+	load_character_select()
