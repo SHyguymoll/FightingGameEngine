@@ -17,11 +17,10 @@ const Y_JUMP = 1
 
 enum ReturnState {
 	SUCCESS,
-	CONTENT_MISSING,
-	CHARACTERS_MISSING,
-	STAGES_MISSING,
-	GAME_MISSING,
+	NO_CHARACTERS,
+	NO_STAGES,
 	INVALID_FIGHTER,
+	INVALID_STAGE,
 	MENU_ELEMENT_MISSING,
 	GAME_ELEMENT_MISSING,
 	INVALID_SHAPE,
@@ -51,7 +50,6 @@ func check_folders():
 		DirAccess.make_dir_recursive_absolute(Content.content_folder.path_join("Stages"))
 
 func prepare_game() -> ReturnState:
-	# Loads all user content into character roster via ResourceLoader
 	#I/O Stuff
 	check_folders()
 	var character_file_folders = search_folder_recurs(Content.content_folder.path_join("Characters"))
@@ -101,19 +99,62 @@ func prepare_game() -> ReturnState:
 					push_error(
 							"char_select_icon variable is wrong type, aborting c_file" + c_file)
 					return ReturnState.INVALID_FIGHTER
-			Content.characters[number_id] = {
+			Content.characters.append({
 				char_name = fighter_details.fighter_name,
 				fighter_file = Content.character_folder.path_join(
 						(fighter_details.folder.path_join(fighter_details.fighter_file))),
 				char_select_icon = Content.character_folder.path_join(
 						(fighter_details.folder.path_join(fighter_details.char_select_icon))),
-			}
+			})
 			number_id += 1
 
 	# Stages
 	for s_file in stage_files:
 		if ProjectSettings.load_resource_pack(s_file):
-			pass
+			if !ResourceLoader.exists("StageDetails.gd"):
+				push_error("StageDetails.gd missing in s_file " + s_file)
+				return ReturnState.INVALID_STAGE
+			var stage_details = load("StageDetails.gd").new()
+			if not "folder" in stage_details:
+				push_error("folder variable missing in StageDetails.gd for s_file " + s_file)
+				return ReturnState.INVALID_STAGE
+			else:
+				if not stage_details.folder is String:
+					push_error("folder variable is wrong type, aborting s_file" + s_file)
+					return ReturnState.INVALID_STAGE
+			if not "stage_name" in stage_details:
+				push_error(
+						"stage_name variable missing in StageDetails.gd for s_file " + s_file)
+				return ReturnState.INVALID_STAGE
+			else:
+				if not stage_details.stage_name is String:
+					push_error(
+							"stage_name variable is wrong type, aborting s_file" + s_file)
+					return ReturnState.INVALID_STAGE
+			if not "stage_file" in stage_details:
+				push_error(
+						"stage_file variable missing in StageDetails.gd for s_file " + s_file)
+				return ReturnState.INVALID_STAGE
+			else:
+				if not stage_details.stage_file is String:
+					push_error(
+							"stage_file variable is wrong type, aborting s_file" + s_file)
+					return ReturnState.INVALID_STAGE
+			if not "compatible_with_3d" in stage_details:
+				push_error(
+						"compatible_with_3d variable missing in StageDetails.gd for s_file " + s_file)
+				return ReturnState.INVALID_STAGE
+			else:
+				if not stage_details.compatible_with_3d is bool:
+					push_error(
+							"compatible_with_3d variable is wrong type, aborting s_file" + s_file)
+					return ReturnState.INVALID_STAGE
+			Content.stages.append({
+				stage_name = stage_details.stage_name,
+				stage_file = Content.stage_folder.path_join(
+						stage_details.folder.path_join(stage_details.stage_file)),
+				compatible_with_3d = stage_details.compatible_with_3d
+			})
 
 	return ReturnState.SUCCESS
 
