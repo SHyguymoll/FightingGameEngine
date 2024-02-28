@@ -58,7 +58,6 @@ func prepare_game() -> ReturnState:
 	var stage_files = search_for_pcks(stage_file_folders)
 
 	# Characters
-	var number_id = 0
 	for c_file in character_files:
 		if ProjectSettings.load_resource_pack(c_file):
 			if !ResourceLoader.exists("FighterDetails.gd"):
@@ -106,7 +105,6 @@ func prepare_game() -> ReturnState:
 				char_select_icon = Content.character_folder.path_join(
 						(fighter_details.folder.path_join(fighter_details.char_select_icon))),
 			})
-			number_id += 1
 
 	# Stages
 	for s_file in stage_files:
@@ -182,7 +180,7 @@ func prepare_menu() -> ReturnState:
 		return ReturnState.MENU_ELEMENT_MISSING
 
 	$Background/Background.set_texture(build_texture(menu_folder.path_join("MenuBackground.png"), true))
-	menuLogo = load(Content.content_folder.path_join("Game/Menu/Logo/Logo.tscn"))
+	menuLogo = load(Content.content_folder.path_join("Art/Menu/Logo/Logo.tscn"))
 	$LogoLayer/Logo.add_child(menuLogo.instantiate())
 	$MenuButtons/Start.set("theme_override_fonts/font", load_font(menu_folder.path_join("Font.ttf")))
 	$MenuButtons/Credits.set("theme_override_fonts/font", load_font(menu_folder.path_join("Font.ttf"), 32))
@@ -201,12 +199,10 @@ func _process(_delta):
 			char_top_left.z
 		)
 		if p1_cursor.choice_made and p2_cursor.choice_made:
-			Content.p1_resource = load(Content.characters[
-				Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x]
-			]["fighter_file"])
-			Content.p2_resource = load(Content.characters[
-				Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x]
-			]["fighter_file"])
+			Content.p1_resource = load(
+					Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x].fighter_file)
+			Content.p2_resource = load(
+					Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x].fighter_file)
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
@@ -259,7 +255,7 @@ func load_font(font: String, size = 50):
 	return new_font
 
 func load_character_select():
-	var character_select = Content.content_folder.path_join("Game/Menu/CharacterSelect")
+	var character_select = Content.content_folder.path_join("Art/Menu/CharacterSelect")
 	$Background/Background.set_texture(
 			build_texture(character_select.path_join("CharacterSelectBackground.png")))
 	Content.char_map = []
@@ -276,10 +272,10 @@ func load_character_select():
 		var yIndex = 0
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = Content.characters[character].char_name
-			icon.characterData = Content.characters[character].fighter_file
+			icon.name = character.char_name
+			icon.characterData = character.fighter_file
 			icon.set_surface_override_material(
-					0,build_albedo(Content.characters[character].char_select_icon, false))
+					0,build_albedo(character.char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			while cur_slice[cur_index] == "0":
 				slice_built.append(null)
@@ -335,10 +331,10 @@ func load_character_select():
 		var cur_slice = []
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = Content.characters[character].char_name
-			icon.characterData = Content.characters[character].fighter_file
+			icon.name = character.char_name
+			icon.characterData = character.fighter_file
 			icon.set_surface_override_material(
-					0,build_albedo(Content.characters[character].char_select_icon, false))
+					0,build_albedo(character.char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
 			icon.position = char_top_left
 			char_top_left.x += X_JUMP
