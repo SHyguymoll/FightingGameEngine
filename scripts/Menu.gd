@@ -290,7 +290,7 @@ func load_character_select():
 				Content.char_map.append(cur_slice)
 				cur_slice = []
 		if cur_slice != []:
-			while len(cur_slice) != len(Content.char_map[0]):
+			while len(cur_slice) < WIDTH:
 				cur_slice.append(null)
 			Content.char_map.append(cur_slice)
 			cur_slice = []
