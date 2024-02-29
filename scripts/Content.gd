@@ -1,7 +1,7 @@
 extends Node
 
-const character_folder = "res://Characters"
-const stage_folder = "res://Stages"
+const character_folder = "res://Content/Characters"
+const stage_folder = "res://Content/Stages"
 
 var characters : Array = []
 var stages : Array = []
