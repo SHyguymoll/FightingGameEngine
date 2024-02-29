@@ -26,8 +26,8 @@ var screen = "Menu"
 var menuLogo
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
-var char_top_left
-var jump_dists
+var char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
+var jump_dists = Vector2(X_JUMP, Y_JUMP)
 
 
 func _ready():
@@ -269,7 +269,6 @@ func load_character_select():
 				cur_index += 1
 			Content.char_map.append(slice_built)
 	else: #fallback shape
-		char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
 		var cur_row_pos = 0
 		var cur_slice = []
 		for character in Content.characters:
