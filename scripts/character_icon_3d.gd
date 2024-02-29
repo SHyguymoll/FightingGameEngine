@@ -1,3 +1,3 @@
 extends MeshInstance3D
 
-var characterData
+var character_data

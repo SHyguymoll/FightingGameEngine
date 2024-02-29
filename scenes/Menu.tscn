@@ -1,6 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://0jmbhr7a3m4k"]
+[gd_scene load_steps=8 format=3 uid="uid://0jmbhr7a3m4k"]
 
 [ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
+[ext_resource type="Texture2D" uid="uid://bcw0jd2sssv4q" path="res://Content/Art/Menu/CharacterSelect/CharacterSelectBackground.png" id="3_qummo"]
+[ext_resource type="PackedScene" uid="uid://dsbw58c55oan3" path="res://Content/Art/Menu/Logo/Logo.tscn" id="3_yapes"]
+[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="4_262sp"]
+[ext_resource type="Script" path="res://Content/Art/Menu/CharacterSelect/custom_layout.gd" id="4_745u2"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3
@@ -8,6 +13,9 @@ background_canvas_max_layer = 1
 
 [node name="Node" type="Node"]
 script = ExtResource("1")
+menu_bckgrd = ExtResource("2_ixfup")
+player_select_bckgrd = ExtResource("3_qummo")
+custom_layout = ExtResource("4_745u2")
 
 [node name="Background" type="ParallaxBackground" parent="."]
 follow_viewport_enabled = true
@@ -15,6 +23,7 @@ follow_viewport_enabled = true
 [node name="Background" type="TextureRect" parent="Background"]
 offset_right = 40.0
 offset_bottom = 40.0
+texture = ExtResource("2_ixfup")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 current = true
@@ -26,6 +35,8 @@ environment = SubResource("2")
 [node name="LogoLayer" type="CanvasLayer" parent="."]
 
 [node name="Logo" type="Node3D" parent="LogoLayer"]
+
+[node name="Icon" parent="LogoLayer/Logo" instance=ExtResource("3_yapes")]
 
 [node name="CharSelectHolder" type="CanvasLayer" parent="."]
 layer = 2
@@ -41,6 +52,8 @@ offset_left = 2.0
 offset_top = -33.776
 offset_right = 356.0
 offset_bottom = 34.224
+theme = ExtResource("4_262sp")
+theme_override_font_sizes/font_size = 48
 text = "Player vs. Player"
 
 [node name="Credits" type="Label" parent="MenuButtons"]
@@ -53,7 +66,9 @@ offset_left = -213.0
 offset_top = -54.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Engine and Art by SHy, 2022
+theme = ExtResource("4_262sp")
+theme_override_font_sizes/font_size = 32
+text = "Engine and Art by SHy, 2022-2024
 Godot logo by Godot Engine"
 
 [connection signal="pressed" from="MenuButtons/Start" to="." method="_on_Start_pressed"]

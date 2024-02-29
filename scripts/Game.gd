@@ -73,10 +73,10 @@ func init_fighters():
 	p2.initialize_boxes(false)
 
 func _ready():
-	add_child(load("res://Content/Game/Stages/BlankStage.tscn").instantiate())
 	stage = Content.stage_resource.instantiate()
 	p1 = Content.p1_resource.instantiate()
 	p2 = Content.p2_resource.instantiate()
+	add_child(stage)
 	make_hud()
 	init_fighters()
 	add_child(p1)
