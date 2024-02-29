@@ -243,8 +243,8 @@ func load_character_select():
 			if cur_slice[cur_index] == 1:
 				slice_built.append(character)
 				icon.position = Vector3(
-					char_top_left.x + cur_index*jump_dists.x,
-					char_top_left.y - y_index*jump_dists.y,
+					char_top_left.x + cur_index * jump_dists.x,
+					char_top_left.y - y_index * jump_dists.y,
 					char_top_left.z
 				)
 				cur_index += 1
@@ -270,7 +270,7 @@ func load_character_select():
 			Content.char_map.append(slice_built)
 	else: #fallback shape
 		char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
-		var currentRowPos = 0
+		var cur_row_pos = 0
 		var cur_slice = []
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
@@ -281,10 +281,10 @@ func load_character_select():
 			$CharSelectHolder.add_child(icon)
 			icon.position = char_top_left
 			char_top_left.x += X_JUMP
-			currentRowPos += 1
+			cur_row_pos += 1
 			cur_slice.append(character)
-			if currentRowPos >= WIDTH:
-				currentRowPos = 0
+			if cur_row_pos == WIDTH:
+				cur_row_pos = 0
 				char_top_left.x = X_LEFT
 				char_top_left.y -= Y_JUMP
 				Content.char_map.append(cur_slice)
@@ -293,7 +293,6 @@ func load_character_select():
 			while len(cur_slice) < WIDTH:
 				cur_slice.append(null)
 			Content.char_map.append(cur_slice)
-			cur_slice = []
 	p1_cursor = select.instantiate()
 	p1_cursor.name = "Player1Cursor"
 	p1_cursor.player = 0
