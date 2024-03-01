@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxcbnaebtmb10"]
+
+[ext_resource type="Script" path="res://scripts/ReferenceScripts/hitbox.gd" id="1_plm3b"]
+[ext_resource type="AudioStream" uid="uid://baqsm31j0hhv8" path="res://Content/Characters/GodotGuy/sounds/atk_heavy.wav" id="2_m3rdc"]
+[ext_resource type="AudioStream" uid="uid://bytcuvmfoag06" path="res://Content/Characters/GodotGuy/sounds/atk_blocked.wav" id="3_hidg4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wvq1o"]
+size = Vector3(4.1853, 4.10962, 1)
+
+[node name="Hitboxes" type="Area3D"]
+collision_layer = 32
+collision_mask = 32
+script = ExtResource("1_plm3b")
+damage_hit = 3.0
+stun_hit = 20
+kback_hit = Vector3(0.4, 10, 0)
+kback_block = Vector3(0.8, 0, 0)
+on_hit_sound = ExtResource("2_m3rdc")
+on_block_sound = ExtResource("3_hidg4")
+lifetime = 2
+hit_type = "launch"
+on_hit = [5.0]
+on_block = [2.0]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_wvq1o")

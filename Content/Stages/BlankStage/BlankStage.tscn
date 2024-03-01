@@ -1,0 +1,74 @@
+[gd_scene load_steps=9 format=3 uid="uid://cx7pdgv0mhddt"]
+
+[ext_resource type="Script" path="res://scripts/ReferenceScripts/stage.gd" id="1_pg408"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ssh77"]
+albedo_color = Color(0.478431, 1, 0.933333, 1)
+
+[sub_resource type="BoxMesh" id="1"]
+material = SubResource("StandardMaterial3D_ssh77")
+size = Vector3(13, 1.335, 1)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qkql2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skvje"]
+albedo_color = Color(1, 0.603922, 1, 1)
+
+[sub_resource type="BoxMesh" id="3"]
+material = SubResource("StandardMaterial3D_skvje")
+size = Vector3(31.818, 11.845, 0.125)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jswp6"]
+plane = Plane(1, 0, 0, 0)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_5xxee"]
+plane = Plane(-1, 0, 0, 0)
+
+[node name="Ground" type="StaticBody3D"]
+collision_mask = 0
+script = ExtResource("1_pg408")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.667, 0)
+mesh = SubResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("WorldBoundaryShape3D_qkql2")
+
+[node name="MeshInstance2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.593981, 0.804479, 0, -0.804479, 0.593981, 0, 1, -4.62878)
+mesh = SubResource("3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.1, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_jswp6")
+
+[node name="StaticBody2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4.1, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody2"]
+shape = SubResource("WorldBoundaryShape3D_5xxee")
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 0.7749, 0.632083, 0, -0.632083, 0.7749, 0, 2.59537, 1.95843)
+light_energy = 2.311
+spot_range = 8.1909
+spot_angle = 47.5453
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 0.7749, 0.632083, 0, -0.632083, 0.7749, -6.02847, 2.59537, 1.95843)
+light_energy = 2.311
+spot_range = 8.1909
+spot_angle = 47.5453
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 0.7749, 0.632083, 0, -0.632083, 0.7749, 6.028, 2.595, 1.958)
+light_energy = 2.311
+spot_range = 8.1909
+spot_angle = 47.5453

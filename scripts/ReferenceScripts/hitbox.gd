@@ -20,6 +20,8 @@ extends Area3D
 @export var on_hit : Array
 @export var on_block : Array
 
+var invalid := false
+
 func _physics_process(_d):
 	if lifetime > 0:
 		lifetime -= 1

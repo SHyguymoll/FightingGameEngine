@@ -23,7 +23,6 @@ enum ReturnState {
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
-var menuLogo
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
 var char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
@@ -271,6 +270,7 @@ func load_character_select():
 	else: #fallback shape
 		var cur_row_pos = 0
 		var cur_slice = []
+		var char_position_working = char_top_left
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
 			icon.name = character.char_name
@@ -278,14 +278,14 @@ func load_character_select():
 			icon.set_surface_override_material(
 					0,build_albedo(character.char_select_icon, false))
 			$CharSelectHolder.add_child(icon)
-			icon.position = char_top_left
-			char_top_left.x += X_JUMP
+			icon.position = char_position_working
+			char_position_working.x += X_JUMP
 			cur_row_pos += 1
 			cur_slice.append(character)
 			if cur_row_pos == WIDTH:
 				cur_row_pos = 0
-				char_top_left.x = X_LEFT
-				char_top_left.y -= Y_JUMP
+				char_position_working.x = X_LEFT
+				char_position_working.y -= Y_JUMP
 				Content.char_map.append(cur_slice)
 				cur_slice = []
 		if cur_slice != []:

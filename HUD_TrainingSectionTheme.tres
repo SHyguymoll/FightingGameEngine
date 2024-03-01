@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dqy1w1gb4mp1b"]
+
+[ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="1_rv145"]
+
+[resource]
+default_font = ExtResource("1_rv145")
+default_font_size = 40

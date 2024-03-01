@@ -1,9 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://cd77r01gxs0ud"]
+[gd_scene load_steps=8 format=3 uid="uid://cd77r01gxs0ud"]
 
-[ext_resource type="Script" path="res://scripts/game.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/main_game.gd" id="1_a16kr"]
+[ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="2_jjmwk"]
+[ext_resource type="Texture2D" uid="uid://danexq1ufr4qj" path="res://Content/Art/HUD/Player1Background.png" id="3_fnmsh"]
+[ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="4_7ll10"]
+[ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="5_6q5w6"]
+[ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="6_2k3f0"]
+[ext_resource type="Theme" uid="uid://dqy1w1gb4mp1b" path="res://HUD_TrainingSectionTheme.tres" id="9_agrsw"]
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1")
+script = ExtResource("1_a16kr")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.269, 7.742)
@@ -14,53 +20,282 @@ size = 3.5
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
 
-[node name="P1Char" type="Label" parent="HUD"]
-offset_top = 192.0
-offset_right = 495.0
-offset_bottom = 272.0
+[node name="Fight" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -281.5
+offset_top = -135.0
+offset_right = 281.5
+offset_bottom = 135.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 219
+text = "FIGHT"
+horizontal_alignment = 1
+
+[node name="HealthAndTime" type="HBoxContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 337.0
+grow_horizontal = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="P1Group" type="VBoxContainer" parent="HUD/HealthAndTime"]
+layout_mode = 2
+alignment = 2
+
+[node name="Health" type="TextureProgressBar" parent="HUD/HealthAndTime/P1Group"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+value = 10.0
+fill_mode = 1
+texture_under = ExtResource("3_fnmsh")
+texture_progress = ExtResource("4_7ll10")
+
+[node name="NameAndPosVel" type="HBoxContainer" parent="HUD/HealthAndTime/P1Group"]
+layout_mode = 2
+alignment = 2
+
+[node name="PosVel" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "p,v"
+horizontal_alignment = 1
+
+[node name="Char" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 64
 text = "Player 1 Character"
 
-[node name="P1Inputs" type="Label" parent="HUD"]
-offset_top = 272.0
-offset_right = 495.0
-offset_bottom = 352.0
-text = "0"
+[node name="Rounds" type="HBoxContainer" parent="HUD/HealthAndTime/P1Group"]
+layout_direction = 3
+layout_mode = 2
+size_flags_vertical = 3
 
-[node name="P2Char" type="Label" parent="HUD"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -495.0
-offset_top = 192.0
-offset_bottom = 272.0
+[node name="Time" type="Label" parent="HUD/HealthAndTime"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 64
+text = "999"
+horizontal_alignment = 1
+
+[node name="P2Group" type="VBoxContainer" parent="HUD/HealthAndTime"]
+layout_mode = 2
+alignment = 2
+
+[node name="Health" type="TextureProgressBar" parent="HUD/HealthAndTime/P2Group"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+value = 10.0
+texture_under = ExtResource("5_6q5w6")
+texture_progress = ExtResource("6_2k3f0")
+
+[node name="NameAndPosVel" type="HBoxContainer" parent="HUD/HealthAndTime/P2Group"]
+layout_mode = 2
+alignment = 2
+
+[node name="Char" type="Label" parent="HUD/HealthAndTime/P2Group/NameAndPosVel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 64
 text = "Player 2 Character"
 horizontal_alignment = 2
 
-[node name="P2Inputs" type="Label" parent="HUD"]
-anchors_preset = 1
+[node name="PosVel" type="Label" parent="HUD/HealthAndTime/P2Group/NameAndPosVel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "p,v"
+horizontal_alignment = 1
+
+[node name="Rounds" type="HBoxContainer" parent="HUD/HealthAndTime/P2Group"]
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SpecialElements" type="HBoxContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 230.0
+offset_bottom = 230.0
+grow_horizontal = 2
+theme_override_constants/separation = 100
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="P1Group" type="VBoxContainer" parent="HUD/SpecialElements"]
+layout_mode = 2
+alignment = 2
+
+[node name="P2Group" type="VBoxContainer" parent="HUD/SpecialElements"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="P1Stats" type="VBoxContainer" parent="HUD"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 96.0
+grow_vertical = 2
+alignment = 1
+
+[node name="State" type="Label" parent="HUD/P1Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "state"
+
+[node name="Combo" type="Label" parent="HUD/P1Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 60
+text = "999"
+
+[node name="Inputs" type="Label" parent="HUD/P1Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "inputs"
+
+[node name="P2Stats" type="VBoxContainer" parent="HUD"]
+anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -495.0
-offset_top = 272.0
-offset_right = 0.999756
-offset_bottom = 352.0
+anchor_bottom = 1.0
+offset_left = -96.0
 grow_horizontal = 0
-text = "0"
+grow_vertical = 2
+alignment = 1
+
+[node name="State" type="Label" parent="HUD/P2Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "state"
 horizontal_alignment = 2
 
-[node name="P1Health" type="TextureProgressBar" parent="HUD"]
-offset_left = 384.0
-offset_right = 896.0
-offset_bottom = 128.0
-value = 10.0
-fill_mode = 1
+[node name="Combo" type="Label" parent="HUD/P2Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 60
+text = "999"
+horizontal_alignment = 2
 
-[node name="P2Health" type="TextureProgressBar" parent="HUD"]
-anchors_preset = 1
-anchor_left = 1.0
+[node name="Inputs" type="Label" parent="HUD/P2Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_jjmwk")
+theme_override_font_sizes/font_size = 24
+text = "inputs"
+horizontal_alignment = 2
+
+[node name="TrainingModeControls" type="HBoxContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
-offset_left = -896.0
-offset_right = -384.0
-offset_bottom = 128.0
-grow_horizontal = 0
-value = 10.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="P1Controls" type="PanelContainer" parent="HUD/TrainingModeControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/TrainingModeControls/P1Controls"]
+layout_mode = 2
+
+[node name="HealthReset" type="HSlider" parent="HUD/TrainingModeControls/P1Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+tick_count = 10
+ticks_on_borders = true
+
+[node name="HealthResetSwitch" type="CheckButton" parent="HUD/TrainingModeControls/P1Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme = ExtResource("9_agrsw")
+text = "Reset P1 Health"
+alignment = 2
+
+[node name="Reset" type="Button" parent="HUD/TrainingModeControls"]
+layout_mode = 2
+theme = ExtResource("9_agrsw")
+text = "Reset"
+
+[node name="P2Controls" type="PanelContainer" parent="HUD/TrainingModeControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/TrainingModeControls/P2Controls"]
+layout_mode = 2
+
+[node name="HealthResetSwitch" type="CheckButton" parent="HUD/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("9_agrsw")
+text = "Reset P2 Health"
+
+[node name="HealthReset" type="HSlider" parent="HUD/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_direction = 3
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tick_count = 10
+ticks_on_borders = true
+
+[node name="Record" type="CheckButton" parent="HUD/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("9_agrsw")
+text = "Record"
+
+[node name="RecordStatus" type="Label" parent="HUD/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("9_agrsw")
+text = "9/9 STP"
+horizontal_alignment = 2
+
+[node name="TrainingModeControlsSpecial" type="HBoxContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_bottom = -108.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="P1Controls" type="PanelContainer" parent="HUD/TrainingModeControlsSpecial"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="P2Controls" type="PanelContainer" parent="HUD/TrainingModeControlsSpecial"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Audio" type="Node3D" parent="."]
+
+[node name="Hitboxes" type="Node3D" parent="."]
+
+[node name="Projectiles" type="Node3D" parent="."]
+
+[connection signal="drag_ended" from="HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset" to="." method="_on_p1_health_reset_drag_ended"]
+[connection signal="toggled" from="HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p1_health_reset_switch_toggled"]
+[connection signal="button_up" from="HUD/TrainingModeControls/Reset" to="." method="_on_reset_button_up"]
+[connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p2_health_reset_switch_toggled"]
+[connection signal="drag_ended" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset" to="." method="_on_p2_health_reset_drag_ended"]
+[connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/Record" to="." method="_on_record_toggled"]

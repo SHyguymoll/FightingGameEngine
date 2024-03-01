@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://qbmqn46brvl4"
+path="res://.godot/imported/IconSmall.png-b4d3dc28a9bddf7119bda8219ec1202d.image"
+
+[deps]
+
+source_file="res://Content/Characters/GodotGuy/IconSmall.png"
+dest_files=["res://.godot/imported/IconSmall.png-b4d3dc28a9bddf7119bda8219ec1202d.image"]
+
+[params]
+

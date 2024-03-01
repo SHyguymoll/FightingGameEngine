@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://ghdtgo2c8tch"]
+
+[ext_resource type="Script" path="res://scripts/ReferenceScripts/hitbox.gd" id="1_a3bkx"]
+
+
+[node name="Hitboxes" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_a3bkx")
+
+[node name="READ ME" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "The script attached to the root node of this scene is required by the game. Don't touch the script! Only change the exported variables."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]

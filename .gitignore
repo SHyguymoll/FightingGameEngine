@@ -6,9 +6,3 @@
 bin/
 build/
 lib/
-
-# Other
-sprites/
-models/
-Content/Characters/
-Content/Stages/

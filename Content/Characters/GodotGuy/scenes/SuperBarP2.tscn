@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bheinqfnk6wxk"]
+
+[ext_resource type="Texture2D" uid="uid://c3s6y8aadtjkh" path="res://Content/Characters/GodotGuy/SuperBack.png" id="1_cypdu"]
+[ext_resource type="Texture2D" uid="uid://sq852p7htoh1" path="res://Content/Characters/GodotGuy/Super2.png" id="2_i2iks"]
+
+[node name="SuperBar" type="TextureProgressBar"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -16.0
+offset_right = 64.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_under = ExtResource("1_cypdu")
+texture_progress = ExtResource("2_i2iks")

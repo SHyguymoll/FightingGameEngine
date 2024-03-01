@@ -1,0 +1,174 @@
+[gd_scene load_steps=13 format=3 uid="uid://b6yselpugxa2t"]
+
+[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/projectile_straight.gd" id="1_coavn"]
+[ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="2_7jb8a"]
+[ext_resource type="Script" path="res://scripts/ReferenceScripts/hitbox.gd" id="3_0irt4"]
+[ext_resource type="AudioStream" uid="uid://ubw1f8hi4pmd" path="res://Content/Characters/GodotGuy/sounds/atk_projectile.wav" id="4_n70fa"]
+[ext_resource type="AudioStream" uid="uid://bytcuvmfoag06" path="res://Content/Characters/GodotGuy/sounds/atk_blocked.wav" id="5_cwhgy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qatpa"]
+size = Vector3(1.18335, 1.0791, 1)
+
+[sub_resource type="Animation" id="Animation_k5wla"]
+resource_name = "end"
+length = 0.266669
+step = 0.0166667
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.266667, 1, 1.44575, 1.44575, 1.003)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.266667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 1, 1, 1), Color(0, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_74a68"]
+resource_name = "loop_left"
+length = 0.266669
+step = 0.0166667
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.0666668, 1, 0, 0, 0.707107, 0.707107, 0.133334, 1, 0, 0, -1, 0, 0.2, 1, 0, 0, -0.707, 0.707, 0.266667, 1, 0, 0, 0, 1)
+tracks/1/type = "scale_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.133334, 1, 0.719086, 0.719085, 1, 0.266667, 1, 1, 1, 1)
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite3D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.133334, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0, 1, 1, 1), Color(0, 1, 1, 0.431373), Color(0, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_f425l"]
+resource_name = "loop_right"
+length = 0.266669
+step = 0.0166667
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.0666668, 1, 0, 0, -0.707107, 0.707107, 0.133334, 1, 0, 0, 1, -4.37114e-08, 0.2, 1, 0, 0, 0.707107, 0.707106, 0.266667, 1, 0, 0, 0, 1)
+tracks/1/type = "scale_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.133334, 1, 0.719086, 0.719085, 1, 0.266667, 1, 1, 1, 1)
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite3D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.133334, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0, 1, 1, 1), Color(0, 1, 1, 0.431373), Color(0, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_33uao"]
+resource_name = "start"
+length = 0.266669
+step = 0.0166667
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1.44575, 1.44575, 1.003, 0.266667, 1, 1, 1, 1)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite3D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.266667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 1, 1, 0), Color(0, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vwb2q"]
+_data = {
+"end": SubResource("Animation_k5wla"),
+"loop_left": SubResource("Animation_74a68"),
+"loop_right": SubResource("Animation_f425l"),
+"start": SubResource("Animation_33uao")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3mt4j"]
+size = Vector3(0.823242, 0.738281, 1)
+
+[node name="ProjectileStraight" type="CharacterBody3D" node_paths=PackedStringArray("hitbox")]
+collision_layer = 0
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("1_coavn")
+start_anim = &"start"
+loop_anim_left = &"loop_left"
+loop_anim_right = &"loop_right"
+end_anim = &"end"
+hitbox = NodePath("Hitbox")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1.44575, 0, 0, 0, 1.44575, 0, 0, 0, 1.003, 0, 0, 0)
+rotation_edit_mode = 1
+modulate = Color(0, 1, 1, 0)
+texture = ExtResource("2_7jb8a")
+
+[node name="Hitbox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_0irt4")
+on_hit_sound = ExtResource("4_n70fa")
+on_block_sound = ExtResource("5_cwhgy")
+lifetime = -1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+shape = SubResource("BoxShape3D_qatpa")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_vwb2q")
+}
+
+[node name="ProjectileContact" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 17
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ProjectileContact"]
+shape = SubResource("BoxShape3D_3mt4j")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
