@@ -80,10 +80,8 @@ func prepare_game() -> ReturnState:
 				return ReturnState.INVALID_FIGHTER
 		Content.characters.append({
 			char_name = fighter_details.fighter_name,
-			fighter_file = Content.character_folder.path_join(
-					(fighter_details.folder.path_join(fighter_details.fighter_file))),
-			char_select_icon = Content.character_folder.path_join(
-					(fighter_details.folder.path_join(fighter_details.char_select_icon))),
+			fighter_file = fighter_details.fighter_file,
+			char_select_icon = fighter_details.char_select_icon,
 		})
 
 	# Stages
@@ -125,8 +123,7 @@ func prepare_game() -> ReturnState:
 				return ReturnState.INVALID_STAGE
 		Content.stages.append({
 			stage_name = stage_details.stage_name,
-			stage_file = Content.stage_folder.path_join(
-					stage_details.folder.path_join(stage_details.stage_file)),
+			stage_file = stage_details.stage_file,
 			compatible_with_3d = stage_details.compatible_with_3d
 		})
 
