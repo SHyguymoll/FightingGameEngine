@@ -171,7 +171,8 @@ func reset_hitstop():
 
 func _ready():
 	reset_hitstop()
-	add_child(Content.stage_resource.instantiate())
+	stage = Content.stage_resource.instantiate()
+	add_child(stage)
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
 	p2 = Content.p2_resource.instantiate()
