@@ -66,9 +66,8 @@ const GG_INPUT = [
 
 const GRABBED_OFFSET_X = 0.46
 
-@export_category("Animation Details")
-@export var _animate : FlippingAnimationPlayer
-@export var basic_anim_state_dict := {
+@onready var _animate := $AnimationPlayer
+var basic_anim_state_dict := {
 	States.INTRO : "other/intro",
 	States.ROUND_WIN : "other/win",
 	States.SET_WIN : "other/win",
@@ -92,26 +91,25 @@ const GRABBED_OFFSET_X = 0.46
 	States.OUTRO_FALL : "hurting/air", States.OUTRO_BNCE : "hurting/air",
 	States.OUTRO_LIE : "hurting/lying",
 }
-@export var animation_ended = true
-@export var move_left_anim : StringName = &"basic/walk_left"
-@export var move_right_anim : StringName = &"basic/walk_right"
-@export var dash_left_anim : StringName = &"basic/dash"
-@export var dash_right_anim : StringName = &"basic/dash"
+var animation_ended = true
+var move_left_anim : StringName = &"basic/walk_left"
+var move_right_anim : StringName = &"basic/walk_right"
+var dash_left_anim : StringName = &"basic/dash"
+var dash_right_anim : StringName = &"basic/dash"
 
-@export_category("Gameplay Details")
-@export var walk_speed : float = 2
-@export var jump_total : int = 2
-@export var jump_height : float = 11
-@export var gravity : float = -0.5
-@export var min_fall_vel : float = -6.5
-@export var GROUND_SLIDE_FRICTION : float = 0.97
-@export var meter : float = 0
-@export var METER_MAX : float = 100
-@export var damage_mult : float = 1.0
-@export var defense_mult : float = 1.0
+var walk_speed : float = 2
+var jump_total : int = 2
+var jump_height : float = 11
+var gravity : float = -0.5
+var min_fall_vel : float = -6.5
+var GROUND_SLIDE_FRICTION : float = 0.97
+var meter : float = 0
+var METER_MAX : float = 100
+var damage_mult : float = 1.0
+var defense_mult : float = 1.0
 ## block rule arrays: [up, down, away, towards]
 ## 1 means must hold, 0 means ignored, -1 means must not hold
-@export var block : Dictionary = {
+var block : Dictionary = {
 	away_any = [0, 0, 1, -1],
 	away_high = [0, -1, 1, -1],
 	away_low = [-1, 1, 1, -1],
