@@ -17,6 +17,15 @@ projection = 1
 current = true
 size = 3.5
 
+[node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="ColorRect" type="ColorRect" parent="SmoothTransitionLayer"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
 

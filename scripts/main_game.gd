@@ -44,11 +44,21 @@ const MOVEMENTBOUNDX = 4.5
 var p1_combo := 0
 var p2_combo := 0
 enum moments {
+	FADE_IN,
 	INTRO,
 	GAME,
-	ROUND_END
+	ROUND_END,
+	FADE_OUT,
 }
-var moment := moments.INTRO
+enum CameraModes {
+	ORTH_BALANCED = 0,
+	ORTH_PLAYER1,
+	ORTH_PLAYER2,
+	PERS_BALANCED,
+	PERS_PLAYER1,
+	PERS_PLAYER2,
+}
+var moment := moments.FADE_IN
 
 @onready var round_element = preload("res://scenes/RoundElement.tscn")
 enum round_change_types {
@@ -194,6 +204,7 @@ func reset_hitstop():
 
 
 func _ready():
+	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
 	reset_hitstop()
 	stage = Content.stage_resource.instantiate()
 	add_child(stage)
@@ -210,14 +221,6 @@ const ORTH_DIST = 1.328125
 const CAMERA_PERSPECTIVE = 0
 const CAMERA_ORTH = 1
 
-enum CameraModes {
-	ORTH_BALANCED = 0,
-	ORTH_PLAYER1,
-	ORTH_PLAYER2,
-	PERS_BALANCED,
-	PERS_PLAYER1,
-	PERS_PLAYER2
-}
 
 func camera_control(mode: int):
 	$Camera3D.projection = CAMERA_ORTH if mode < CameraModes.PERS_BALANCED else CAMERA_PERSPECTIVE
@@ -579,6 +582,11 @@ func training_mode_settings():
 func _physics_process(_delta):
 	camera_control(camera_mode)
 	match moment:
+		moments.FADE_IN:
+			move_inputs_and_iterate(true)
+			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
+			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a):
+				moment = moments.INTRO
 		moments.INTRO:
 			move_inputs_and_iterate(true)
 			if p1._post_intro() and p2._post_intro():
@@ -605,19 +613,19 @@ func _physics_process(_delta):
 			if p1._post_outro() and p2._in_defeated_state():
 				GameGlobal.p1_wins += 1
 				if GameGlobal.p1_wins < GameGlobal.win_threshold:
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
 				else:
 					print("game ended with a p1 victory, restarting anyways")
 					GameGlobal.p1_wins = 0
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
 			elif p1._in_defeated_state() and p2._post_outro():
 				GameGlobal.p2_wins += 1
 				if GameGlobal.p2_wins < GameGlobal.win_threshold:
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
 				else:
 					print("game ended with a p2 victory, restarting anyways")
 					GameGlobal.p2_wins = 0
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
 			elif p1._in_defeated_state() and p2._in_defeated_state():
 				if (
 					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
@@ -626,11 +634,16 @@ func _physics_process(_delta):
 					print("game ended on a draw, restarting anyways")
 					GameGlobal.p1_wins = 0
 					GameGlobal.p2_wins = 0
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
 				else:
 					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
 					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
-					get_tree().reload_current_scene()
+					moment = moments.FADE_OUT
+		moments.FADE_OUT:
+			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 1.0, 0.25)
+			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a - 1.0):
+				get_tree().reload_current_scene()
+
 
 func _on_p1_health_reset_switch_toggled(toggled_on):
 	p1_reset_health_on_drop = toggled_on
