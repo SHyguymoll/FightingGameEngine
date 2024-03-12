@@ -11,12 +11,32 @@ var p2_reset_health_on_drop := true
 var p1_health_reset : float
 var p2_health_reset : float
 
+
+var p1_buttons = [false, false, false, false, false, false, false, false, false, false]
+var p2_buttons = [false, false, false, false, false, false, false, false, false, false]
+
+var p1_inputs : Dictionary = {
+	up=[[0, false]],
+	down=[[0, false]],
+	left=[[0, false]],
+	right=[[0, false]],
+}
+
+var p2_inputs : Dictionary = {
+	up=[[0, false]],
+	down=[[0, false]],
+	left=[[0, false]],
+	right=[[0, false]],
+}
+
+var p1_input_index : int = 0
+var p2_input_index : int = 0
+
 var player_record_buffer := []
 var record_buffer_current := 0
 var record := false
 var replay := false
 
-#required variables and methods from Game.gd
 @export var camera_mode = 0
 const CAMERAMAXX = 1.6
 const CAMERAMAXY = 10
@@ -92,6 +112,7 @@ func make_hud():
 	health_reset_hud.value = health_reset_hud.max_value
 	$HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch.set_pressed_no_signal(p2_reset_health_on_drop)
 
+
 func update_hud():
 	# player 1
 	$HUD/HealthAndTime/P1Group/Health.value = p1.health
@@ -120,9 +141,10 @@ func update_hud():
 		]
 	)
 
+
 func init_fighters():
 	for i in range(p1.BUTTONCOUNT):
-		GameGlobal.p1_inputs["button" + str(i)] = [[0, false]]
+		p1_inputs["button" + str(i)] = [[0, false]]
 	p1.player = true
 	p1.position = Vector3(abs(p1.start_x_offset) * -1, 0, 0)
 	p1._initialize_boxes()
@@ -141,7 +163,7 @@ func init_fighters():
 	add_child(p1.grabbed_point)
 
 	for i in range(p2.BUTTONCOUNT):
-		GameGlobal.p2_inputs["button" + str(i)] = [[0, false]]
+		p2_inputs["button" + str(i)] = [[0, false]]
 	p2.player = false
 	p2.position = Vector3(abs(p2.start_x_offset), 0, 0)
 	p2._initialize_boxes()
@@ -166,8 +188,10 @@ func init_fighters():
 	p1_health_reset = p1.health
 	p2_health_reset = p2.health
 
+
 func reset_hitstop():
 	GameGlobal.global_hitstop = 0
+
 
 func _ready():
 	reset_hitstop()
@@ -249,6 +273,7 @@ func slice_input_dictionary(input_dict: Dictionary, from: int, to: int):
 		ret_dict["button" + str(i)] = input_dict["button" + str(i)].slice(from, to)
 	return ret_dict
 
+
 func generate_input_hud(buf : Dictionary, input_label : Label):
 	var lookup_string := ""
 	var dirs := ["up", "down", "left", "right"]
@@ -275,6 +300,7 @@ func generate_input_hud(buf : Dictionary, input_label : Label):
 					"| %s, %s " % [buf[button][i][0], ("Ø" if buf[button][i][1] else "0")])
 		input_label.text += "\n"
 
+
 func build_input_tracker(p1_buf : Dictionary, p2_buf : Dictionary) -> void:
 	generate_input_hud(p1_buf, $HUD/P1Stats/Inputs)
 	generate_input_hud(p2_buf, $HUD/P2Stats/Inputs)
@@ -293,6 +319,7 @@ func generate_current_input_hash(buttons : Array, button_count : int) -> int:
 			((int(button_count > 4 and buttons[8])) * 256) +
 			((int(button_count > 5 and buttons[9])) * 512)
 	)
+
 
 #ditto, but for an already completed input
 func generate_prior_input_hash(player_inputs: Dictionary):
@@ -315,6 +342,7 @@ func increment_inputs(player_inputs: Dictionary):
 	for inp in player_inputs:
 		player_inputs[inp][-1][0] += 1
 
+
 func create_new_input_set(player_inputs: Dictionary, new_inputs: Array):
 	var ind = 0
 	for inp in player_inputs:
@@ -323,6 +351,7 @@ func create_new_input_set(player_inputs: Dictionary, new_inputs: Array):
 		else: #otherwise, this is a new input, so make a new entry
 			player_inputs[inp].append([1, new_inputs[ind]])
 		ind += 1
+
 
 func directional_inputs(prefix: String) -> Array:
 	return [
@@ -336,49 +365,52 @@ func directional_inputs(prefix: String) -> Array:
 				not Input.is_action_pressed(prefix + "_left")),
 	]
 
+
 func button_inputs(prefix : String, button_count : int) -> Array:
 	var button_input_arr = []
 	for button in range(button_count):
 		button_input_arr.append(Input.is_action_pressed(prefix + "_button" + str(button)))
 	return button_input_arr
 
+
 func create_inputs():
-	GameGlobal.p1_buttons = directional_inputs("first") + button_inputs("first", p1.BUTTONCOUNT)
-	GameGlobal.p2_buttons = directional_inputs("second") + button_inputs("second", p2.BUTTONCOUNT)
+	p1_buttons = directional_inputs("first") + button_inputs("first", p1.BUTTONCOUNT)
+	p2_buttons = directional_inputs("second") + button_inputs("second", p2.BUTTONCOUNT)
 
 	if record:
-		player_record_buffer.append(GameGlobal.p2_buttons.duplicate())
+		player_record_buffer.append(p2_buttons.duplicate())
 
 	if not record and not replay and Input.is_action_just_pressed("training_replay"):
 		replay = true
 
-	if generate_prior_input_hash(GameGlobal.p1_inputs) != generate_current_input_hash(
-				GameGlobal.p1_buttons, p1.BUTTONCOUNT):
-		create_new_input_set(GameGlobal.p1_inputs, GameGlobal.p1_buttons)
-		GameGlobal.p1_input_index += 1
+	if generate_prior_input_hash(p1_inputs) != generate_current_input_hash(
+				p1_buttons, p1.BUTTONCOUNT):
+		create_new_input_set(p1_inputs, p1_buttons)
+		p1_input_index += 1
 	else:
-		increment_inputs(GameGlobal.p1_inputs)
+		increment_inputs(p1_inputs)
 
 	if replay and record_buffer_current == len(player_record_buffer):
 		replay = false
 		record_buffer_current = 0
 
 	if not replay:
-		if (generate_prior_input_hash(GameGlobal.p2_inputs) != generate_current_input_hash(
-				GameGlobal.p2_buttons, p2.BUTTONCOUNT)):
-			create_new_input_set(GameGlobal.p2_inputs, GameGlobal.p2_buttons)
-			GameGlobal.p2_input_index += 1
+		if (generate_prior_input_hash(p2_inputs) != generate_current_input_hash(
+				p2_buttons, p2.BUTTONCOUNT)):
+			create_new_input_set(p2_inputs, p2_buttons)
+			p2_input_index += 1
 		else:
-			increment_inputs(GameGlobal.p2_inputs)
+			increment_inputs(p2_inputs)
 	else:
-		if (generate_prior_input_hash(GameGlobal.p2_inputs) !=
+		if (generate_prior_input_hash(p2_inputs) !=
 					generate_current_input_hash(
 							player_record_buffer[record_buffer_current], p2.BUTTONCOUNT)):
-			create_new_input_set(GameGlobal.p2_inputs, player_record_buffer[record_buffer_current])
-			GameGlobal.p2_input_index += 1
+			create_new_input_set(p2_inputs, player_record_buffer[record_buffer_current])
+			p2_input_index += 1
 		else:
-			increment_inputs(GameGlobal.p2_inputs)
+			increment_inputs(p2_inputs)
 		record_buffer_current += 1
+
 
 func create_dummy_buffer(button_count : int):
 	var dummy_buffer = {
@@ -389,8 +421,8 @@ func create_dummy_buffer(button_count : int):
 	}
 	for i in range(button_count):
 		dummy_buffer["button" + str(i)] = [[0, false]]
-
 	return dummy_buffer
+
 
 func hitbox_hitbox_collisions():
 	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
@@ -407,6 +439,7 @@ func hitbox_hitbox_collisions():
 				print("%s collided with %s and is now neutralized" % [check, hitbox])
 				hitbox.invalid = true
 
+
 func move_inputs_and_iterate(fake_inputs):
 	if fake_inputs:
 		p1._input_step(create_dummy_buffer(p1.BUTTONCOUNT))
@@ -414,12 +447,12 @@ func move_inputs_and_iterate(fake_inputs):
 		return
 
 	var p1_buf = slice_input_dictionary(
-			GameGlobal.p1_inputs, max(0, GameGlobal.p1_input_index - p1.input_buffer_len),
-			GameGlobal.p1_input_index + 1
+			p1_inputs, max(0, p1_input_index - p1.input_buffer_len),
+			p1_input_index + 1
 	)
 	var p2_buf = slice_input_dictionary(
-			GameGlobal.p2_inputs, max(0, GameGlobal.p2_input_index - p2.input_buffer_len),
-			GameGlobal.p2_input_index + 1
+			p2_inputs, max(0, p2_input_index - p2.input_buffer_len),
+			p2_input_index + 1
 	)
 	build_input_tracker(p1_buf, p2_buf)
 
@@ -464,11 +497,13 @@ func move_inputs_and_iterate(fake_inputs):
 	p1._input_step(p1_buf)
 	p2._input_step(p2_buf)
 
+
 func check_combos():
 	if not p1._in_hurting_state():
 		p2_combo = 0
 	if not p2._in_hurting_state():
 		p1_combo = 0
+
 
 func character_positioning():
 	if p1.grabbed_point.act_on_player:
@@ -486,6 +521,7 @@ func character_positioning():
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x
 
+
 func spawn_audio(sound: AudioStream):
 	var new_audio = AudioStreamPlayer.new()
 	new_audio.stream = sound
@@ -493,15 +529,19 @@ func spawn_audio(sound: AudioStream):
 	new_audio.autoplay = true
 	$Audio.add_child(new_audio)
 
+
 func register_hitbox(hitbox):
 	$Hitboxes.add_child(hitbox, true)
+
 
 func register_projectile(projectile):
 	projectile.projectile_ended.connect(delete_projectile)
 	$Projectiles.add_child(projectile, true)
 
+
 func delete_projectile(projectile):
 	projectile.queue_free()
+
 
 func grabbed(player):
 	if player:
@@ -509,11 +549,13 @@ func grabbed(player):
 	else:
 		p2.grabbed_point.act_on_player = true
 
+
 func grab_released(player):
 	if player:
 		p2.grabbed_point.act_on_player = false
 	else:
 		p1.grabbed_point.act_on_player = false
+
 
 func player_defeated():
 	moment = moments.ROUND_END
@@ -522,11 +564,13 @@ func player_defeated():
 	for projectile in ($Projectiles.get_children() as Array[Projectile]):
 		projectile.destroy()
 
+
 func training_mode_settings():
 	if p1_reset_health_on_drop and not p2_combo:
 		p1.health = p1_health_reset
 	if p2_reset_health_on_drop and not p1_combo:
 		p2.health = p2_health_reset
+
 
 func _physics_process(_delta):
 	camera_control(camera_mode)
@@ -587,22 +631,27 @@ func _physics_process(_delta):
 func _on_p1_health_reset_switch_toggled(toggled_on):
 	p1_reset_health_on_drop = toggled_on
 
+
 func _on_p1_health_reset_drag_ended(value_changed):
 	if value_changed and p1_reset_health_on_drop:
 		p1_health_reset = $HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset.value
 
+
 func _on_p2_health_reset_switch_toggled(toggled_on):
 	p1_reset_health_on_drop = toggled_on
+
 
 func _on_p2_health_reset_drag_ended(value_changed):
 	if value_changed and p2_reset_health_on_drop:
 		p2_health_reset = $HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset.value
+
 
 func _on_record_toggled(toggled_on):
 	if toggled_on:
 		player_record_buffer.clear()
 		record_buffer_current = 0
 	record = toggled_on
+
 
 func _on_reset_button_up():
 	get_tree().reload_current_scene()
