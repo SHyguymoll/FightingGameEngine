@@ -573,6 +573,12 @@ func move_inputs_and_iterate(fake_inputs):
 				p1._on_block(p2_attacker.on_block)
 				GameGlobal.global_hitstop = int(p2_attacker.damage_hit / 2)
 			p2_attacker.queue_free()
+	if p1.stun_time_current == -1 and p1._in_hurting_state() and p2.stun_time_current == -1 and p2._in_hurting_state():
+		p1.stun_time_current = 60
+		p1.kback = Vector3(5, 5, 0)
+		p2.stun_time_current = 60
+		p2.kback = Vector3(5, 5, 0)
+		pass
 
 	p1._input_step(p1_buf)
 	p2._input_step(p2_buf)
