@@ -4277,14 +4277,14 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.183334, 0.25),
+"times": PackedFloat32Array(0, 0.1837, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
-"args": [Vector3(-5, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(-5, 0, 0)],
+"method": &"set_grd_vel"
 }, {
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.931, 1.279, 0), "crouch_c"],
 "method": &"create_hitbox"
@@ -4424,8 +4424,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.316667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 0],
 "method": &"create_projectile"
@@ -4458,8 +4458,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0.2338, 0.316667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 5, 0), 3],
-"method": &"update_velocity"
+"args": [Vector3(0, 5, 0)],
+"method": &"set_y_air_vel"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 1],
 "method": &"create_projectile"
@@ -4489,14 +4489,14 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.0833335, 0.133334, 0.266667, 0.400001, 0.533334, 0.666668),
+"times": PackedFloat32Array(0, 0.0835, 0.133334, 0.266667, 0.400001, 0.533334, 0.666668),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "values": [{
-"args": [Vector3(3, 6, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(3, 6, 0)],
+"method": &"set_air_vel"
 }, {
-"args": [Vector3(0, 0, 0), 3],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_y_air_vel"
 }, {
 "args": [Vector3(1.28335, 0.49879, 0), "spin_approach"],
 "method": &"create_hitbox"
@@ -4541,8 +4541,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0666668, 0.133334, 0.216667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
-"args": [Vector3(3, 0, 0), 4],
-"method": &"update_velocity"
+"args": [Vector3(3, 0, 0)],
+"method": &"expediate_air_vel"
 }, {
 "args": [Vector3(1.28335, 0.49879, 0), "spin_approach"],
 "method": &"create_hitbox"
@@ -4578,17 +4578,17 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.25, 0.333334),
+"times": PackedFloat32Array(0, 0.0166667, 0.2505, 0.333334),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_air_vel"
 }, {
 "args": [5.0],
 "method": &"add_meter"
 }, {
-"args": [Vector3(0, 10, 0), 3],
-"method": &"update_velocity"
+"args": [Vector3(0, 10, 0)],
+"method": &"set_y_air_vel"
 }, {
 "args": [Vector3(0.580425, 0.683781, 0), "uppercut"],
 "method": &"create_hitbox"
@@ -4630,8 +4630,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0333334),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.137, 0.782, 0), "stand_a"],
 "method": &"create_hitbox"
@@ -4664,8 +4664,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.116667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(1.409, 0.561, 0), "stand_b"],
 "method": &"create_hitbox"
@@ -4698,8 +4698,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.166667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.705, 0.92, 0), "stand_c"],
 "method": &"create_hitbox"
@@ -4732,8 +4732,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.316667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.705, 0.92, 0), "grab"],
 "method": &"create_hitbox"
@@ -4838,8 +4838,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.316667, 0.333334, 0.350001),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0), 1],
-"method": &"update_velocity"
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 2],
 "method": &"create_projectile"
@@ -4878,8 +4878,8 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
-"args": [Vector3(0, 5, 0), 3],
-"method": &"update_velocity"
+"args": [Vector3(0, 5, 0)],
+"method": &"set_y_air_vel"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 3],
 "method": &"create_projectile"
@@ -4919,11 +4919,10 @@ size = Vector3(0.202, 1.08658, 0.27)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vbsgv"]
 size = Vector3(1.45025, 1.28207, 1)
 
-[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("_animate", "grab_point")]
+[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point")]
 collision_layer = 0
 axis_lock_linear_z = true
 script = ExtResource("1_5p4re")
-_animate = NodePath("AnimationPlayer")
 grab_point = NodePath("Grabbing")
 char_name = "Godot Guy"
 health = 100.0
@@ -4939,8 +4938,9 @@ ui_elements_training_packed = {
 [node name="DebugData" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.92896, 0)
 billboard = 2
-text = "Right Facing: %s
+text = "Jumps: %s
 State: %s (Prev: %s)
+Vels: %s %s
 Attack Finished: %s
 Stun: %s:%s
 Knockback: %s
@@ -4997,20 +4997,21 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
-shape = ExtResource("3_8q5n8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.344, 0)
+shape = ExtResource("2_ahw0y")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+transform = Transform3D(1.48612, 0, 0, 0, 0.300002, 0, 0, 0, 1, 0.574656, 0.221659, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.322331, 0, 0, 0, 0.322331, 0, 0, 0, 1, -0.616, 0.417, 0.04)
+transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
+modulate = Color(0.803922, 0.686275, 0, 0.999997)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

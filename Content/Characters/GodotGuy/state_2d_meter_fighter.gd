@@ -3,7 +3,7 @@ extends Fighter
 
 ## This script defines a FSM-based Fighter with the following features:
 ## 2D Movement[br]
-## Dashing[br]
+## Grounded and Aerial Dashing[br]
 ## Jump-Cancelling[br]
 ## The Magic Series (Stronger Attacks Cancel Weaker Attacks)[br]
 ## Special Cancelling (and Super Cancelling)[br]
@@ -13,22 +13,20 @@ extends Fighter
 enum States {
 	INTRO, ROUND_WIN, SET_WIN, # round stuff
 	IDLE, CRCH, # basic basics
-	WALK_F, WALK_B, DASH_F, DASH_B, # lateral movement
-	JUMP_L_I, JUMP_N_I, JUMP_R_I, # jump from ground initial
-	JUMP_L_A_I, JUMP_N_A_I, JUMP_R_A_I, # jump from air initial
-	JUMP_L, JUMP_N, JUMP_R, # aerial actionable
-	JUMP_L_NO_ACT, JUMP_N_NO_ACT, JUMP_R_NO_ACT, # aerial not actionable
+	WALK_F, WALK_B, DASH_F, DASH_B, # lateral motions
+	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial motions
 	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB, ATCK_JUMP, ATCK_SUPR, # attacking
+	ATCK_NRML_IMP, ATCK_CMND_INP, ATCK_JUMP_IMP, # certain attack impacts
 	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
 	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, # not handling getting attacked well
 	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
 	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE # The final stage of not handling it
 }
 
-enum AVEffects {ADD = 0, SET = 1, SET_X = 2, SET_Y = 3, EXPEDIATE = 4}
-
 enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
 
+const AIR_DASH_LENGTH = 16
+const JUMP_SQUAT_LENGTH = 4
 const DASH_INPUT_LENIENCY : int = 15
 const MOTION_INPUT_LENIENCY : int = 12
 # motion inputs, with some leniency
@@ -68,6 +66,11 @@ const GG_INPUT = [
 
 const GRABBED_OFFSET_X = 0.46
 
+var current_state: States = States.IDLE
+var previous_state : States
+var ticks_since_state_change : int = 0
+var force_airborne := false
+
 @onready var _animate := $AnimationPlayer
 var basic_anim_state_dict := {
 	States.INTRO : "other/intro",
@@ -75,14 +78,10 @@ var basic_anim_state_dict := {
 	States.SET_WIN : "other/win",
 	States.IDLE : "basic/idle",
 	States.CRCH : "basic/crouch",
-	States.JUMP_R_I : "basic/jump", States.JUMP_L_I : "basic/jump",
-	States.JUMP_N_I : "basic/jump",
-	States.JUMP_R_A_I : "basic/jump", States.JUMP_L_A_I : "basic/jump",
-	States.JUMP_N_A_I : "basic/jump",
-	States.JUMP_R : "basic/jump", States.JUMP_L : "basic/jump",
-	States.JUMP_N : "basic/jump",
-	States.JUMP_R_NO_ACT : "basic/jump", States.JUMP_L_NO_ACT : "basic/jump",
-	States.JUMP_N_NO_ACT : "basic/jump",
+	States.JUMP_INIT : "basic/jump", # todo new anim
+	States.JUMP_AIR_INIT : "basic/jump", # ditto
+	States.JUMP : "basic/jump",
+	States.JUMP_NO_ACT : "basic/jump", # ditto
 	States.BLCK_HGH : "blocking/high", States.BLCK_LOW : "blocking/low",
 	States.BLCK_AIR : "blocking/air",
 	States.HURT_HGH : "hurting/high", States.HURT_LOW : "hurting/low",
@@ -100,7 +99,7 @@ var dash_left_anim : StringName = &"basic/dash"
 var dash_right_anim : StringName = &"basic/dash"
 
 var walk_speed : float = 2
-var jump_total : int = 2
+var jump_total : float = 2
 var jump_height : float = 11
 var gravity : float = -0.5
 var min_fall_vel : float = -6.5
@@ -118,10 +117,12 @@ var block : Dictionary = {
 	nope = [-1, -1. -1, -1],
 }
 
-var record_y : float
 var check_true : bool # Used to remember results of move_and_slide()
 var right_facing : bool
-var jump_count : int = 0
+var jump_count : float = 0
+
+var ground_vel : Vector3
+var aerial_vel : Vector3
 
 @onready var hitboxes = {
 	"stand_a": preload("scenes/hitboxes/stand/a.tscn"),
@@ -143,9 +144,6 @@ var jump_count : int = 0
 	"basic": preload("scenes/ProjectileStraight.tscn")
 }
 
-var current_state: States = States.INTRO
-var previous_state : States
-
 var current_attack : String
 
 var attack_return_state := {
@@ -156,9 +154,9 @@ var attack_return_state := {
 	"attack_command/crouch_b": States.CRCH,
 	"attack_command/crouch_c": States.CRCH,
 	"attack_motion/projectile": States.IDLE,
-	"attack_motion/uppercut": States.JUMP_N_NO_ACT,
-	"attack_motion/spin_approach": States.JUMP_N_NO_ACT,
-	"attack_motion/spin_approach_air": States.JUMP_N_NO_ACT,
+	"attack_motion/uppercut": States.JUMP_NO_ACT,
+	"attack_motion/spin_approach": States.JUMP_NO_ACT,
+	"attack_motion/spin_approach_air": States.JUMP_NO_ACT,
 }
 
 var grab_return_states := {
@@ -177,21 +175,25 @@ func _ready():
 
 
 func _process(_delta):
-	$DebugData.text = """Right Facing: %s
-State: %s (Prev: %s)
+	$DebugData.text = """State: %s (Prev: %s)
+Vels: %s %s
 Attack Finished: %s
 Stun: %s:%s
 Knockback: %s
 Current Animation : %s
+Jumps: %s/%s
 """ % [
-		right_facing,
 		States.keys()[current_state],
 		States.keys()[previous_state],
+		ground_vel,
+		aerial_vel,
 		animation_ended,
 		stun_time_current,
 		stun_time_start,
 		kback,
 		_animate.current_animation,
+		jump_count,
+		jump_total,
 	]
 	if len(inputs.up) > 0:
 		$DebugData.text += str(inputs_as_numpad()[0])
@@ -212,6 +214,7 @@ func _input_step(recv_inputs) -> void:
 
 	_animate.speed_scale = float(GameGlobal.global_hitstop == 0)
 	reset_facing()
+	ticks_since_state_change += 1
 
 
 func _initialize_training_mode_elements():
@@ -228,15 +231,15 @@ func _initialize_training_mode_elements():
 
 	(ui_elements_training[0] as HSlider).value_changed.connect(training_mode_set_meter)
 
+
 func _return_attackers():
 	return $Hurtbox.get_overlapping_areas() as Array[Hitbox]
-
 
 # This is called when a hitbox makes contact with the other fighter,
 # after resolving that the fighter was hit by the attack.
 # An Array is passed for maximum customizability.
-func _on_hit(on_hit_data : Array):
 # For this fighter, the on_hit and on_block arrays stores only the meter_gain, a float.
+func _on_hit(on_hit_data : Array):
 	add_meter(on_hit_data[0])
 
 # Ditto, but for after resolving that the opposing fighter blocked the attack.
@@ -289,11 +292,11 @@ func training_mode_set_meter(val):
 
 func airborne() -> bool:
 	return current_state in [
-		States.ATCK_JUMP,
-		States.JUMP_L, States.JUMP_N, States.JUMP_R,
-		States.JUMP_R_NO_ACT, States.JUMP_N_NO_ACT, States.JUMP_L_NO_ACT,
-		States.BLCK_AIR, States.HURT_BNCE, States.HURT_FALL,
-	]
+		States.JUMP, States.JUMP_NO_ACT, States.JUMP_AIR_INIT,
+		States.DASH_A_B, States.DASH_A_F,
+		States.ATCK_JUMP, States.BLCK_AIR,
+		States.HURT_BNCE, States.HURT_FALL, States.OUTRO_BNCE, States.OUTRO_FALL
+	] or force_airborne
 
 
 func crouching() -> bool:
@@ -301,36 +304,85 @@ func crouching() -> bool:
 
 
 func dashing() -> bool:
-	return current_state in [States.DASH_B, States.DASH_F]
+	return current_state in [States.DASH_B, States.DASH_F, States.DASH_A_B, States.DASH_A_F]
 
 # Functions used by the AnimationPlayer to perform actions within animations
-func update_velocity(vel : Vector3, how : AVEffects):
+func add_grd_vel(vel : Vector3):
 	if not right_facing:
 		vel.x *= -1
-	match how:
-		AVEffects.ADD:
-			velocity += vel
-		AVEffects.SET:
-			velocity = vel
-		AVEffects.SET_X:
-			velocity.x = vel.x
-		AVEffects.SET_Y:
-			velocity.y = vel.y
-		AVEffects.EXPEDIATE:
-			vel.x = abs(vel.x)
-			if velocity.x < 0:
-				velocity.x -= vel.x
-			elif velocity.x > 0:
-				velocity.x += vel.x
+	ground_vel += vel
+
+
+func add_air_vel(vel : Vector3):
+	if not right_facing:
+		vel.x *= -1
+	aerial_vel += vel
+
+
+func set_grd_vel(vel : Vector3):
+	if not right_facing:
+		vel.x *= -1
+	ground_vel = vel
+
+
+func set_air_vel(vel : Vector3):
+	if not right_facing:
+		vel.x *= -1
+	aerial_vel += vel
+
+
+func set_x_grd_vel(vel : Vector3):
+	if not right_facing:
+		vel.x *= -1
+	ground_vel.x = vel.x
+
+
+func set_x_air_vel(vel : Vector3):
+	if not right_facing:
+		vel.x *= -1
+	aerial_vel.x = vel.x
+
+
+func set_y_grd_vel(vel : Vector3):
+	ground_vel.y = vel.y
+
+
+func set_y_air_vel(vel : Vector3):
+	aerial_vel.y = vel.y
+
+
+func expediate_grd_vel(vel : Vector3):
+		vel.x = abs(vel.x)
+		if ground_vel.x < 0:
+			ground_vel.x -= vel.x
+		elif ground_vel.x > 0:
+			ground_vel.x += vel.x
+		else:
+			if right_facing:
+				ground_vel.x += vel.x
 			else:
-				if right_facing:
-					velocity.x += vel.x
-				else:
-					velocity.x -= vel.x
-			if velocity.y < 0:
-				velocity.y -= vel.y
+				ground_vel.x -= vel.x
+		if ground_vel.y < 0:
+			ground_vel.y -= vel.y
+		else:
+			ground_vel.y += vel.y
+
+
+func expediate_air_vel(vel : Vector3):
+		vel.x = abs(vel.x)
+		if aerial_vel.x < 0:
+			aerial_vel.x -= vel.x
+		elif aerial_vel.x > 0:
+			aerial_vel.x += vel.x
+		else:
+			if right_facing:
+				aerial_vel.x += vel.x
 			else:
-				velocity.y += vel.y
+				aerial_vel.x -= vel.x
+		if aerial_vel.y < 0:
+			aerial_vel.y -= vel.y
+		else:
+			aerial_vel.y += vel.y
 
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
@@ -379,6 +431,7 @@ func set_state(new_state: States):
 	if current_state != new_state:
 		current_state = new_state
 		update_character_animation()
+		ticks_since_state_change = 0
 
 
 func ground_cancelled_attack_ended() -> bool:
@@ -431,7 +484,7 @@ func try_super_attack(cur_state: States) -> States:
 				meter -= 50
 				update_attack("attack_super/projectile")
 				return States.ATCK_SUPR
-		States.JUMP_N, States.JUMP_L, States.JUMP_R:
+		States.JUMP:
 			if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
 				meter -= 50
 				update_attack("attack_super/projectile_air")
@@ -468,7 +521,7 @@ func try_special_attack(cur_state: States) -> States:
 				update_attack("attack_motion/uppercut")
 				jump_count = 0
 				return States.ATCK_MOTN
-		States.JUMP_N, States.JUMP_L, States.JUMP_R:
+		States.JUMP:
 			if (motion_input_check(QUARTER_CIRCLE_FORWARD + TIGER_KNEE_FORWARD) and
 					one_atk_just_pressed()):
 				update_attack("attack_motion/projectile_air")
@@ -533,7 +586,7 @@ func try_attack(cur_state: States) -> States:
 			if btn_just_pressed("button2"):
 				update_attack("attack_command/crouch_c")
 				return States.ATCK_CMND
-		States.JUMP_N, States.JUMP_L, States.JUMP_R:
+		States.JUMP:
 			if btn_just_pressed("button0"):
 				update_attack("attack_jumping/a")
 				return States.ATCK_JUMP
@@ -587,45 +640,26 @@ func try_walk(exclude, cur_state: States) -> States:
 	return cur_state
 
 
-func try_dash(input: String, success_state: States, cur_state: States) -> States:
+func try_dash(input: String, success_state: States, cur_state: States, cost := false) -> States:
 # we only need the last three inputs
 	var walks = [
 		btn_pressed_ind(input, -3),
 		btn_pressed_ind(input, -2),
 		btn_pressed_ind(input, -1),
 	]
-
 	var count_frames = btn_state(input, -3)[0] + btn_state(input, -2)[0] + btn_state(input, -1)[0]
-
-	if walks == [true, false, true] and count_frames <= DASH_INPUT_LENIENCY:
+	if walks == [true, false, true] and count_frames <= DASH_INPUT_LENIENCY and (
+			(not cost) or (cost and jump_count >= 0.5)):
 		animation_ended = false
 		return success_state
-
 	return cur_state
 
 
-func try_jump(exclude, cur_state: States, grounded := true) -> States:
-	if (
-			(btn_pressed("up") and grounded) or
-			(btn_just_pressed("up") and not grounded) and jump_count > 0
-	):
-		var dir = walk_value()
-
-		if dir != exclude:
-			match dir:
-				WalkDirections.FORWARD:
-					if right_facing:
-						return States.JUMP_R_I if grounded else States.JUMP_R_A_I
-					else:
-						return States.JUMP_L_I if grounded else States.JUMP_L_A_I
-				WalkDirections.BACK:
-					if right_facing:
-						return States.JUMP_L_I if grounded else States.JUMP_L_A_I
-					else:
-						return States.JUMP_R_I if grounded else States.JUMP_R_A_I
-				WalkDirections.NEUTRAL:
-					return States.JUMP_N_I if grounded else States.JUMP_N_A_I
-
+func try_jump(cur_state: States, grounded := true) -> States:
+	if btn_pressed("up") and grounded and jump_count >= 1:
+		return States.JUMP_INIT
+	if btn_just_pressed("up") and not grounded and jump_count >= 1:
+		return States.JUMP_AIR_INIT
 	return cur_state
 
 
@@ -719,21 +753,28 @@ func handle_input() -> void:
 				States.WALK_F:
 					decision = try_walk(WalkDirections.FORWARD, decision)
 			decision = States.CRCH if btn_pressed("down") else decision
-			decision = try_jump(null, decision)
+			decision = try_jump(decision)
 			decision = try_attack(decision)
 # Order: release down, attack, b/h
 		States.CRCH:
 			decision = try_walk(null, decision) if !btn_pressed("down") else decision
 			decision = try_attack(decision)
 # Order: jump, attack, b/h
-		States.JUMP_N, States.JUMP_L, States.JUMP_R:
-			decision = try_jump(null, decision, false)
+		States.JUMP:
+			if len(inputs.up) > 3:
+				if right_facing:
+					decision = try_dash("left", States.DASH_A_B, decision, true)
+					decision = try_dash("right", States.DASH_A_F, decision, true)
+				else:
+					decision = try_dash("left", States.DASH_A_F, decision, true)
+					decision = try_dash("right", States.DASH_A_B, decision, true)
+			decision = try_jump(decision, false)
 			decision = try_attack(decision)
 # Special cases for attack canceling
 		States.ATCK_NRML:
 			if attack_connected: #if the attack landed at all
 				# jump canceling normals
-				decision = try_jump(null, decision)
+				decision = try_jump(decision)
 				# magic series
 				if decision == States.ATCK_NRML:
 					match current_attack:
@@ -769,77 +810,86 @@ func handle_air_stun():
 
 func update_character_state():
 	match current_state:
-		States.IDLE:
-			velocity.x = 0
-			jump_count = jump_total
-		States.CRCH:
-			velocity.x = 0
+		States.IDLE, States.CRCH:
+			ground_vel = Vector3.ZERO
 			jump_count = jump_total
 		States.WALK_F:
 			jump_count = jump_total
 			if not $StopPlayerIntersection.has_overlapping_areas():
-				velocity.x = (1 if right_facing else -1) * walk_speed
+				ground_vel.x = (1 if right_facing else -1) * walk_speed
 			else:
-				velocity.x = 0
+				ground_vel.x = 0
 		States.WALK_B:
 			jump_count = jump_total
-			velocity.x = (-1 if right_facing else 1) * walk_speed
+			ground_vel.x = (-1 if right_facing else 1) * walk_speed
 		States.DASH_F:
 			jump_count = jump_total
 			if not $StopPlayerIntersection.has_overlapping_areas():
-				velocity.x = (1 if right_facing else -1) * walk_speed * 1.5
+				ground_vel.x = (1 if right_facing else -1) * walk_speed * 1.5
 			else:
-				velocity.x = 0
+				ground_vel.x = 0
 		States.DASH_B:
 			jump_count = jump_total
-			velocity.x = (-1 if right_facing else 1) * walk_speed * 1.5
-		States.JUMP_R_I, States.JUMP_L_I, States.JUMP_N_I, States.JUMP_N_A_I, States.JUMP_L_A_I, States.JUMP_R_A_I:
+			ground_vel.x = (-1 if right_facing else 1) * walk_speed * 1.5
+		States.DASH_A_F when ticks_since_state_change == 0:
+			jump_count -= 0.5
+			print(jump_count)
+			if not $StopPlayerIntersection.has_overlapping_areas():
+				aerial_vel.x = (1 if right_facing else -1) * walk_speed * 2.5
+			else:
+				aerial_vel.x = 0
+			aerial_vel.y = -gravity * 3
+		States.DASH_A_B when ticks_since_state_change == 0:
+			jump_count -= 0.5
+			print(jump_count)
+			aerial_vel.x = (-1 if right_facing else 1) * walk_speed * 2.5
+			aerial_vel.y = -gravity  * 3
+		States.JUMP_INIT when ticks_since_state_change == 0:
+			ground_vel.x = 0
+		States.JUMP_INIT when ticks_since_state_change == JUMP_SQUAT_LENGTH:
 			jump_count -= 1
-			velocity.y = jump_height
-		States.JUMP_R, States.JUMP_R_NO_ACT:
-			velocity.x = walk_speed
-		States.JUMP_L, States.JUMP_L_NO_ACT:
-			velocity.x = -1 * walk_speed
-		States.JUMP_N, States.JUMP_N_NO_ACT:
-			velocity.x = 0
+			aerial_vel.x = walk_value() * walk_speed
+			if not right_facing:
+				aerial_vel.x *= -1
+			aerial_vel.y = jump_height
+		States.JUMP_AIR_INIT when ticks_since_state_change == 0:
+			jump_count -= 1
+			aerial_vel.x = walk_value() * walk_speed
+			if not right_facing:
+				aerial_vel.x *= -1
+			aerial_vel.y = jump_height
 		States.HURT_GRB:
-			velocity.x = 0
-			velocity.y = -gravity #negative gravity is used here to undo gravity and halt all movement
-		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW:
-			if stun_time_current == stun_time_start:
-				velocity.x += (-1 if right_facing else 1) * kback.x
-		States.HURT_FALL, States.HURT_BNCE, States.BLCK_AIR, States.OUTRO_BNCE, States.OUTRO_FALL:
-			if stun_time_current == stun_time_start:
-				velocity.x += (-1 if right_facing else 1) * kback.x
-				velocity.y += kback.y
+			ground_vel = Vector3.ZERO
+		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW when (
+				stun_time_current == stun_time_start
+		):
+			ground_vel.x += (-1 if right_facing else 1) * kback.x
+		States.HURT_FALL, States.HURT_BNCE, States.BLCK_AIR, States.OUTRO_BNCE, States.OUTRO_FALL when (
+				stun_time_current == stun_time_start
+		):
+			aerial_vel += Vector3((-1 if right_facing else 1) * kback.x, kback.y, kback.z)
 		States.HURT_LIE, States.OUTRO_LIE:
-			velocity.x *= GROUND_SLIDE_FRICTION
+			ground_vel.x *= GROUND_SLIDE_FRICTION
 
-	velocity.y += gravity
-	velocity.y = max(min_fall_vel, velocity.y)
-	record_y = velocity.y
+	aerial_vel.y += gravity
+	aerial_vel.y = max(min_fall_vel, aerial_vel.y)
+	#if aerial_vel.y < 0 and is_on_floor():
+		#aerial_vel.y = 0
+	velocity = aerial_vel if airborne() else ground_vel
 	check_true = move_and_slide()
-	if velocity.y < 0 and is_on_floor():
-		velocity.y = 0
 
 
 func resolve_state_transitions():
 	# complete jump bug fix
-	match previous_state:
-		States.JUMP_N_I, States.JUMP_N_A_I:
-			previous_state = States.JUMP_N
-		States.JUMP_R_I, States.JUMP_R_A_I:
-			previous_state = States.JUMP_R
-		States.JUMP_L_I, States.JUMP_L_A_I:
-			previous_state = States.JUMP_L
+	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT]:
+		previous_state = States.JUMP
 	match current_state:
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
 			set_state(States.ROUND_WIN)
 			return
-		States.INTRO:
-			if not _animate.is_playing():
-				set_state(States.IDLE)
-				previous_state = current_state
+		States.INTRO when not _animate.is_playing():
+			set_state(States.IDLE)
+			previous_state = current_state
 		States.ROUND_WIN:
 			previous_state = current_state
 			set_state(States.ROUND_WIN)
@@ -849,22 +899,17 @@ func resolve_state_transitions():
 		States.GET_UP:
 			if not _animate.is_playing():
 				set_state(previous_state)
-		States.DASH_B:
-			if animation_ended:
-				set_state(States.WALK_B)
-		States.DASH_F:
-			if animation_ended:
-				set_state(States.WALK_F)
-		States.JUMP_R_I, States.JUMP_R_A_I:
-			if not is_on_floor(): set_state(States.JUMP_R)
-		States.JUMP_L_I, States.JUMP_L_A_I:
-			if not is_on_floor(): set_state(States.JUMP_L)
-		States.JUMP_N_I, States.JUMP_N_A_I:
-			if not is_on_floor(): set_state(States.JUMP_N)
-		States.JUMP_R, States.JUMP_L, States.JUMP_N, States.JUMP_R_NO_ACT, States.JUMP_N_NO_ACT, States.JUMP_L_NO_ACT:
-			if is_on_floor():
-				var new_walk = try_walk(null, current_state)
-				set_state(new_walk)
+		States.DASH_B, States.DASH_F when animation_ended:
+			set_state(States.IDLE)
+		States.DASH_A_F, States.DASH_A_B when ticks_since_state_change >= AIR_DASH_LENGTH:
+			set_state(States.JUMP)
+		States.JUMP_INIT when ticks_since_state_change >= JUMP_SQUAT_LENGTH + 1:
+			set_state(States.JUMP)
+		States.JUMP_AIR_INIT when ticks_since_state_change >= 1:
+			set_state(States.JUMP)
+		States.JUMP, States.JUMP_NO_ACT when is_on_floor():
+			var new_walk = try_walk(null, current_state)
+			set_state(new_walk)
 		States.BLCK_AIR:
 			reduce_stun()
 			if is_on_floor():
@@ -898,16 +943,14 @@ func resolve_state_transitions():
 			reduce_stun()
 			if check_true:
 				set_state(States.OUTRO_LIE)
-		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR:
-			if animation_ended:
-				if attack_return_state.get(current_attack) != null:
-					set_state(attack_return_state[current_attack])
-				else:
-					set_state(previous_state)
-		States.ATCK_GRAB:
-			if animation_ended:
-				update_attack(grab_return_states[current_attack][attack_hurt])
-				set_state(States.ATCK_NRML)
+		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR when animation_ended:
+			if attack_return_state.get(current_attack) != null:
+				set_state(attack_return_state[current_attack])
+			else:
+				set_state(previous_state)
+		States.ATCK_GRAB when animation_ended:
+			update_attack(grab_return_states[current_attack][attack_hurt])
+			set_state(States.ATCK_NRML)
 		States.ATCK_JUMP:
 			if animation_ended:
 				if attack_return_state.get(current_attack) != null:
@@ -939,6 +982,14 @@ func update_character_animation():
 			States.DASH_B when right_facing:
 				_animate.play(dash_left_anim)
 			States.DASH_B when !right_facing:
+				_animate.play(dash_right_anim)
+			States.DASH_A_F when right_facing:
+				_animate.play(dash_right_anim)
+			States.DASH_A_F when !right_facing:
+				_animate.play(dash_left_anim)
+			States.DASH_A_B when right_facing:
+				_animate.play(dash_left_anim)
+			States.DASH_A_B when !right_facing:
 				_animate.play(dash_right_anim)
 			_:
 				_animate.play(basic_anim_state_dict[current_state] + (_animate.anim_right_suf if right_facing else _animate.anim_left_suf))
