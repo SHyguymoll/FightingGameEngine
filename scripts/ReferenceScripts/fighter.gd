@@ -67,6 +67,10 @@ func _initialize_training_mode_elements():
 # Functions used by the game, mostly for checks
 # the methods seen here are defined "virtually", as in, they are expected to be altered
 # by extensions of this class.
+
+func _do_intro() -> void:
+	pass
+
 func _post_intro() -> bool:
 	return true
 

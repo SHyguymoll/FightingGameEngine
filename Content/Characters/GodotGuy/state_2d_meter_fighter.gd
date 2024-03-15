@@ -197,6 +197,10 @@ Current Animation : %s
 		$DebugData.text += str(inputs_as_numpad()[0])
 
 
+func _do_intro():
+	set_state(States.INTRO)
+
+
 func _input_step(recv_inputs) -> void:
 	inputs = recv_inputs
 

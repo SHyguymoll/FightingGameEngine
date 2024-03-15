@@ -1,49 +1,6 @@
 extends Node3D
 
-var p1 : Fighter
-var p2 : Fighter
-var stage : Stage
-
-@onready var grab_point = preload("res://scenes/GrabPoint.tscn")
-
-var p1_reset_health_on_drop := true
-var p2_reset_health_on_drop := true
-var p1_health_reset : float
-var p2_health_reset : float
-
-
-var p1_buttons = [false, false, false, false, false, false, false, false, false, false]
-var p2_buttons = [false, false, false, false, false, false, false, false, false, false]
-
-var p1_inputs : Dictionary = {
-	up=[[0, false]],
-	down=[[0, false]],
-	left=[[0, false]],
-	right=[[0, false]],
-}
-
-var p2_inputs : Dictionary = {
-	up=[[0, false]],
-	down=[[0, false]],
-	left=[[0, false]],
-	right=[[0, false]],
-}
-
-var p1_input_index : int = 0
-var p2_input_index : int = 0
-
-var player_record_buffer := []
-var record_buffer_current := 0
-var record := false
-var replay := false
-
-@export var camera_mode = 0
-const CAMERAMAXX = 1.6
-const CAMERAMAXY = 10
-const MOVEMENTBOUNDX = 4.5
-var p1_combo := 0
-var p2_combo := 0
-enum moments {
+enum Moments {
 	FADE_IN,
 	INTRO,
 	GAME,
@@ -58,14 +15,161 @@ enum CameraModes {
 	PERS_PLAYER1,
 	PERS_PLAYER2,
 }
-var moment := moments.FADE_IN
-
-@onready var round_element = preload("res://scenes/RoundElement.tscn")
-enum round_change_types {
+enum RoundChangeTypes {
 	ADD,
 	REMOVE
 }
-var round_change_behavior : round_change_types = round_change_types.ADD
+const ORTH_DIST = 1.328125
+const CAMERA_PERSPECTIVE = 0
+const CAMERA_ORTH = 1
+const CAMERAMAXX = 1.6
+const CAMERAMAXY = 10
+const MOVEMENTBOUNDX = 4.5
+
+var p1 : Fighter
+var p2 : Fighter
+var stage : Stage
+
+
+
+var p1_reset_health_on_drop := true
+var p2_reset_health_on_drop := true
+var p1_health_reset : float
+var p2_health_reset : float
+
+var p1_buttons = [false, false, false, false, false, false, false, false, false, false]
+var p2_buttons = [false, false, false, false, false, false, false, false, false, false]
+
+var p1_inputs : Dictionary = {
+	up=[[0, false]],
+	down=[[0, false]],
+	left=[[0, false]],
+	right=[[0, false]],
+}
+
+var p1_dummy_buffer = {
+	up=[[0,false]],
+	down=[[0,false]],
+	left=[[0,false]],
+	right=[[0,false]],
+}
+
+var p2_inputs : Dictionary = {
+	up=[[0, false]],
+	down=[[0, false]],
+	left=[[0, false]],
+	right=[[0, false]],
+}
+
+var p2_dummy_buffer = {
+	up=[[0,false]],
+	down=[[0,false]],
+	left=[[0,false]],
+	right=[[0,false]],
+}
+
+var p1_input_index : int = 0
+var p2_input_index : int = 0
+
+var player_record_buffer := []
+var record_buffer_current := 0
+var record := false
+var replay := false
+
+var camera_mode = 0
+
+var p1_combo := 0
+var p2_combo := 0
+
+var moment := Moments.FADE_IN
+var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
+
+@onready var grab_point = preload("res://scenes/GrabPoint.tscn")
+@onready var round_element = preload("res://scenes/RoundElement.tscn")
+
+func _ready():
+	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
+	reset_hitstop()
+	stage = Content.stage_resource.instantiate()
+	add_child(stage)
+	p1 = Content.p1_resource.instantiate()
+	p1.name = "p1"
+	p2 = Content.p2_resource.instantiate()
+	p2.name = "p2"
+	make_hud()
+	init_fighters()
+	add_child(p1)
+	add_child(p2)
+
+
+func _physics_process(_delta):
+	camera_control(camera_mode)
+	match moment:
+		Moments.FADE_IN:
+			move_inputs_and_iterate(true)
+			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
+			if $SmoothTransitionLayer/ColorRect.color.a < 0.1:
+				$SmoothTransitionLayer/ColorRect.color.a = 0.0
+				moment = Moments.INTRO
+				p1._do_intro()
+				p2._do_intro()
+		Moments.INTRO:
+			move_inputs_and_iterate(true)
+			if p1._post_intro() and p2._post_intro():
+				moment = Moments.GAME
+				$HUD/Fight.visible = true
+			check_combos()
+			character_positioning()
+			update_hud()
+		Moments.GAME:
+			# handle projectiles
+			for proj in ($Projectiles.get_children() as Array[Projectile]):
+				proj.tick()
+			create_inputs()
+			move_inputs_and_iterate(false)
+			check_combos()
+			training_mode_settings()
+			character_positioning()
+			update_hud()
+			$HUD/Fight.modulate.a8 -= 10
+		Moments.ROUND_END:
+			move_inputs_and_iterate(true)
+			check_combos()
+			character_positioning()
+			if p1._post_outro() and p2._in_defeated_state():
+				GameGlobal.p1_wins += 1
+				if GameGlobal.p1_wins < GameGlobal.win_threshold:
+					moment = Moments.FADE_OUT
+				else:
+					print("game ended with a p1 victory, restarting anyways")
+					GameGlobal.p1_wins = 0
+					moment = Moments.FADE_OUT
+			elif p1._in_defeated_state() and p2._post_outro():
+				GameGlobal.p2_wins += 1
+				if GameGlobal.p2_wins < GameGlobal.win_threshold:
+					moment = Moments.FADE_OUT
+				else:
+					print("game ended with a p2 victory, restarting anyways")
+					GameGlobal.p2_wins = 0
+					moment = Moments.FADE_OUT
+			elif p1._in_defeated_state() and p2._in_defeated_state():
+				if (
+					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
+					and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
+				):
+					print("game ended on a draw, restarting anyways")
+					GameGlobal.p1_wins = 0
+					GameGlobal.p2_wins = 0
+					moment = Moments.FADE_OUT
+				else:
+					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
+					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
+					moment = Moments.FADE_OUT
+		Moments.FADE_OUT:
+			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 1.0, 0.25)
+			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a - 1.0):
+				get_tree().reload_current_scene()
+
 
 func make_hud():
 	# player 1
@@ -95,12 +199,12 @@ func make_hud():
 		p2_round.name = str(n)
 		p2_round_group.add_child(p2_round)
 	match round_change_behavior:
-		round_change_types.ADD:
+		RoundChangeTypes.ADD:
 			for n in range(GameGlobal.p1_wins):
 				(p1_round_group.get_node(str(n)) as RoundElement).fulfill()
 			for n in range(GameGlobal.p2_wins):
 				(p2_round_group.get_node(str(n)) as RoundElement).fulfill()
-		round_change_types.REMOVE:
+		RoundChangeTypes.REMOVE:
 			for n in range(GameGlobal.win_threshold):
 				(p1_round_group.get_node(str(n)) as RoundElement).fulfill()
 				(p2_round_group.get_node(str(n)) as RoundElement).fulfill()
@@ -155,10 +259,10 @@ func update_hud():
 func init_fighters():
 	for i in range(p1.BUTTONCOUNT):
 		p1_inputs["button" + str(i)] = [[0, false]]
+		p1_dummy_buffer["button" + str(i)] = [[0, false]]
 	p1.player = true
 	p1.position = Vector3(abs(p1.start_x_offset) * -1, 0, 0)
 	p1._initialize_boxes()
-	p1.char_name += " p1"
 	p1.hitbox_created.connect(register_hitbox)
 	p1.projectile_created.connect(register_projectile)
 	p1.grabbed.connect(grabbed)
@@ -174,10 +278,10 @@ func init_fighters():
 
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
+		p2_dummy_buffer["button" + str(i)] = [[0, false]]
 	p2.player = false
 	p2.position = Vector3(abs(p2.start_x_offset), 0, 0)
 	p2._initialize_boxes()
-	p2.char_name += " p2"
 	p2.hitbox_created.connect(register_hitbox)
 	p2.projectile_created.connect(register_projectile)
 	p2.grabbed.connect(grabbed)
@@ -201,25 +305,6 @@ func init_fighters():
 
 func reset_hitstop():
 	GameGlobal.global_hitstop = 0
-
-
-func _ready():
-	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
-	reset_hitstop()
-	stage = Content.stage_resource.instantiate()
-	add_child(stage)
-	p1 = Content.p1_resource.instantiate()
-	p1.name = "p1"
-	p2 = Content.p2_resource.instantiate()
-	p2.name = "p2"
-	make_hud()
-	init_fighters()
-	add_child(p1)
-	add_child(p2)
-
-const ORTH_DIST = 1.328125
-const CAMERA_PERSPECTIVE = 0
-const CAMERA_ORTH = 1
 
 
 func camera_control(mode: int):
@@ -415,18 +500,6 @@ func create_inputs():
 		record_buffer_current += 1
 
 
-func create_dummy_buffer(button_count : int):
-	var dummy_buffer = {
-		up=[[0,false]],
-		down=[[0,false]],
-		left=[[0,false]],
-		right=[[0,false]],
-	}
-	for i in range(button_count):
-		dummy_buffer["button" + str(i)] = [[0, false]]
-	return dummy_buffer
-
-
 func hitbox_hitbox_collisions():
 	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
 		if hitbox.invalid:
@@ -435,18 +508,18 @@ func hitbox_hitbox_collisions():
 			if hitbox.collision_layer == check.collision_layer:
 				continue
 			if (hitbox as Hitbox).hit_priority <= (check as Hitbox).hit_priority:
-				print("%s collided with %s and is now neutralized" % [hitbox, check])
+				#print("%s collided with %s and is now neutralized" % [hitbox, check])
 				hitbox.invalid = true
 				break
 			else:
-				print("%s collided with %s and is now neutralized" % [check, hitbox])
+				#print("%s collided with %s and is now neutralized" % [check, hitbox])
 				hitbox.invalid = true
 
 
 func move_inputs_and_iterate(fake_inputs):
 	if fake_inputs:
-		p1._input_step(create_dummy_buffer(p1.BUTTONCOUNT))
-		p2._input_step(create_dummy_buffer(p2.BUTTONCOUNT))
+		p1._input_step(p1_dummy_buffer)
+		p2._input_step(p2_dummy_buffer)
 		return
 
 	var p1_buf = slice_input_dictionary(
@@ -565,7 +638,7 @@ func grab_released(player):
 
 
 func player_defeated():
-	moment = moments.ROUND_END
+	moment = Moments.ROUND_END
 	p1.game_ended = true
 	p2.game_ended = true
 	for projectile in ($Projectiles.get_children() as Array[Projectile]):
@@ -577,72 +650,6 @@ func training_mode_settings():
 		p1.health = p1_health_reset
 	if p2_reset_health_on_drop and not p1_combo:
 		p2.health = p2_health_reset
-
-
-func _physics_process(_delta):
-	camera_control(camera_mode)
-	match moment:
-		moments.FADE_IN:
-			move_inputs_and_iterate(true)
-			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
-			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a):
-				moment = moments.INTRO
-		moments.INTRO:
-			move_inputs_and_iterate(true)
-			if p1._post_intro() and p2._post_intro():
-				moment = moments.GAME
-				$HUD/Fight.visible = true
-			check_combos()
-			character_positioning()
-			update_hud()
-		moments.GAME:
-			# handle projectiles
-			for proj in ($Projectiles.get_children() as Array[Projectile]):
-				proj.tick()
-			create_inputs()
-			move_inputs_and_iterate(false)
-			check_combos()
-			training_mode_settings()
-			character_positioning()
-			update_hud()
-			$HUD/Fight.modulate.a8 -= 10
-		moments.ROUND_END:
-			move_inputs_and_iterate(true)
-			check_combos()
-			character_positioning()
-			if p1._post_outro() and p2._in_defeated_state():
-				GameGlobal.p1_wins += 1
-				if GameGlobal.p1_wins < GameGlobal.win_threshold:
-					moment = moments.FADE_OUT
-				else:
-					print("game ended with a p1 victory, restarting anyways")
-					GameGlobal.p1_wins = 0
-					moment = moments.FADE_OUT
-			elif p1._in_defeated_state() and p2._post_outro():
-				GameGlobal.p2_wins += 1
-				if GameGlobal.p2_wins < GameGlobal.win_threshold:
-					moment = moments.FADE_OUT
-				else:
-					print("game ended with a p2 victory, restarting anyways")
-					GameGlobal.p2_wins = 0
-					moment = moments.FADE_OUT
-			elif p1._in_defeated_state() and p2._in_defeated_state():
-				if (
-					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
-					and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
-				):
-					print("game ended on a draw, restarting anyways")
-					GameGlobal.p1_wins = 0
-					GameGlobal.p2_wins = 0
-					moment = moments.FADE_OUT
-				else:
-					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
-					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
-					moment = moments.FADE_OUT
-		moments.FADE_OUT:
-			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 1.0, 0.25)
-			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a - 1.0):
-				get_tree().reload_current_scene()
 
 
 func _on_p1_health_reset_switch_toggled(toggled_on):
