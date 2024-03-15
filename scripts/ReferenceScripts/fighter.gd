@@ -20,8 +20,6 @@ const INFINITE_STUN := -1
 @export_category("Gameplay Details")
 @export var BUTTONCOUNT : int = 3
 @export var JUST_PRESSED_BUFFER : int = 2
-@export var DASH_INPUT_LENIENCY : int = 15
-@export var MOTION_INPUT_LENIENCY : int = 12
 @export var start_x_offset : float = 2
 @export var grabbed_offset : Vector3 = Vector3(-0.46, -0.87, 0)
 @export var grab_point : GrabPoint # When the fighter is the grabber

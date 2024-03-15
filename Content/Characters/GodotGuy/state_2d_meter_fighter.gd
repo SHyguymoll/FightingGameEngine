@@ -29,6 +29,8 @@ enum AVEffects {ADD = 0, SET = 1, SET_X = 2, SET_Y = 3, EXPEDIATE = 4}
 
 enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
 
+const DASH_INPUT_LENIENCY : int = 15
+const MOTION_INPUT_LENIENCY : int = 12
 # motion inputs, with some leniency
 const QUARTER_CIRCLE_FORWARD = [[2,3,6], [2,6]]
 const QUARTER_CIRCLE_BACK = [[2,1,4], [2,4]]
