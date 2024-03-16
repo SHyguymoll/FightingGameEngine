@@ -25,9 +25,8 @@ enum States {
 
 enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
 
-const AIR_DASH_LENGTH = 16
 const JUMP_SQUAT_LENGTH = 4
-const DASH_INPUT_LENIENCY : int = 15
+const DASH_INPUT_LENIENCY : int = 10
 const MOTION_INPUT_LENIENCY : int = 12
 # motion inputs, with some leniency
 const QUARTER_CIRCLE_FORWARD = [[2,3,6], [2,6]]
@@ -328,27 +327,27 @@ func set_grd_vel(vel : Vector3):
 func set_air_vel(vel : Vector3):
 	if not right_facing:
 		vel.x *= -1
-	aerial_vel += vel
+	aerial_vel = vel
 
 
-func set_x_grd_vel(vel : Vector3):
+func set_x_grd_vel(val : float):
 	if not right_facing:
-		vel.x *= -1
-	ground_vel.x = vel.x
+		val *= -1
+	ground_vel.x = val
 
 
-func set_x_air_vel(vel : Vector3):
+func set_x_air_vel(val : float):
 	if not right_facing:
-		vel.x *= -1
-	aerial_vel.x = vel.x
+		val *= -1
+	aerial_vel.x = val
 
 
-func set_y_grd_vel(vel : Vector3):
-	ground_vel.y = vel.y
+func set_y_grd_vel(val : float):
+	ground_vel.y = val
 
 
-func set_y_air_vel(vel : Vector3):
-	aerial_vel.y = vel.y
+func set_y_air_vel(val : float):
+	aerial_vel.y = val
 
 
 func expediate_grd_vel(vel : Vector3):
@@ -426,6 +425,10 @@ func add_meter(add_to_meter : float):
 	meter = min(meter + add_to_meter, METER_MAX)
 	(ui_elements[0] as TextureProgressBar).value = meter
 
+
+func set_airborne():
+	force_airborne = true
+####################################################################################################
 
 func set_state(new_state: States):
 	if current_state != new_state:
@@ -833,7 +836,6 @@ func update_character_state():
 			ground_vel.x = (-1 if right_facing else 1) * walk_speed * 1.5
 		States.DASH_A_F when ticks_since_state_change == 0:
 			jump_count -= 0.5
-			print(jump_count)
 			if not $StopPlayerIntersection.has_overlapping_areas():
 				aerial_vel.x = (1 if right_facing else -1) * walk_speed * 2.5
 			else:
@@ -841,7 +843,6 @@ func update_character_state():
 			aerial_vel.y = -gravity * 3
 		States.DASH_A_B when ticks_since_state_change == 0:
 			jump_count -= 0.5
-			print(jump_count)
 			aerial_vel.x = (-1 if right_facing else 1) * walk_speed * 2.5
 			aerial_vel.y = -gravity  * 3
 		States.JUMP_INIT when ticks_since_state_change == 0:
@@ -860,6 +861,7 @@ func update_character_state():
 			aerial_vel.y = jump_height
 		States.HURT_GRB:
 			ground_vel = Vector3.ZERO
+			aerial_vel = Vector3.ZERO
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW when (
 				stun_time_current == stun_time_start
 		):
@@ -901,7 +903,7 @@ func resolve_state_transitions():
 				set_state(previous_state)
 		States.DASH_B, States.DASH_F when animation_ended:
 			set_state(States.IDLE)
-		States.DASH_A_F, States.DASH_A_B when ticks_since_state_change >= AIR_DASH_LENGTH:
+		States.DASH_A_F, States.DASH_A_B when ticks_since_state_change >= DASH_INPUT_LENIENCY + 1:
 			set_state(States.JUMP)
 		States.JUMP_INIT when ticks_since_state_change >= JUMP_SQUAT_LENGTH + 1:
 			set_state(States.JUMP)
@@ -918,6 +920,10 @@ func resolve_state_transitions():
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW:
 			reduce_stun()
 			handle_stand_stun()
+		States.HURT_GRB:
+			reduce_stun()
+			if stun_time_current == 0:
+				set_state(States.HURT_FALL)
 		States.HURT_FALL:
 			reduce_stun()
 			handle_air_stun()
@@ -944,22 +950,23 @@ func resolve_state_transitions():
 			if check_true:
 				set_state(States.OUTRO_LIE)
 		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR when animation_ended:
+			force_airborne = false
 			if attack_return_state.get(current_attack) != null:
 				set_state(attack_return_state[current_attack])
 			else:
 				set_state(previous_state)
 		States.ATCK_GRAB when animation_ended:
+			force_airborne = false
 			update_attack(grab_return_states[current_attack][attack_hurt])
 			set_state(States.ATCK_NRML)
-		States.ATCK_JUMP:
-			if animation_ended:
-				if attack_return_state.get(current_attack) != null:
-					set_state(attack_return_state[current_attack])
-				else:
-					set_state(previous_state)
-			elif is_on_floor():
-				var new_walk = try_walk(null, current_state)
-				set_state(new_walk)
+		States.ATCK_JUMP when animation_ended:
+			if attack_return_state.get(current_attack) != null:
+				set_state(attack_return_state[current_attack])
+			else:
+				set_state(previous_state)
+		States.ATCK_JUMP when is_on_floor():
+			var new_walk = try_walk(null, current_state)
+			set_state(new_walk)
 
 
 func update_character_animation():
@@ -1005,6 +1012,7 @@ func reset_facing():
 
 
 func handle_damage(attack : Hitbox, blocked : bool, next_state : States):
+	release_grab()
 	if not blocked:
 		health -= attack.damage_hit * defense_mult
 		set_stun(attack.stun_hit)
@@ -1079,15 +1087,15 @@ func try_block(attack : Hitbox,
 		return false
 
 
-func try_grab(attack_dmg: float, on_ground : bool) -> bool:
+func try_grab(attack : Hitbox, on_ground : bool) -> bool:
 	if crouching():
 		return false
 	if on_ground and airborne():
 		return false
 
 	emit_signal(&"grabbed", player)
-	health = max(health - attack_dmg * defense_mult, 1)
-	set_stun(-1)
+	health = max(health - attack.damage_hit * defense_mult, 1)
+	set_stun(attack.stun_hit)
 	kback = Vector3.ZERO
 	set_state(States.HURT_GRB)
 	return true
@@ -1114,9 +1122,9 @@ func _damage_step(attack : Hitbox) -> bool:
 			return try_block(attack, block.away_high, block.away_any,
 					States.HURT_BNCE, States.HURT_BNCE, States.HURT_BNCE)
 		"grab_ground":
-			return try_grab(attack.damage_hit, true)
+			return try_grab(attack, true)
 		"grab_air":
-			return try_grab(attack.damage_hit, false)
+			return try_grab(attack, false)
 		_: # this will definitely not be a bug in the future
 			return try_block(attack, block.nope, block.nope,
 					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL)
