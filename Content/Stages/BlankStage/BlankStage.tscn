@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cx7pdgv0mhddt"]
+[gd_scene load_steps=10 format=3 uid="uid://cx7pdgv0mhddt"]
 
 [ext_resource type="Script" path="res://scripts/ReferenceScripts/stage.gd" id="1_pg408"]
 
@@ -7,22 +7,36 @@ albedo_color = Color(0.478431, 1, 0.933333, 1)
 
 [sub_resource type="BoxMesh" id="1"]
 material = SubResource("StandardMaterial3D_ssh77")
-size = Vector3(13, 1.335, 1)
+size = Vector3(13, 1.335, 1.615)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qkql2"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skvje"]
-albedo_color = Color(1, 0.603922, 1, 1)
-
-[sub_resource type="BoxMesh" id="3"]
-material = SubResource("StandardMaterial3D_skvje")
-size = Vector3(31.818, 11.845, 0.125)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_jswp6"]
 plane = Plane(1, 0, 0, 0)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_5xxee"]
 plane = Plane(-1, 0, 0, 0)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o8mma"]
+sky_top_color = Color(0.439216, 0.25098, 1, 1)
+sky_horizon_color = Color(0, 0.752941, 0.701961, 1)
+sky_curve = 0.204906
+ground_bottom_color = Color(0.752941, 0, 0.658824, 1)
+ground_horizon_color = Color(0, 0.752941, 0.701961, 1)
+ground_curve = 0.200484
+sun_angle_max = 0.0
+sun_curve = 1e-05
+use_debanding = false
+
+[sub_resource type="Sky" id="Sky_inyy8"]
+sky_material = SubResource("ProceduralSkyMaterial_o8mma")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_4jeua"]
+background_mode = 2
+background_canvas_max_layer = 5
+sky = SubResource("Sky_inyy8")
+sky_rotation = Vector3(0, 0, 0.673697)
 
 [node name="Ground" type="StaticBody3D"]
 collision_mask = 0
@@ -34,10 +48,6 @@ mesh = SubResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("WorldBoundaryShape3D_qkql2")
-
-[node name="MeshInstance2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.593981, 0.804479, 0, -0.804479, 0.593981, 0, 1, -4.62878)
-mesh = SubResource("3")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.1, 0)
@@ -72,3 +82,6 @@ transform = Transform3D(1, 0, 0, 0, 0.7749, 0.632083, 0, -0.632083, 0.7749, 6.02
 light_energy = 2.311
 spot_range = 8.1909
 spot_angle = 47.5453
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4jeua")
