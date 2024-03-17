@@ -19,7 +19,7 @@ enum ReturnState {
 }
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
-@export var custom_layout : CustomLayoutDefinition
+@onready var custom_layout = preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var select = preload("res://scenes/PlayerSelect.tscn")
 var screen = "Menu"
@@ -264,6 +264,7 @@ func load_character_select():
 				slice_built.append(null)
 				cur_index += 1
 			Content.char_map.append(slice_built)
+		custom_layout = null # finally, free the custom_shape
 	else: #fallback shape
 		var cur_row_pos = 0
 		var cur_slice = []

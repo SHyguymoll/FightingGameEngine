@@ -1,4 +1,3 @@
-class_name CustomLayoutDefinition
 extends Resource
 
 var char_top_left = Vector3(-4,2,-6)
