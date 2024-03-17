@@ -608,7 +608,7 @@ func character_positioning():
 	p2.distance = p2.position.x - p1.position.x
 
 
-func spawn_audio(sound: AudioStream):
+func spawn_audio(sound : AudioStream):
 	var new_audio = AudioStreamPlayer.new()
 	new_audio.stream = sound
 	new_audio.finished.connect(func(): new_audio.queue_free())
@@ -616,11 +616,11 @@ func spawn_audio(sound: AudioStream):
 	$Audio.add_child(new_audio)
 
 
-func register_hitbox(hitbox):
+func register_hitbox(hitbox : Hitbox):
 	$Hitboxes.add_child(hitbox, true)
 
 
-func register_projectile(projectile):
+func register_projectile(projectile : Projectile):
 	projectile.projectile_ended.connect(delete_projectile)
 	$Projectiles.add_child(projectile, true)
 
