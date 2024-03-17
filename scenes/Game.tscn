@@ -17,17 +17,18 @@ projection = 1
 current = true
 size = 3.5
 
-[node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
-layer = 100
+[node name="Audio" type="Node3D" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="SmoothTransitionLayer"]
-offset_right = 1920.0
-offset_bottom = 1080.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="Hitboxes" type="Node3D" parent="."]
+
+[node name="Projectiles" type="Node3D" parent="."]
+
+[node name="FightersAndStage" type="Node3D" parent="."]
+
+layer = 10
 
 [node name="HUD" type="CanvasLayer" parent="."]
-layer = 10
+layer = 20
 
 [node name="Fight" type="Label" parent="HUD"]
 anchors_preset = 8
@@ -296,11 +297,14 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Audio" type="Node3D" parent="."]
+[node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
+layer = 100
 
-[node name="Hitboxes" type="Node3D" parent="."]
-
-[node name="Projectiles" type="Node3D" parent="."]
+[node name="ColorRect" type="ColorRect" parent="SmoothTransitionLayer"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [connection signal="drag_ended" from="HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset" to="." method="_on_p1_health_reset_drag_ended"]
 [connection signal="toggled" from="HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p1_health_reset_switch_toggled"]

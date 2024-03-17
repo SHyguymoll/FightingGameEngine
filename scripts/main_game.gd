@@ -91,15 +91,15 @@ func _ready():
 	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
 	reset_hitstop()
 	stage = Content.stage_resource.instantiate()
-	add_child(stage)
+	$FightersAndStage.add_child(stage)
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
 	p2 = Content.p2_resource.instantiate()
 	p2.name = "p2"
 	make_hud()
 	init_fighters()
-	add_child(p1)
-	add_child(p2)
+	$FightersAndStage.add_child(p1)
+	$FightersAndStage.add_child(p2)
 
 
 func _physics_process(_delta):
@@ -274,7 +274,7 @@ func init_fighters():
 	for element in p1.ui_elements_training:
 		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(element)
 	p1.grabbed_point = grab_point.instantiate()
-	add_child(p1.grabbed_point)
+	$FightersAndStage.add_child(p1.grabbed_point)
 
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
@@ -293,7 +293,7 @@ func init_fighters():
 	for element in p2.ui_elements_training:
 		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(element)
 	p2.grabbed_point = grab_point.instantiate()
-	add_child(p2.grabbed_point)
+	$FightersAndStage.add_child(p2.grabbed_point)
 
 	p1.position.x = clamp(p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
