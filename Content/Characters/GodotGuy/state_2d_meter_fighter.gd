@@ -385,7 +385,7 @@ func expediate_air_vel(vel : Vector3):
 
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
-	var new_hitbox := (hitboxes[hitbox_name].instantiate() as Hitbox)
+	var new_hitbox := hitboxes[hitbox_name].instantiate() as Hitbox
 
 	if not right_facing:
 		pos.x *= -1
@@ -400,7 +400,7 @@ func create_hitbox(pos : Vector3, hitbox_name : String):
 
 
 func create_projectile(pos : Vector3, projectile_name : String, type : int):
-	var new_projectile := (projectiles[projectile_name].instantiate() as Projectile)
+	var new_projectile := projectiles[projectile_name].instantiate() as Projectile
 
 	if not right_facing:
 		pos.x *= -1
