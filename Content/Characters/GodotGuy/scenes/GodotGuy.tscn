@@ -1,4 +1,4 @@
-[gd_scene load_steps=84 format=3 uid="uid://kquoyj34deus"]
+[gd_scene load_steps=85 format=3 uid="uid://kquoyj34deus"]
 
 [ext_resource type="Script" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/dupli_flipping_2d_animation_player.gd" id="5_e82io"]
 [ext_resource type="PackedScene" uid="uid://deergjaym2msh" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP2.tscn" id="5_fjkep"]
 [ext_resource type="AudioStream" uid="uid://c2tgndwonbirx" path="res://Content/Characters/GodotGuy/sounds/step.wav" id="5_wtfc2"]
+[ext_resource type="PackedScene" uid="uid://byer6bjupb33k" path="res://Content/Characters/GodotGuy/scenes/Animated2DSuperFreeze.tscn" id="6_xkque"]
 [ext_resource type="PackedScene" uid="uid://b3qx5aofxylc7" path="res://scenes/GrabPoint.tscn" id="7_eysur"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
 
@@ -4707,11 +4708,14 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.0166667, 0.166667),
+"transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
+}, {
+"args": [0],
+"method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.705, 0.92, 0), "stand_c"],
 "method": &"create_hitbox"
@@ -4847,11 +4851,14 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.316667, 0.333334, 0.350001),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0166667, 0.316667, 0.333334, 0.350001),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
+}, {
+"args": [0],
+"method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 2],
 "method": &"create_projectile"
@@ -4887,11 +4894,17 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0166667, 0.0833335, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
+"args": [],
+"method": &"set_airborne"
+}, {
 "args": [6.0],
 "method": &"set_y_air_vel"
+}, {
+"args": [0],
+"method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 3],
 "method": &"create_projectile"
@@ -4946,6 +4959,7 @@ ui_elements_training_packed = {
 "player1": [ExtResource("4_m71sm")],
 "player2": [ExtResource("5_fjkep")]
 }
+dramatic_freezes = [ExtResource("6_xkque")]
 
 [node name="DebugData" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.92896, 0)
@@ -4982,6 +4996,7 @@ anim_left_suf = "_left"
 anim_right_suf = "_right"
 
 [node name="FunctionPlayer" type="AnimationPlayer" parent="."]
+callback_mode_process = 0
 libraries = {
 "attack_command": SubResource("AnimationLibrary_ddds8"),
 "attack_jumping": SubResource("AnimationLibrary_ukvdc"),
@@ -5009,21 +5024,21 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
-shape = ExtResource("3_8q5n8")
-disabled = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.344, 0)
+shape = ExtResource("2_ahw0y")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 0.776615, 0, 0, 0, 1, 0, 0.529186, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.302649, 0, 0, 0, 0.302649, 0, 0, 0, 1, -0.647207, 0.728664, 0.04)
+transform = Transform3D(0.212501, 0, 0, 0, 0.475225, 0, 0, 0, 1, 0.236201, 0.344891, 0.04)
+visible = false
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

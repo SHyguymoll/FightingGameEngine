@@ -199,16 +199,18 @@ func _do_intro():
 	set_state(States.INTRO)
 
 
+func globally_actionable() -> bool:
+	return GameGlobal.global_hitstop == 0 and not GameGlobal.freeze
+
 func _input_step(recv_inputs) -> void:
 	inputs = recv_inputs
 
-	if GameGlobal.global_hitstop == 0:
+	if globally_actionable():
 		resolve_state_transitions()
 	handle_input()
-	if GameGlobal.global_hitstop == 0:
+	if globally_actionable():
 		update_character_state()
 
-	_animate.speed_scale = float(GameGlobal.global_hitstop == 0)
 	reset_facing()
 	ticks_since_state_change += 1
 
@@ -413,6 +415,9 @@ func create_projectile(pos : Vector3, projectile_name : String, type : int):
 
 	emit_signal(&"projectile_created", new_projectile)
 
+func create_dramatic_freeze(ind : int):
+	var new_freeze := dramatic_freezes[ind].instantiate() as DramaticFreeze
+	emit_signal(&"dramatic_freeze_created", new_freeze, self)
 
 func release_grab():
 	emit_signal("grab_released", player)

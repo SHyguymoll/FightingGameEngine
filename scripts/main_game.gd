@@ -4,6 +4,7 @@ enum Moments {
 	FADE_IN,
 	INTRO,
 	GAME,
+	DRAMATIC_FREEZE,
 	ROUND_END,
 	FADE_OUT,
 }
@@ -29,8 +30,6 @@ const MOVEMENTBOUNDX = 4.5
 var p1 : Fighter
 var p2 : Fighter
 var stage : Stage
-
-
 
 var p1_reset_health_on_drop := true
 var p2_reset_health_on_drop := true
@@ -132,6 +131,11 @@ func _physics_process(_delta):
 			character_positioning()
 			update_hud()
 			$HUD/Fight.modulate.a8 -= 10
+		Moments.DRAMATIC_FREEZE:
+			create_inputs()
+			move_inputs_and_iterate(false)
+			character_positioning()
+			update_hud()
 		Moments.ROUND_END:
 			move_inputs_and_iterate(true)
 			check_combos()
@@ -265,6 +269,7 @@ func init_fighters():
 	p1._initialize_boxes()
 	p1.hitbox_created.connect(register_hitbox)
 	p1.projectile_created.connect(register_projectile)
+	p1.dramatic_freeze_created.connect(start_dramatic_freeze)
 	p1.grabbed.connect(grabbed)
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
@@ -284,6 +289,7 @@ func init_fighters():
 	p2._initialize_boxes()
 	p2.hitbox_created.connect(register_hitbox)
 	p2.projectile_created.connect(register_projectile)
+	p2.dramatic_freeze_created.connect(start_dramatic_freeze)
 	p2.grabbed.connect(grabbed)
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
@@ -623,6 +629,26 @@ func register_hitbox(hitbox : Hitbox):
 func register_projectile(projectile : Projectile):
 	projectile.projectile_ended.connect(delete_projectile)
 	$Projectiles.add_child(projectile, true)
+
+
+func start_dramatic_freeze(dramatic_freeze : DramaticFreeze, source : Fighter):
+	dramatic_freeze.end_freeze.connect(end_dramatic_freeze)
+	dramatic_freeze.source = source
+	dramatic_freeze.source_2d_pos = $Camera3D.unproject_position(source.global_position)
+	if source.player:
+		dramatic_freeze.other = p2
+		dramatic_freeze.other_2d_pos = $Camera3D.unproject_position(p2.global_position)
+	else:
+		dramatic_freeze.other = p1
+		dramatic_freeze.other_2d_pos = $Camera3D.unproject_position(p1.global_position)
+	$DramaticFreezes.add_child(dramatic_freeze, true)
+	GameGlobal.freeze = true
+	moment = Moments.DRAMATIC_FREEZE
+
+
+func end_dramatic_freeze():
+	GameGlobal.freeze = false
+	moment = Moments.GAME
 
 
 func delete_projectile(projectile):

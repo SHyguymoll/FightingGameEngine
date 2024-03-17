@@ -25,6 +25,7 @@ size = 3.5
 
 [node name="FightersAndStage" type="Node3D" parent="."]
 
+[node name="DramaticFreezes" type="CanvasLayer" parent="."]
 layer = 10
 
 [node name="HUD" type="CanvasLayer" parent="."]

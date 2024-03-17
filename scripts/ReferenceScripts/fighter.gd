@@ -5,6 +5,7 @@ signal grabbed
 signal grab_released
 signal hitbox_created
 signal projectile_created
+signal dramatic_freeze_created
 signal defeated
 
 const INFINITE_STUN := -1
@@ -37,6 +38,9 @@ const INFINITE_STUN := -1
 	player1=[],
 	player2=[]
 }
+
+# play these to freeze the game for added drama.
+@export var dramatic_freezes = []
 
 # Don't modify any of these, the game will initialize them.
 var player : bool # True if player 1, False if player 2.

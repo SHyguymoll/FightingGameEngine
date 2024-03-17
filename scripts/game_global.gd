@@ -1,6 +1,7 @@
 extends Node
 
 var global_hitstop : int
+var freeze : bool = false
 
 var win_threshold : int = 2
 var p1_wins : int = 0
