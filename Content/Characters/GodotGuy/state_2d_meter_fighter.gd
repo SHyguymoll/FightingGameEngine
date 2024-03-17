@@ -864,11 +864,11 @@ func update_character_state():
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW when (
 				stun_time_current == stun_time_start
 		):
-			ground_vel.x += (-1 if right_facing else 1) * kback.x
+			ground_vel.x = (-1 if right_facing else 1) * kback.x
 		States.HURT_FALL, States.HURT_BNCE, States.BLCK_AIR, States.OUTRO_BNCE, States.OUTRO_FALL when (
 				stun_time_current == stun_time_start
 		):
-			aerial_vel += Vector3((-1 if right_facing else 1) * kback.x, kback.y, kback.z)
+			aerial_vel = Vector3((-1 if right_facing else 1) * kback.x, kback.y, kback.z)
 		States.HURT_LIE, States.OUTRO_LIE:
 			ground_vel.x *= GROUND_SLIDE_FRICTION
 
