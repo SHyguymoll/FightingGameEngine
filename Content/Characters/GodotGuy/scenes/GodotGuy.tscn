@@ -4708,14 +4708,11 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.166667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.166667),
+"transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [0],
-"method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.705, 0.92, 0), "stand_c"],
 "method": &"create_hitbox"
