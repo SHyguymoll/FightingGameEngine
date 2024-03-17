@@ -175,10 +175,8 @@ func _ready():
 
 func _process(_delta):
 	$DebugData.text = """State: %s (Prev: %s)
-Vels: %s %s
-Attack Finished: %s
-Stun: %s:%s
-Knockback: %s
+Vels: %s | %s | %s
+Stun: %s/%s
 Current Animation : %s
 Jumps: %s/%s
 """ % [
@@ -186,16 +184,15 @@ Jumps: %s/%s
 		States.keys()[previous_state],
 		ground_vel,
 		aerial_vel,
-		animation_ended,
+		kback,
 		stun_time_current,
 		stun_time_start,
-		kback,
 		_animate.current_animation,
 		jump_count,
 		jump_total,
 	]
-	if len(inputs.up) > 0:
-		$DebugData.text += str(inputs_as_numpad()[0])
+	#if len(inputs.up) > 0:
+		#$DebugData.text += str(inputs_as_numpad()[0])
 
 
 func _do_intro():
