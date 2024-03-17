@@ -107,8 +107,11 @@ func _return_attackers():
 	return []
 
 
-func _input_step(recv_inputs) -> void:
+func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
 	inputs = recv_inputs
+
+func _visual_step(dramatic_freeze : bool) -> void:
+	pass
 
 # This is called when a hitbox makes contact with the other fighter, after resolving that the fighter
 # was hit by the attack. An Array is passed for maximum customizability.

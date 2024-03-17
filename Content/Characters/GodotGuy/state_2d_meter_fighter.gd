@@ -70,7 +70,6 @@ var previous_state : States
 var ticks_since_state_change : int = 0
 var force_airborne := false
 
-@onready var _animate := $AnimationPlayer
 var basic_anim_state_dict := {
 	States.INTRO : "other/intro",
 	States.ROUND_WIN : "other/win",
@@ -169,8 +168,8 @@ var grab_return_states := {
 # real-time effects, and _ready for initialization.
 func _ready():
 	reset_facing()
-	_animate.play(basic_anim_state_dict[current_state] +
-			(_animate.anim_right_suf if right_facing else _animate.anim_left_suf))
+	$AnimationPlayer.play(basic_anim_state_dict[current_state] +
+			($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
 
 
 func _process(_delta):
@@ -187,7 +186,7 @@ Jumps: %s/%s
 		kback,
 		stun_time_current,
 		stun_time_start,
-		_animate.current_animation,
+		$AnimationPlayer.current_animation,
 		jump_count,
 		jump_total,
 	]
@@ -199,21 +198,19 @@ func _do_intro():
 	set_state(States.INTRO)
 
 
-func globally_actionable() -> bool:
-	return GameGlobal.global_hitstop == 0 and not GameGlobal.freeze
-
-func _input_step(recv_inputs) -> void:
+func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
 	inputs = recv_inputs
 
-	if globally_actionable():
+	if GameGlobal.global_hitstop == 0 and not dramatic_freeze:
 		resolve_state_transitions()
 	handle_input()
-	if globally_actionable():
+	if GameGlobal.global_hitstop == 0 and not dramatic_freeze:
 		update_character_state()
+		reset_facing()
+		ticks_since_state_change += 1
 
-	reset_facing()
-	ticks_since_state_change += 1
-
+	$AnimationPlayer.speed_scale = float(not dramatic_freeze)
+	$FunctionPlayer.speed_scale = float(not dramatic_freeze)
 
 func _initialize_training_mode_elements():
 	if player:
@@ -250,7 +247,7 @@ func _post_intro() -> bool:
 
 
 func _post_outro() -> bool:
-	return (current_state in [States.ROUND_WIN, States.SET_WIN] and not _animate.is_playing())
+	return (current_state in [States.ROUND_WIN, States.SET_WIN] and not $AnimationPlayer.is_playing())
 
 
 func _in_defeated_state() -> bool:
@@ -891,7 +888,7 @@ func resolve_state_transitions():
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
 			set_state(States.ROUND_WIN)
 			return
-		States.INTRO when not _animate.is_playing():
+		States.INTRO when not $AnimationPlayer.is_playing():
 			set_state(States.IDLE)
 			previous_state = current_state
 		States.ROUND_WIN:
@@ -901,7 +898,7 @@ func resolve_state_transitions():
 			previous_state = current_state
 			set_state(States.SET_WIN)
 		States.GET_UP:
-			if not _animate.is_playing():
+			if not $AnimationPlayer.is_playing():
 				set_state(previous_state)
 		States.DASH_B, States.DASH_F when animation_ended:
 			set_state(States.IDLE)
@@ -973,35 +970,35 @@ func resolve_state_transitions():
 
 func update_character_animation():
 	if _in_attacking_state():
-		_animate.play(current_attack + (_animate.anim_right_suf if right_facing else _animate.anim_left_suf))
+		$AnimationPlayer.play(current_attack + ($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
 	else:
 		match current_state:
 			States.WALK_F when right_facing:
-				_animate.play(move_right_anim)
+				$AnimationPlayer.play(move_right_anim)
 			States.WALK_F when !right_facing:
-				_animate.play(move_left_anim)
+				$AnimationPlayer.play(move_left_anim)
 			States.WALK_B when right_facing:
-				_animate.play(move_left_anim)
+				$AnimationPlayer.play(move_left_anim)
 			States.WALK_B when !right_facing:
-				_animate.play(move_right_anim)
+				$AnimationPlayer.play(move_right_anim)
 			States.DASH_F when right_facing:
-				_animate.play(dash_right_anim)
+				$AnimationPlayer.play(dash_right_anim)
 			States.DASH_F when !right_facing:
-				_animate.play(dash_left_anim)
+				$AnimationPlayer.play(dash_left_anim)
 			States.DASH_B when right_facing:
-				_animate.play(dash_left_anim)
+				$AnimationPlayer.play(dash_left_anim)
 			States.DASH_B when !right_facing:
-				_animate.play(dash_right_anim)
+				$AnimationPlayer.play(dash_right_anim)
 			States.DASH_A_F when right_facing:
-				_animate.play(dash_right_anim)
+				$AnimationPlayer.play(dash_right_anim)
 			States.DASH_A_F when !right_facing:
-				_animate.play(dash_left_anim)
+				$AnimationPlayer.play(dash_left_anim)
 			States.DASH_A_B when right_facing:
-				_animate.play(dash_left_anim)
+				$AnimationPlayer.play(dash_left_anim)
 			States.DASH_A_B when !right_facing:
-				_animate.play(dash_right_anim)
+				$AnimationPlayer.play(dash_right_anim)
 			_:
-				_animate.play(basic_anim_state_dict[current_state] + (_animate.anim_right_suf if right_facing else _animate.anim_left_suf))
+				$AnimationPlayer.play(basic_anim_state_dict[current_state] + ($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
 
 
 func reset_facing():

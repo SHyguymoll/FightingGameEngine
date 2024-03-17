@@ -105,7 +105,7 @@ func _physics_process(_delta):
 	camera_control(camera_mode)
 	match moment:
 		Moments.FADE_IN:
-			move_inputs_and_iterate(true)
+			move_inputs_and_iterate(true, false)
 			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
 			if $SmoothTransitionLayer/ColorRect.color.a < 0.1:
 				$SmoothTransitionLayer/ColorRect.color.a = 0.0
@@ -113,7 +113,7 @@ func _physics_process(_delta):
 				p1._do_intro()
 				p2._do_intro()
 		Moments.INTRO:
-			move_inputs_and_iterate(true)
+			move_inputs_and_iterate(true, false)
 			if p1._post_intro() and p2._post_intro():
 				moment = Moments.GAME
 				$HUD/Fight.visible = true
@@ -125,7 +125,7 @@ func _physics_process(_delta):
 			for proj in ($Projectiles.get_children() as Array[Projectile]):
 				proj.tick()
 			create_inputs()
-			move_inputs_and_iterate(false)
+			move_inputs_and_iterate(false, false)
 			check_combos()
 			training_mode_settings()
 			character_positioning()
@@ -133,11 +133,11 @@ func _physics_process(_delta):
 			$HUD/Fight.modulate.a8 -= 10
 		Moments.DRAMATIC_FREEZE:
 			create_inputs()
-			move_inputs_and_iterate(false)
+			move_inputs_and_iterate(false, true)
 			character_positioning()
 			update_hud()
 		Moments.ROUND_END:
-			move_inputs_and_iterate(true)
+			move_inputs_and_iterate(true, false)
 			check_combos()
 			character_positioning()
 			if p1._post_outro() and p2._in_defeated_state():
@@ -522,10 +522,10 @@ func hitbox_hitbox_collisions():
 				hitbox.invalid = true
 
 
-func move_inputs_and_iterate(fake_inputs):
+func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 	if fake_inputs:
-		p1._input_step(p1_dummy_buffer)
-		p2._input_step(p2_dummy_buffer)
+		p1._input_step(p1_dummy_buffer, dramatic_freeze)
+		p2._input_step(p2_dummy_buffer, dramatic_freeze)
 		return
 
 	var p1_buf = slice_input_dictionary(
@@ -586,8 +586,8 @@ func move_inputs_and_iterate(fake_inputs):
 		p2.kback = Vector3(5, 5, 0)
 		pass
 
-	p1._input_step(p1_buf)
-	p2._input_step(p2_buf)
+	p1._input_step(p1_buf, dramatic_freeze)
+	p2._input_step(p2_buf, dramatic_freeze)
 
 
 func check_combos():
@@ -642,12 +642,10 @@ func start_dramatic_freeze(dramatic_freeze : DramaticFreeze, source : Fighter):
 		dramatic_freeze.other = p1
 		dramatic_freeze.other_2d_pos = $Camera3D.unproject_position(p1.global_position)
 	$DramaticFreezes.add_child(dramatic_freeze, true)
-	GameGlobal.freeze = true
 	moment = Moments.DRAMATIC_FREEZE
 
 
 func end_dramatic_freeze():
-	GameGlobal.freeze = false
 	moment = Moments.GAME
 
 
