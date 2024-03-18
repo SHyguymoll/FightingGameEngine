@@ -782,8 +782,17 @@ func handle_input() -> void:
 # Special cases for attack canceling
 		States.ATCK_NRML:
 			if attack_connected: #if the attack landed at all
+				# dash canceling normals
+				if len(inputs.up) > 3:
+					if right_facing:
+						decision = try_dash("left", States.DASH_B, decision)
+						decision = try_dash("right", States.DASH_F, decision)
+					else:
+						decision = try_dash("left", States.DASH_F, decision)
+						decision = try_dash("right", States.DASH_B, decision)
 				# jump canceling normals
-				decision = try_jump(decision)
+				if decision == States.ATCK_NRML:
+					decision = try_jump(decision)
 				# magic series
 				if decision == States.ATCK_NRML:
 					match current_attack:
