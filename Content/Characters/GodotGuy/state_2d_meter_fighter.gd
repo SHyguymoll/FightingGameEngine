@@ -481,12 +481,12 @@ func one_atk_just_pressed():
 
 func try_super_attack(cur_state: States) -> States:
 	match current_state:
-		States.IDLE, States.WALK_B, States.WALK_F:
+		States.IDLE, States.WALK_B, States.WALK_F, States.DASH_F, States.DASH_B:
 			if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
 				meter -= 50
 				update_attack("attack_super/projectile")
 				return States.ATCK_SUPR
-		States.JUMP:
+		States.JUMP, States.DASH_A_F, States.DASH_A_B:
 			if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
 				meter -= 50
 				update_attack("attack_super/projectile_air")
@@ -506,7 +506,7 @@ func try_super_attack(cur_state: States) -> States:
 
 func try_special_attack(cur_state: States) -> States:
 	match current_state:
-		States.IDLE, States.WALK_B, States.WALK_F, States.ATCK_NRML:
+		States.IDLE, States.WALK_B, States.WALK_F, States.ATCK_NRML, States.DASH_F, States.DASH_B:
 			#check z_motion first since there's a lot of overlap with quarter_circle in some cases
 			if motion_input_check(Z_MOTION_FORWARD) and one_atk_just_pressed():
 				update_attack("attack_motion/uppercut")
@@ -523,7 +523,7 @@ func try_special_attack(cur_state: States) -> States:
 				update_attack("attack_motion/uppercut")
 				jump_count = 0
 				return States.ATCK_MOTN
-		States.JUMP:
+		States.JUMP, States.DASH_A_F, States.DASH_A_B:
 			if (motion_input_check(QUARTER_CIRCLE_FORWARD + TIGER_KNEE_FORWARD) and
 					one_atk_just_pressed()):
 				update_attack("attack_motion/projectile_air")
@@ -588,7 +588,7 @@ func try_attack(cur_state: States) -> States:
 			if btn_just_pressed("button2"):
 				update_attack("attack_command/crouch_c")
 				return States.ATCK_CMND
-		States.JUMP:
+		States.JUMP, States.DASH_A_F, States.DASH_A_B:
 			if btn_just_pressed("button0"):
 				update_attack("attack_jumping/a")
 				return States.ATCK_JUMP
@@ -772,6 +772,13 @@ func handle_input() -> void:
 					decision = try_dash("right", States.DASH_A_B, decision, true)
 			decision = try_jump(decision, false)
 			decision = try_attack(decision)
+# Cancel ground dashes into specials and supers
+		States.DASH_F, States.DASH_B:
+			decision = try_super_attack(decision)
+			decision = try_special_attack(decision)
+# Cancel air dashes into any attack
+		States.DASH_A_F, States.DASH_A_B:
+			decision = try_attack(decision)
 # Special cases for attack canceling
 		States.ATCK_NRML:
 			if attack_connected: #if the attack landed at all
@@ -879,7 +886,7 @@ func update_character_state():
 
 func resolve_state_transitions():
 	# complete jump bug fix
-	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT]:
+	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT, States.DASH_A_F, States.DASH_A_B]:
 		previous_state = States.JUMP
 	match current_state:
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
