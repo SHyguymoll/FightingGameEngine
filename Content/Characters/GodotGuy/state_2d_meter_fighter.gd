@@ -835,10 +835,7 @@ func update_character_state():
 			ground_vel.x = (-1 if right_facing else 1) * walk_speed * 1.5
 		States.DASH_A_F when ticks_since_state_change == 0:
 			jump_count -= 0.5
-			if not $StopPlayerIntersection.has_overlapping_areas():
-				aerial_vel.x = (1 if right_facing else -1) * walk_speed * 2.5
-			else:
-				aerial_vel.x = 0
+			aerial_vel.x = (1 if right_facing else -1) * walk_speed * 2.5
 			aerial_vel.y = -gravity * 3
 		States.DASH_A_B when ticks_since_state_change == 0:
 			jump_count -= 0.5
