@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://byer6bjupb33k"]
+[gd_scene load_steps=6 format=3 uid="uid://byer6bjupb33k"]
 
 [ext_resource type="Script" path="res://Content/Characters/GodotGuy/animated_dramatic_freeze.gd" id="1_tqlga"]
+[ext_resource type="AudioStream" uid="uid://bge83bpasfrux" path="res://Content/Characters/GodotGuy/sounds/freeze_buildup.wav" id="2_1r1c4"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="2_1vd1e"]
 
 [sub_resource type="Animation" id="Animation_lxa2x"]
@@ -43,6 +44,21 @@ tracks/2/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 0)]
 }
+tracks/3/type = "audio"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SoundEffect")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("2_1r1c4")
+}],
+"times": PackedFloat32Array(-0.2004)
+}
+tracks/3/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_e2mci"]
 _data = {
@@ -60,9 +76,11 @@ libraries = {
 [node name="Effects" type="Node2D" parent="."]
 
 [node name="Splash" type="Sprite2D" parent="Effects"]
-modulate = Color(1, 0.958333, 0.958333, 1)
-position = Vector2(31, -13)
-scale = Vector2(1.13933, 1.13933)
+modulate = Color(1, 0, 0, 0)
+position = Vector2(2.38419e-07, 7.10543e-15)
+scale = Vector2(14.9422, 14.9422)
 texture = ExtResource("2_1vd1e")
+
+[node name="SoundEffect" type="AudioStreamPlayer" parent="."]
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

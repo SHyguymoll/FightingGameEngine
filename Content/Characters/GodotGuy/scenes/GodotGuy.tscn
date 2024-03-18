@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=3 uid="uid://kquoyj34deus"]
+[gd_scene load_steps=90 format=3 uid="uid://kquoyj34deus"]
 
 [ext_resource type="Script" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
@@ -12,7 +12,12 @@
 [ext_resource type="AudioStream" uid="uid://c2tgndwonbirx" path="res://Content/Characters/GodotGuy/sounds/step.wav" id="5_wtfc2"]
 [ext_resource type="PackedScene" uid="uid://byer6bjupb33k" path="res://Content/Characters/GodotGuy/scenes/Animated2DSuperFreeze.tscn" id="6_xkque"]
 [ext_resource type="PackedScene" uid="uid://b3qx5aofxylc7" path="res://scenes/GrabPoint.tscn" id="7_eysur"]
+[ext_resource type="AudioStream" uid="uid://dblbn1xejoslb" path="res://Content/Characters/GodotGuy/sounds/projectile_fire.wav" id="10_otsw8"]
+[ext_resource type="AudioStream" uid="uid://cusjecr87ys5i" path="res://Content/Characters/GodotGuy/sounds/spin_approach_air.wav" id="11_imos3"]
+[ext_resource type="AudioStream" uid="uid://bpjmb2mg3jvgs" path="res://Content/Characters/GodotGuy/sounds/spin_approach.wav" id="12_2smnv"]
+[ext_resource type="AudioStream" uid="uid://bfr0auflihcnh" path="res://Content/Characters/GodotGuy/sounds/super_projectile_fire.wav" id="13_748ol"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
+[ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
 
@@ -947,6 +952,21 @@ tracks/12/keys = {
 "update": 1,
 "values": [-0.5]
 }
+tracks/13/type = "audio"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AttackAudio")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("10_otsw8")
+}],
+"times": PackedFloat32Array(0.3173)
+}
+tracks/13/use_blend = true
 
 [sub_resource type="Animation" id="Animation_5onjv"]
 resource_name = "projectile_right"
@@ -1076,6 +1096,21 @@ tracks/12/keys = {
 "update": 1,
 "values": [-0.5]
 }
+tracks/13/type = "audio"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AttackAudio")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("10_otsw8")
+}],
+"times": PackedFloat32Array(0.3173)
+}
+tracks/13/use_blend = true
 
 [sub_resource type="Animation" id="Animation_2bfia"]
 resource_name = "spin_approach_air_right"
@@ -1212,6 +1247,21 @@ tracks/13/keys = {
 "update": 1,
 "values": [0.0, -0.5]
 }
+tracks/14/type = "audio"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AttackAudio")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("11_imos3")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/14/use_blend = true
 
 [sub_resource type="Animation" id="Animation_3225c"]
 resource_name = "spin_approach_right"
@@ -1348,6 +1398,21 @@ tracks/13/keys = {
 "update": 1,
 "values": [0.0, -0.5]
 }
+tracks/14/type = "audio"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AttackAudio")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("12_2smnv")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/14/use_blend = true
 
 [sub_resource type="Animation" id="Animation_x3lbw"]
 resource_name = "uppercut_right"
@@ -2399,6 +2464,21 @@ tracks/12/keys = {
 "update": 1,
 "values": [-0.5]
 }
+tracks/13/type = "audio"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AttackAudio")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("13_748ol")
+}],
+"times": PackedFloat32Array(0.2171)
+}
+tracks/13/use_blend = true
 
 [sub_resource type="Animation" id="Animation_gosxq"]
 resource_name = "projectile_right"
@@ -2528,6 +2608,21 @@ tracks/12/keys = {
 "update": 1,
 "values": [-0.5]
 }
+tracks/13/type = "audio"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AttackAudio")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("13_748ol")
+}],
+"times": PackedFloat32Array(0.3173)
+}
+tracks/13/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lpwhi"]
 _data = {
@@ -2746,6 +2841,21 @@ tracks/10/keys = {
 "update": 1,
 "values": [-0.5]
 }
+tracks/11/type = "audio"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("../OtherAudio")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("14_mv6ts")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/11/use_blend = true
 
 [sub_resource type="Animation" id="Animation_oq48w"]
 resource_name = "idle_right"
@@ -5021,21 +5131,21 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.344, 0)
-shape = ExtResource("2_ahw0y")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
+shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.776615, 0, 0, 0, 1, 0, 0.529186, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.212501, 0, 0, 0, 0.475225, 0, 0, 0, 1, 0.236201, 0.344891, 0.04)
+transform = Transform3D(1.32273, 0, 0, 0, 1.52935, 0, 0, 0, 1, 0.875549, 0.685474, 0.04)
 visible = false
+modulate = Color(0, 1, 1, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
