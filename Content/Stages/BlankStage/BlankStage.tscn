@@ -41,6 +41,7 @@ sky_rotation = Vector3(0, 0, 0.673697)
 [node name="Ground" type="StaticBody3D"]
 collision_mask = 0
 script = ExtResource("1_pg408")
+stage_name = "Blank 2D Stage"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.667, 0)
