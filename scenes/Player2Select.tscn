@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://nvbxi37a3huf"]
+
+[ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="1_ihs2b"]
+[ext_resource type="Script" path="res://scripts/player_select.gd" id="2_rxhrv"]
+
+[sub_resource type="QuadMesh" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_420cy"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("1_ihs2b")
+
+[node name="Player2Cursor" type="MeshInstance3D"]
+mesh = SubResource("1")
+surface_material_override/0 = SubResource("StandardMaterial3D_420cy")
+script = ExtResource("2_rxhrv")
+player = true

@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://dtvw4hdldc02"]
-
-[ext_resource type="Script" path="res://scripts/player_select.gd" id="1"]
-
-[sub_resource type="QuadMesh" id="1"]
-
-[node name="Icon" type="MeshInstance3D"]
-mesh = SubResource("1")
-script = ExtResource("1")

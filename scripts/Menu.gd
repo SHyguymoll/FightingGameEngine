@@ -28,8 +28,9 @@ enum Screens {
 @export var player_select_bckgrd : Texture2D
 @onready var custom_layout = preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
-@onready var select = preload("res://scenes/PlayerSelect.tscn")
-var screen = "Menu"
+@onready var p1_select = preload("res://scenes/Player1Select.tscn")
+@onready var p2_select = preload("res://scenes/Player2Select.tscn")
+var screen := Screens.MAIN_MENU
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
 var char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
@@ -206,7 +207,6 @@ func load_font(font: String, size = 50):
 	return new_font
 
 func load_character_select():
-	var character_select = CONT_DIR.path_join("Art/Menu/CharacterSelect")
 	$Background/Background.set_texture(player_select_bckgrd)
 	Content.char_map = []
 	if custom_layout != null: #custom shape
@@ -297,9 +297,7 @@ func load_character_select():
 			while len(cur_slice) < WIDTH:
 				cur_slice.append(null)
 			Content.char_map.append(cur_slice)
-	p1_cursor = select.instantiate()
-	p1_cursor.name = "Player1Cursor"
-	p1_cursor.player = 0
+	p1_cursor = p1_select.instantiate()
 	p1_cursor.selected = Vector2(0,0) #places at lefttopmost spot
 	p1_cursor.max_x = len(Content.char_map[0])
 	p1_cursor.max_y = len(Content.char_map)
@@ -308,12 +306,8 @@ func load_character_select():
 		if p1_cursor.selected.x == p1_cursor.max_x:
 			p1_cursor.selected.x = 0
 			p1_cursor.selected.y += 1
-	p1_cursor.set_surface_override_material(
-			0,build_albedo(character_select.path_join("Player1Select.png"), true, true))
 	$CharSelectHolder.add_child(p1_cursor)
-	p2_cursor = select.instantiate()
-	p2_cursor.name = "Player2Cursor"
-	p2_cursor.player = 1
+	p2_cursor = p2_select.instantiate()
 	p2_cursor.selected = Vector2(
 			len(Content.char_map[0]) - 1,
 			len(Content.char_map) - 1) #places at rightbottommost spot
@@ -324,8 +318,6 @@ func load_character_select():
 		if p2_cursor.selected.x == -1:
 			p2_cursor.selected.x = p2_cursor.max_x
 			p2_cursor.selected.y -= 1
-	p2_cursor.set_surface_override_material(
-			0,build_albedo(character_select.path_join("Player2Select.png"), true, true))
 	$CharSelectHolder.add_child(p2_cursor)
 	return ReturnStates.SUCCESS
 

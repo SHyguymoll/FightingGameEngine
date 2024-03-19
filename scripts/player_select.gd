@@ -1,7 +1,7 @@
 class_name PlayerSelect
 extends MeshInstance3D
 
-var player: bool
+@export var player: bool
 
 var selected = Vector2(0, 0)
 var max_x: int
