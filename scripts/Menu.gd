@@ -22,7 +22,6 @@ enum Screens {
 	OPTIONS_CONTROLS,
 	OPTIONS_OTHER,
 	FIGHTER_SELECT,
-	WINNER_GLOATS,
 }
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
@@ -327,14 +326,28 @@ func failure_cleanup():
 		char_icon.queue_free()
 
 
-func _on_Start_pressed():
+func show_main_menu_screen():
+	$MenuButtons.show()
+	($LogoLayer/Logo as Node3D).show()
+
+
+func hide_main_menu_screen():
 	$MenuButtons.hide()
 	($LogoLayer/Logo as Node3D).hide()
+
+func show_controls_screen():
+	pass
+
+
+func hide_controls_screen():
+	pass
+
+
+func _on_PlayerVsPlayer_pressed() -> void:
+	hide_main_menu_screen()
 	var try_load = load_character_select()
 	if try_load == ReturnStates.SUCCESS:
 		screen = Screens.FIGHTER_SELECT
 	else:
 		failure_cleanup()
 		push_error(ReturnStates.keys()[try_load])
-		$MenuButtons.show()
-		($LogoLayer/Logo as Node3D).show()

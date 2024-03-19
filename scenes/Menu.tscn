@@ -33,6 +33,7 @@ environment = SubResource("2")
 [node name="LogoLayer" type="CanvasLayer" parent="."]
 
 [node name="Logo" type="Node3D" parent="LogoLayer"]
+visible = false
 
 [node name="Icon" parent="LogoLayer/Logo" instance=ExtResource("3_yapes")]
 
@@ -41,8 +42,9 @@ layer = 2
 
 [node name="MenuButtons" type="CanvasLayer" parent="."]
 layer = 2
+visible = false
 
-[node name="Start" type="Button" parent="MenuButtons"]
+[node name="PlayerVsPlayer" type="Button" parent="MenuButtons"]
 anchors_preset = -1
 anchor_top = 0.182
 anchor_bottom = 0.182
@@ -69,4 +71,22 @@ theme_override_font_sizes/font_size = 32
 text = "Engine and Art by SHy, 2022-2024
 Godot logo by Godot Engine"
 
-[connection signal="pressed" from="MenuButtons/Start" to="." method="_on_Start_pressed"]
+[node name="ControlButtons" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="ControlButtons"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -438.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1Controls" type="ItemList" parent="ControlButtons/HSplitContainer"]
+layout_mode = 2
+
+[node name="Player2Controls" type="ItemList" parent="ControlButtons/HSplitContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
