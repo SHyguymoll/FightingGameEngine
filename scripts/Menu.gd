@@ -7,7 +7,7 @@ const Z_POSITION = -4
 const X_JUMP = 1.25
 const Y_JUMP = 1
 const CONT_DIR := "res://Content"
-enum ReturnState {
+enum ReturnStates {
 	SUCCESS,
 	NO_CHARACTERS,
 	NO_STAGES,
@@ -16,6 +16,13 @@ enum ReturnState {
 	MENU_ELEMENT_MISSING,
 	GAME_ELEMENT_MISSING,
 	INVALID_SHAPE,
+}
+enum Screens {
+	MAIN_MENU,
+	OPTIONS_CONTROLS,
+	OPTIONS_OTHER,
+	FIGHTER_SELECT,
+	WINNER_GLOATS,
 }
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
@@ -31,10 +38,10 @@ var jump_dists = Vector2(X_JUMP, Y_JUMP)
 
 func _ready():
 	$Background/Background.set_texture(menu_bckgrd)
-	if prepare_game() != ReturnState.SUCCESS:
+	if prepare_game() != ReturnStates.SUCCESS:
 		$MenuButtons/Start.hide()
 
-func prepare_game() -> ReturnState:
+func prepare_game() -> ReturnStates:
 	#I/O Stuff
 	var character_file_folders = directory_traversal(CONT_DIR.path_join("Characters"))
 	var stage_file_folders = directory_traversal(CONT_DIR.path_join("Stages"))
@@ -46,38 +53,38 @@ func prepare_game() -> ReturnState:
 		var fighter_details = load(c_file).new()
 		if not "folder" in fighter_details:
 			push_error("folder variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnState.INVALID_FIGHTER
+			return ReturnStates.INVALID_FIGHTER
 		else:
 			if not fighter_details.folder is String:
 				push_error("folder variable is wrong type, aborting c_file" + c_file)
-				return ReturnState.INVALID_FIGHTER
+				return ReturnStates.INVALID_FIGHTER
 		if not "fighter_name" in fighter_details:
 			push_error(
 					"fighter_name variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnState.INVALID_FIGHTER
+			return ReturnStates.INVALID_FIGHTER
 		else:
 			if not fighter_details.fighter_name is String:
 				push_error(
 						"fighter_name variable is wrong type, aborting c_file" + c_file)
-				return ReturnState.INVALID_FIGHTER
+				return ReturnStates.INVALID_FIGHTER
 		if not "fighter_file" in fighter_details:
 			push_error(
 					"fighter_file variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnState.INVALID_FIGHTER
+			return ReturnStates.INVALID_FIGHTER
 		else:
 			if not fighter_details.fighter_file is String:
 				push_error(
 						"fighter_file variable is wrong type, aborting c_file" + c_file)
-				return ReturnState.INVALID_FIGHTER
+				return ReturnStates.INVALID_FIGHTER
 		if not "char_select_icon" in fighter_details:
 			push_error(
 					"char_select_icon variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnState.INVALID_FIGHTER
+			return ReturnStates.INVALID_FIGHTER
 		else:
 			if not fighter_details.char_select_icon is String:
 				push_error(
 						"char_select_icon variable is wrong type, aborting c_file" + c_file)
-				return ReturnState.INVALID_FIGHTER
+				return ReturnStates.INVALID_FIGHTER
 		Content.characters.append({
 			char_name = fighter_details.fighter_name,
 			fighter_file = fighter_details.fighter_file,
@@ -89,48 +96,48 @@ func prepare_game() -> ReturnState:
 		var stage_details = load(s_file).new()
 		if not "folder" in stage_details:
 			push_error("folder variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnState.INVALID_STAGE
+			return ReturnStates.INVALID_STAGE
 		else:
 			if not stage_details.folder is String:
 				push_error("folder variable is wrong type, aborting s_file" + s_file)
-				return ReturnState.INVALID_STAGE
+				return ReturnStates.INVALID_STAGE
 		if not "stage_name" in stage_details:
 			push_error(
 					"stage_name variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnState.INVALID_STAGE
+			return ReturnStates.INVALID_STAGE
 		else:
 			if not stage_details.stage_name is String:
 				push_error(
 						"stage_name variable is wrong type, aborting s_file" + s_file)
-				return ReturnState.INVALID_STAGE
+				return ReturnStates.INVALID_STAGE
 		if not "stage_file" in stage_details:
 			push_error(
 					"stage_file variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnState.INVALID_STAGE
+			return ReturnStates.INVALID_STAGE
 		else:
 			if not stage_details.stage_file is String:
 				push_error(
 						"stage_file variable is wrong type, aborting s_file" + s_file)
-				return ReturnState.INVALID_STAGE
+				return ReturnStates.INVALID_STAGE
 		if not "compatible_with_3d" in stage_details:
 			push_error(
 					"compatible_with_3d variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnState.INVALID_STAGE
+			return ReturnStates.INVALID_STAGE
 		else:
 			if not stage_details.compatible_with_3d is bool:
 				push_error(
 						"compatible_with_3d variable is wrong type, aborting s_file" + s_file)
-				return ReturnState.INVALID_STAGE
+				return ReturnStates.INVALID_STAGE
 		Content.stages.append({
 			stage_name = stage_details.stage_name,
 			stage_file = stage_details.stage_file,
 			compatible_with_3d = stage_details.compatible_with_3d
 		})
 
-	return ReturnState.SUCCESS
+	return ReturnStates.SUCCESS
 
 func _process(_delta):
-	if screen == "CharSelect":
+	if screen == Screens.FIGHTER_SELECT:
 		p1_cursor.position = Vector3(
 			char_top_left.x + p1_cursor.selected.x * jump_dists.x,
 			char_top_left.y - p1_cursor.selected.y * jump_dists.y,
@@ -230,11 +237,11 @@ func load_character_select():
 						prev_slice = custom_layout.definition[max(y_index - 1, 0)]
 						if not len(cur_slice) == len(prev_slice):
 							push_error("ERROR: shape must occupy a rectangle of space")
-							return ReturnState.INVALID_SHAPE
+							return ReturnStates.INVALID_SHAPE
 					else:
 						if cur_slice.count(0) == len(cur_slice) - 1:
 							push_error("ERROR: shape must not end with empty line")
-							return ReturnState.INVALID_SHAPE
+							return ReturnStates.INVALID_SHAPE
 
 			if cur_slice[cur_index] == 1:
 				slice_built.append(character)
@@ -254,11 +261,11 @@ func load_character_select():
 						prev_slice = custom_layout.definition[max(y_index - 1, 0)]
 						if not len(cur_slice) == len(prev_slice):
 							push_error("ERROR: shape must occupy a rectangle of space")
-							return ReturnState.INVALID_SHAPE
+							return ReturnStates.INVALID_SHAPE
 					else:
 						if cur_slice.count(0) == len(cur_slice) - 1:
 							push_error("ERROR: shape must not end with empty line")
-							return ReturnState.INVALID_SHAPE
+							return ReturnStates.INVALID_SHAPE
 		if cur_index != len(cur_slice): #set the rest to 0 to stop floating
 			while cur_index != len(cur_slice):
 				slice_built.append(null)
@@ -320,10 +327,22 @@ func load_character_select():
 	p2_cursor.set_surface_override_material(
 			0,build_albedo(character_select.path_join("Player2Select.png"), true, true))
 	$CharSelectHolder.add_child(p2_cursor)
-	screen = "CharSelect"
-	return ReturnState.SUCCESS
+	return ReturnStates.SUCCESS
+
+
+func failure_cleanup():
+	for char_icon in $CharSelectHolder.get_children():
+		char_icon.queue_free()
+
 
 func _on_Start_pressed():
 	$MenuButtons.hide()
-	$LogoLayer/Logo.get_children()[0].queue_free() #this is safe I promise
-	load_character_select()
+	($LogoLayer/Logo as Node3D).hide()
+	var try_load = load_character_select()
+	if try_load == ReturnStates.SUCCESS:
+		screen = Screens.FIGHTER_SELECT
+	else:
+		failure_cleanup()
+		push_error(ReturnStates.keys()[try_load])
+		$MenuButtons.show()
+		($LogoLayer/Logo as Node3D).show()
