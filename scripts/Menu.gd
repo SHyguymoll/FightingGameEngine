@@ -336,7 +336,7 @@ func hide_main_menu_screen():
 	($LogoLayer/Logo as Node3D).hide()
 
 func show_controls_screen():
-	pass
+	$ControlButtons/FullOuter.show()
 
 
 func hide_controls_screen():

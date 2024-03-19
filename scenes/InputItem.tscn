@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c72slly80e3ji"]
+[gd_scene load_steps=3 format=3 uid="uid://c72slly80e3ji"]
 
 [ext_resource type="Script" path="res://scripts/input_item.gd" id="1_6k411"]
+[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="2_n7ltq"]
 
 [node name="InputItem" type="Panel"]
 anchors_preset = 15
@@ -17,12 +18,16 @@ offset_bottom = 40.0
 
 [node name="ButtonName" type="Label" parent="HBox"]
 layout_mode = 2
+theme = ExtResource("2_n7ltq")
+theme_type_variation = &"HeaderMedium"
 
 [node name="VSeparator" type="VSeparator" parent="HBox"]
 layout_mode = 2
 
 [node name="KeyboardInput" type="Button" parent="HBox"]
 layout_mode = 2
+theme = ExtResource("2_n7ltq")
 
 [node name="JoypadInput" type="Button" parent="HBox"]
 layout_mode = 2
+theme = ExtResource("2_n7ltq")

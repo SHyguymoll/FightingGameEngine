@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://0jmbhr7a3m4k"]
+[gd_scene load_steps=8 format=3 uid="uid://0jmbhr7a3m4k"]
 
 [ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
 [ext_resource type="Texture2D" uid="uid://bcw0jd2sssv4q" path="res://Content/Art/Menu/CharacterSelect/CharacterSelectBackground.png" id="3_qummo"]
 [ext_resource type="PackedScene" uid="uid://dsbw58c55oan3" path="res://Content/Art/Menu/Logo/Logo.tscn" id="3_yapes"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="4_262sp"]
+[ext_resource type="PackedScene" uid="uid://c72slly80e3ji" path="res://scenes/InputItem.tscn" id="6_4c8tv"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3
@@ -74,19 +75,41 @@ Godot logo by Godot Engine"
 [node name="ControlButtons" type="CanvasLayer" parent="."]
 layer = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="ControlButtons"]
+[node name="FullOuter" type="HBoxContainer" parent="ControlButtons"]
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_top = -438.0
+offset_bottom = 328.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("4_262sp")
+alignment = 1
 
-[node name="Player1Controls" type="ItemList" parent="ControlButtons/HSplitContainer"]
+[node name="P1BoxOuter" type="VBoxContainer" parent="ControlButtons/FullOuter"]
 layout_mode = 2
+theme = ExtResource("4_262sp")
 
-[node name="Player2Controls" type="ItemList" parent="ControlButtons/HSplitContainer"]
+[node name="Label" type="Label" parent="ControlButtons/FullOuter/P1BoxOuter"]
 layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_type_variation = &"HeaderLarge"
+text = "Player One Controls"
+
+[node name="HSeparator" type="HSeparator" parent="ControlButtons/FullOuter/P1BoxOuter"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+
+[node name="InputItem" parent="ControlButtons/FullOuter/P1BoxOuter" instance=ExtResource("6_4c8tv")]
+layout_mode = 2
+input_to_update = &"sync_debug"
+visible_name = &"test"
+
+[node name="Button" type="Button" parent="ControlButtons"]
+offset_right = 8.0
+offset_bottom = 8.0
+theme = ExtResource("4_262sp")
+text = "Back"
 
 [connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
