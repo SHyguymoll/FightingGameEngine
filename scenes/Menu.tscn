@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://0jmbhr7a3m4k"]
+[gd_scene load_steps=8 format=3 uid="uid://0jmbhr7a3m4k"]
 
 [ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://dsbw58c55oan3" path="res://Content/Art/Menu/Logo/Logo.tscn" id="3_yapes"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="4_262sp"]
 [ext_resource type="PackedScene" uid="uid://c72slly80e3ji" path="res://scenes/InputItem.tscn" id="6_4c8tv"]
-[ext_resource type="Script" path="res://scripts/input_screen.gd" id="7_i4to5"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3
@@ -240,19 +239,6 @@ theme_override_font_sizes/font_size = 66
 text = "Back"
 
 [node name="ControlPrompt" type="CanvasLayer" parent="."]
-
-[node name="NewControlOuter" type="ColorRect" parent="ControlPrompt"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 100.0
-offset_top = 71.0
-offset_right = -100.0
-offset_bottom = -71.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.270588, 0.270588, 0.270588, 0.886275)
-script = ExtResource("7_i4to5")
 
 [connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Up" to="." method="_on_input_button_clicked"]

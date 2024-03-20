@@ -25,6 +25,7 @@ enum Screens {
 }
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
+@onready var input_prompt = preload("res://scenes/NewControlPrompt.tscn")
 @onready var custom_layout = preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var p1_select = preload("res://scenes/Player1Select.tscn")
@@ -351,6 +352,14 @@ func _on_controls_back_pressed() -> void:
 	show_main_menu_screen()
 
 
-func _on_input_button_clicked(input_item: Variant) -> void:
+func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
 	$ControlPrompt.show()
-	$ControlPrompt/NewControlOuter.
+	var new_prompt = input_prompt.instantiate()
+	new_prompt.current_input = input_item.input_to_update
+	new_prompt.event_to_erase = input_item.kb_input if is_kb else input_item.jp_input
+	new_prompt.input_visual = input_item.visible_name
+	new_prompt.is_kb = is_kb
+	$ControlPrompt.add_child(new_prompt)
+	await new_prompt.prompt_completed
+	new_prompt.queue_free()
+	$ControlPrompt.hide()

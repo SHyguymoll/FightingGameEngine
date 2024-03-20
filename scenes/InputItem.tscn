@@ -24,12 +24,12 @@ theme = ExtResource("2_n7ltq")
 [node name="KeyboardInput" type="Button" parent="."]
 layout_mode = 2
 theme = ExtResource("2_n7ltq")
-text = "KB"
+text = "NONE"
 
 [node name="JoypadInput" type="Button" parent="."]
 layout_mode = 2
 theme = ExtResource("2_n7ltq")
-text = "JP"
+text = "NONE"
 
 [connection signal="pressed" from="KeyboardInput" to="." method="_on_keyboard_input_pressed"]
 [connection signal="pressed" from="JoypadInput" to="." method="_on_joypad_input_pressed"]

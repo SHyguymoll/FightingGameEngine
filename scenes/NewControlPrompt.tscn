@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8dwtbp2xlcx2"]
+
+[ext_resource type="Script" path="res://scripts/input_screen.gd" id="1_cban4"]
+[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="2_is0i2"]
+
+[node name="NewControlOuter" type="ColorRect"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 375.0
+offset_top = -108.0
+offset_right = -375.0
+offset_bottom = 108.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.270588, 0.270588, 0.270588, 0.886275)
+script = ExtResource("1_cban4")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -511.0
+offset_top = -47.5
+offset_right = 511.0
+offset_bottom = 47.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_is0i2")
+theme_override_font_sizes/font_size = 76
+text = "Set new keyboard input for 'Test'"
+horizontal_alignment = 1
