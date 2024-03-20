@@ -3,31 +3,33 @@
 [ext_resource type="Script" path="res://scripts/input_item.gd" id="1_6k411"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="2_n7ltq"]
 
-[node name="InputItem" type="Panel"]
-anchors_preset = 15
+[node name="InputItem" type="HBoxContainer"]
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 31.0
 grow_horizontal = 2
-grow_vertical = 2
+alignment = 1
 script = ExtResource("1_6k411")
 
-[node name="HBox" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="ButtonName" type="Label" parent="HBox"]
+[node name="ButtonName" type="Label" parent="."]
 layout_mode = 2
 theme = ExtResource("2_n7ltq")
 theme_type_variation = &"HeaderMedium"
+text = "Name"
 
-[node name="VSeparator" type="VSeparator" parent="HBox"]
-layout_mode = 2
-
-[node name="KeyboardInput" type="Button" parent="HBox"]
+[node name="VSeparator" type="VSeparator" parent="."]
 layout_mode = 2
 theme = ExtResource("2_n7ltq")
 
-[node name="JoypadInput" type="Button" parent="HBox"]
+[node name="KeyboardInput" type="Button" parent="."]
 layout_mode = 2
 theme = ExtResource("2_n7ltq")
+text = "KB"
+
+[node name="JoypadInput" type="Button" parent="."]
+layout_mode = 2
+theme = ExtResource("2_n7ltq")
+text = "JP"
+
+[connection signal="pressed" from="KeyboardInput" to="." method="_on_keyboard_input_pressed"]
+[connection signal="pressed" from="JoypadInput" to="." method="_on_joypad_input_pressed"]

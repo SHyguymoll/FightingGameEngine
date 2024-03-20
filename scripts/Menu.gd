@@ -328,19 +328,12 @@ func failure_cleanup():
 
 func show_main_menu_screen():
 	$MenuButtons.show()
-	($LogoLayer/Logo as Node3D).show()
+	$LogoLayer.show()
 
 
 func hide_main_menu_screen():
 	$MenuButtons.hide()
-	($LogoLayer/Logo as Node3D).hide()
-
-func show_controls_screen():
-	$ControlButtons/FullOuter.show()
-
-
-func hide_controls_screen():
-	pass
+	$LogoLayer.hide()
 
 
 func _on_PlayerVsPlayer_pressed() -> void:
@@ -351,3 +344,13 @@ func _on_PlayerVsPlayer_pressed() -> void:
 	else:
 		failure_cleanup()
 		push_error(ReturnStates.keys()[try_load])
+
+
+func _on_controls_back_pressed() -> void:
+	$ControlButtons.hide()
+	show_main_menu_screen()
+
+
+func _on_input_button_clicked(input_item: Variant) -> void:
+	$ControlPrompt.show()
+	$ControlPrompt/NewControlOuter.
