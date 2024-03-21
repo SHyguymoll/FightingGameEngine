@@ -23,7 +23,7 @@ func _ready():
 		types.SUPER:
 			velocity = Vector3.RIGHT * 10
 		types.DIAGONAL_DOWN_SUPER:
-			velocity = (Vector3.RIGHT * 30 * randf()) + (Vector3.DOWN * randf() * 10)
+			velocity = (Vector3.RIGHT * 1) + (Vector3.DOWN * 0.5)
 	velocity.x *= 1 if right_facing else -1
 	match type:
 		types.STRAIGHT, types.DIAGONAL_DOWN:
@@ -52,7 +52,7 @@ func _ready():
 			hitbox.damage_block = 1
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
-			hitbox.kback_hit = Vector3(-2, 2, 0)
+			hitbox.kback_hit = Vector3(-4, 10, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "launch"
 			hitbox.hit_priority = 10
