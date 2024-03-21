@@ -39,8 +39,7 @@ var jump_dists = Vector2(X_JUMP, Y_JUMP)
 
 func _ready():
 	$Background/Background.set_texture(menu_bckgrd)
-	if prepare_game() != ReturnStates.SUCCESS:
-		$MenuButtons/Start.hide()
+	$MenuButtons.show()
 
 func prepare_game() -> ReturnStates:
 	#I/O Stuff
@@ -326,19 +325,8 @@ func failure_cleanup():
 	for char_icon in $CharSelectHolder.get_children():
 		char_icon.queue_free()
 
-
-func show_main_menu_screen():
-	$MenuButtons.show()
-	$LogoLayer.show()
-
-
-func hide_main_menu_screen():
-	$MenuButtons.hide()
-	$LogoLayer.hide()
-
-
 func _on_PlayerVsPlayer_pressed() -> void:
-	hide_main_menu_screen()
+	$MenuButtons.hide()
 	var try_load = load_character_select()
 	if try_load == ReturnStates.SUCCESS:
 		screen = Screens.FIGHTER_SELECT
@@ -347,12 +335,12 @@ func _on_PlayerVsPlayer_pressed() -> void:
 		push_error(ReturnStates.keys()[try_load])
 
 func _on_controls_pressed() -> void:
-	hide_main_menu_screen()
+	$MenuButtons.hide()
 	$ControlButtons.show()
 
 func _on_controls_back_pressed() -> void:
 	$ControlButtons.hide()
-	show_main_menu_screen()
+	$MenuButtons.show()
 
 
 func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
