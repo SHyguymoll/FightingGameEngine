@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://0jmbhr7a3m4k"]
+[gd_scene load_steps=12 format=3 uid="uid://0jmbhr7a3m4k"]
 
 [ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
@@ -6,6 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://dsbw58c55oan3" path="res://Content/Art/Menu/Logo/Logo.tscn" id="3_yapes"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="4_262sp"]
 [ext_resource type="PackedScene" uid="uid://c72slly80e3ji" path="res://scenes/InputItem.tscn" id="6_4c8tv"]
+[ext_resource type="Script" path="res://scripts/input_viewer.gd" id="7_eps47"]
+[ext_resource type="Texture2D" uid="uid://dhteexn64v3j5" path="res://Content/Art/Menu/ControlsScreen/Joystick.png" id="7_un0jc"]
+[ext_resource type="Texture2D" uid="uid://0tw0shipmla4" path="res://Content/Art/Menu/ControlsScreen/JoystickTop.png" id="8_sj7ct"]
+[ext_resource type="Texture2D" uid="uid://1yu63o63msd1" path="res://Content/Art/Menu/ControlsScreen/Buttons.png" id="9_1f5fr"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3
@@ -32,18 +36,18 @@ size = 3.5
 environment = SubResource("2")
 
 [node name="LogoLayer" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="Logo" type="Node3D" parent="LogoLayer"]
-visible = false
 
 [node name="Icon" parent="LogoLayer/Logo" instance=ExtResource("3_yapes")]
 
 [node name="CharSelectHolder" type="CanvasLayer" parent="."]
 layer = 2
+visible = false
 
 [node name="MenuButtons" type="CanvasLayer" parent="."]
 layer = 2
-visible = false
 
 [node name="PlayerVsPlayer" type="Button" parent="MenuButtons"]
 anchors_preset = -1
@@ -56,6 +60,18 @@ offset_bottom = 34.224
 theme = ExtResource("4_262sp")
 theme_override_font_sizes/font_size = 48
 text = "Player vs. Player"
+
+[node name="Controls" type="Button" parent="MenuButtons"]
+anchors_preset = -1
+anchor_top = 0.182
+anchor_bottom = 0.182
+offset_left = 2.0
+offset_top = 93.654
+offset_right = 356.0
+offset_bottom = 162.654
+theme = ExtResource("4_262sp")
+theme_override_font_sizes/font_size = 48
+text = "Controls"
 
 [node name="Credits" type="Label" parent="MenuButtons"]
 anchors_preset = 3
@@ -74,6 +90,7 @@ Godot logo by Godot Engine"
 
 [node name="ControlButtons" type="CanvasLayer" parent="."]
 layer = 2
+visible = false
 
 [node name="FullOuter" type="HBoxContainer" parent="ControlButtons"]
 anchors_preset = 14
@@ -238,8 +255,277 @@ theme = ExtResource("4_262sp")
 theme_override_font_sizes/font_size = 66
 text = "Back"
 
+[node name="P1InputViewer" type="ColorRect" parent="ControlButtons"]
+anchors_preset = -1
+anchor_left = 0.195
+anchor_top = 0.802
+anchor_right = 0.195
+anchor_bottom = 0.802
+offset_left = -249.4
+offset_top = -166.16
+offset_right = 304.6
+offset_bottom = 149.84
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.223529, 0.223529, 0.223529, 0.529412)
+script = ExtResource("7_eps47")
+player = "first"
+
+[node name="VBC" type="VBoxContainer" parent="ControlButtons/P1InputViewer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="ControlButtons/P1InputViewer/VBC"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_font_sizes/font_size = 51
+text = "Player 1 Input"
+horizontal_alignment = 1
+
+[node name="HBC" type="HBoxContainer" parent="ControlButtons/P1InputViewer/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Joystick" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC"]
+layout_mode = 2
+texture = ExtResource("7_un0jc")
+
+[node name="BallTop" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Joystick"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 41.0
+offset_top = -24.5
+offset_right = 90.0
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_sj7ct")
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 15
+
+[node name="Buttons" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC"]
+layout_mode = 2
+texture = ExtResource("9_1f5fr")
+
+[node name="VBC" type="VBoxContainer" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.5
+offset_top = -51.0
+offset_right = 77.5
+offset_bottom = 51.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_262sp")
+
+[node name="TopRow" type="HBoxContainer" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button0" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button1" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator2" type="VSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button2" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HSeparator" type="HSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+theme_override_constants/separation = 45
+
+[node name="BotRow" type="HBoxContainer" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button3" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button4" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator2" type="VSeparator" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button5" type="TextureRect" parent="ControlButtons/P1InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="P2InputViewer" type="ColorRect" parent="ControlButtons"]
+anchors_preset = -1
+anchor_left = 0.195
+anchor_top = 0.802
+anchor_right = 0.195
+anchor_bottom = 0.802
+offset_left = 375.6
+offset_top = -166.16
+offset_right = 929.6
+offset_bottom = 149.84
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.223529, 0.223529, 0.223529, 0.529412)
+script = ExtResource("7_eps47")
+player = "second"
+
+[node name="VBC" type="VBoxContainer" parent="ControlButtons/P2InputViewer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="ControlButtons/P2InputViewer/VBC"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_font_sizes/font_size = 51
+text = "Player 2 Input"
+horizontal_alignment = 1
+
+[node name="HBC" type="HBoxContainer" parent="ControlButtons/P2InputViewer/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Joystick" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC"]
+layout_mode = 2
+texture = ExtResource("7_un0jc")
+
+[node name="BallTop" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Joystick"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 41.0
+offset_top = -24.5
+offset_right = 90.0
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_sj7ct")
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 15
+
+[node name="Buttons" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC"]
+layout_mode = 2
+texture = ExtResource("9_1f5fr")
+
+[node name="VBC" type="VBoxContainer" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.5
+offset_top = -51.0
+offset_right = 77.5
+offset_bottom = 51.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_262sp")
+
+[node name="TopRow" type="HBoxContainer" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button0" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button1" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator2" type="VSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button2" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/TopRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HSeparator" type="HSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+theme_override_constants/separation = 45
+
+[node name="BotRow" type="HBoxContainer" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button3" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator" type="VSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button4" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VSeparator2" type="VSeparator" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+theme = ExtResource("4_262sp")
+theme_override_constants/separation = 60
+
+[node name="Button5" type="TextureRect" parent="ControlButtons/P2InputViewer/VBC/HBC/Buttons/VBC/BotRow"]
+layout_mode = 2
+mouse_filter = 2
+
 [node name="ControlPrompt" type="CanvasLayer" parent="."]
 
 [connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
+[connection signal="pressed" from="MenuButtons/Controls" to="." method="_on_controls_pressed"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Up" to="." method="_on_input_button_clicked"]
 [connection signal="pressed" from="ControlButtons/Back" to="." method="_on_controls_back_pressed"]

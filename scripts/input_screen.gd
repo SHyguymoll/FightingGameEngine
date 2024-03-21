@@ -13,7 +13,7 @@ enum CompletionStates {
 var completion_state : CompletionStates = CompletionStates.INCOMPLETE
 
 func _ready() -> void:
-	$Label.text = "Set new " + "keyboard" if is_kb else "pad" + \
+	$Label.text = "Set new " + "keyboard" if is_kb else "controller" + \
 			" input for '" + input_visual + "'"
 
 

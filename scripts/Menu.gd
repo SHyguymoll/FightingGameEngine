@@ -346,6 +346,9 @@ func _on_PlayerVsPlayer_pressed() -> void:
 		failure_cleanup()
 		push_error(ReturnStates.keys()[try_load])
 
+func _on_controls_pressed() -> void:
+	hide_main_menu_screen()
+	$ControlButtons.show()
 
 func _on_controls_back_pressed() -> void:
 	$ControlButtons.hide()
@@ -363,3 +366,6 @@ func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
 	await new_prompt.prompt_completed
 	new_prompt.queue_free()
 	$ControlPrompt.hide()
+
+
+
