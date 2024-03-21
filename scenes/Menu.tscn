@@ -35,12 +35,9 @@ size = 3.5
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("2")
 
-[node name="LogoLayer" type="CanvasLayer" parent="."]
-visible = false
+[node name="Logo" type="Node3D" parent="."]
 
-[node name="Logo" type="Node3D" parent="LogoLayer"]
-
-[node name="Icon" parent="LogoLayer/Logo" instance=ExtResource("3_yapes")]
+[node name="Icon" parent="Logo" instance=ExtResource("3_yapes")]
 
 [node name="CharSelectHolder" type="CanvasLayer" parent="."]
 layer = 2
@@ -48,6 +45,7 @@ visible = false
 
 [node name="MenuButtons" type="CanvasLayer" parent="."]
 layer = 2
+visible = false
 
 [node name="PlayerVsPlayer" type="Button" parent="MenuButtons"]
 anchors_preset = -1
@@ -524,8 +522,29 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="ControlPrompt" type="CanvasLayer" parent="."]
+layer = 3
+visible = false
 
 [connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
 [connection signal="pressed" from="MenuButtons/Controls" to="." method="_on_controls_pressed"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Up" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Down" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Left" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Right" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button0" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button1" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button2" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button3" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button4" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button5" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Up" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Down" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Left" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Right" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button0" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button1" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button2" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button3" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button4" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button5" to="." method="_on_input_button_clicked"]
 [connection signal="pressed" from="ControlButtons/Back" to="." method="_on_controls_back_pressed"]
