@@ -26,7 +26,7 @@ enum Screens {
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
 @onready var input_prompt = preload("res://scenes/NewControlPrompt.tscn")
-@onready var custom_layout = preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
+@onready var custom_layout = null #preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var p1_select = preload("res://scenes/Player1Select.tscn")
 @onready var p2_select = preload("res://scenes/Player2Select.tscn")
@@ -39,7 +39,8 @@ var jump_dists = Vector2(X_JUMP, Y_JUMP)
 
 func _ready():
 	$Background/Background.set_texture(menu_bckgrd)
-	$MenuButtons.show()
+	if prepare_game() == ReturnStates.SUCCESS:
+		$MenuButtons.show()
 
 func prepare_game() -> ReturnStates:
 	#I/O Stuff
@@ -327,6 +328,7 @@ func failure_cleanup():
 
 func _on_PlayerVsPlayer_pressed() -> void:
 	$MenuButtons.hide()
+	$Logo.hide()
 	var try_load = load_character_select()
 	if try_load == ReturnStates.SUCCESS:
 		screen = Screens.FIGHTER_SELECT
