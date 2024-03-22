@@ -23,10 +23,14 @@ enum Screens {
 	OPTIONS_OTHER,
 	FIGHTER_SELECT,
 }
+@onready var transitions : Array[Transition] = [
+	$TransitionScreens/Black,
+	$TransitionScreens/Purple,
+]
 @export var menu_bckgrd : Texture2D
 @export var player_select_bckgrd : Texture2D
 @onready var input_prompt = preload("res://scenes/NewControlPrompt.tscn")
-@onready var custom_layout = null #preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
+@onready var custom_layout = preload("res://Content/Art/Menu/CharacterSelect/custom_layout.gd").new()
 @onready var character_icon = preload("res://scenes/CharacterIcon3D.tscn")
 @onready var p1_select = preload("res://scenes/Player1Select.tscn")
 @onready var p2_select = preload("res://scenes/Player2Select.tscn")
@@ -326,9 +330,17 @@ func failure_cleanup():
 	for char_icon in $CharSelectHolder.get_children():
 		char_icon.queue_free()
 
-func _on_PlayerVsPlayer_pressed() -> void:
-	$MenuButtons.hide()
-	$Logo.hide()
+
+func transition_and_call(transition : Transition, in_between_funcs : Array[Callable]):
+	transition.do_first_half()
+	await transition.first_half_completed
+	for function in in_between_funcs:
+		function.call()
+	transition.do_second_half()
+	await transition.second_half_completed
+
+
+func try_load_c_select():
 	var try_load = load_character_select()
 	if try_load == ReturnStates.SUCCESS:
 		screen = Screens.FIGHTER_SELECT
@@ -336,13 +348,17 @@ func _on_PlayerVsPlayer_pressed() -> void:
 		failure_cleanup()
 		push_error(ReturnStates.keys()[try_load])
 
+
+func _on_PlayerVsPlayer_pressed() -> void:
+	await transition_and_call(transitions[1], [$MenuButtons.hide, $Logo.hide, try_load_c_select])
+
+
 func _on_controls_pressed() -> void:
-	$MenuButtons.hide()
-	$ControlButtons.show()
+	await transition_and_call(transitions[0], [$MenuButtons.hide, $ControlButtons.show])
+
 
 func _on_controls_back_pressed() -> void:
-	$ControlButtons.hide()
-	$MenuButtons.show()
+	await transition_and_call(transitions[0], [$ControlButtons.hide, $MenuButtons.show])
 
 
 func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
@@ -356,6 +372,3 @@ func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
 	await new_prompt.prompt_completed
 	new_prompt.queue_free()
 	$ControlPrompt.hide()
-
-
-

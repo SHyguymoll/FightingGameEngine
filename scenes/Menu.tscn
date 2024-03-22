@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://0jmbhr7a3m4k"]
+[gd_scene load_steps=13 format=3 uid="uid://0jmbhr7a3m4k"]
 
 [ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dhteexn64v3j5" path="res://Content/Art/Menu/ControlsScreen/Joystick.png" id="7_un0jc"]
 [ext_resource type="Texture2D" uid="uid://0tw0shipmla4" path="res://Content/Art/Menu/ControlsScreen/JoystickTop.png" id="8_sj7ct"]
 [ext_resource type="Texture2D" uid="uid://1yu63o63msd1" path="res://Content/Art/Menu/ControlsScreen/Buttons.png" id="9_1f5fr"]
+[ext_resource type="Script" path="res://scripts/color_transition.gd" id="11_upbus"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3
@@ -524,6 +525,49 @@ mouse_filter = 2
 [node name="ControlPrompt" type="CanvasLayer" parent="."]
 layer = 3
 visible = false
+
+[node name="TransitionScreens" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Black" type="Control" parent="TransitionScreens"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("11_upbus")
+
+[node name="ColorRect" type="ColorRect" parent="TransitionScreens/Black"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Purple" type="Control" parent="TransitionScreens"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("11_upbus")
+
+[node name="ColorRect" type="ColorRect" parent="TransitionScreens/Purple"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.419608, 0, 0.537255, 0)
 
 [connection signal="pressed" from="MenuButtons/PlayerVsPlayer" to="." method="_on_PlayerVsPlayer_pressed"]
 [connection signal="pressed" from="MenuButtons/Controls" to="." method="_on_controls_pressed"]
