@@ -8,18 +8,18 @@ const JOYSTICK_CHANGE = 65.5
 
 func _process(delta: float) -> void:
 	$VBC/HBC/Joystick/BallTop.position = Vector2(
-			74.5 - (JOYSTICK_CHANGE * int(
+			lerpf($VBC/HBC/Joystick/BallTop.position.x, 74.5 - (JOYSTICK_CHANGE * int(
 					Input.is_action_pressed(player + "_left") and
 					not Input.is_action_pressed(player + "_right"))) + (
 						JOYSTICK_CHANGE * int(
 							Input.is_action_pressed(player + "_right") and
-						not Input.is_action_pressed(player + "_left"))),
-			74.5 - (JOYSTICK_CHANGE * int(
+						not Input.is_action_pressed(player + "_left"))), 0.7),
+			lerpf($VBC/HBC/Joystick/BallTop.position.y, 74.5 - (JOYSTICK_CHANGE * int(
 					Input.is_action_pressed(player + "_up") and
 					not Input.is_action_pressed(player + "_down"))) + (
 						JOYSTICK_CHANGE * int(
 							Input.is_action_pressed(player + "_down") and
-						not Input.is_action_pressed(player + "_up")))
+						not Input.is_action_pressed(player + "_up"))), 0.7)
 	)
 	$VBC/HBC/Buttons/VBC/TopRow/Button0.texture = button_on if Input.is_action_pressed(
 			player + "_button0") else button_off
