@@ -16,7 +16,6 @@ enum States {
 	WALK_F, WALK_B, DASH_F, DASH_B, # lateral motions
 	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial motions
 	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB, ATCK_JUMP, ATCK_SUPR, # attacking
-	ATCK_NRML_IMP, ATCK_CMND_INP, ATCK_JUMP_IMP, # certain attack impacts
 	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
 	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, # not handling getting attacked well
 	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
@@ -268,6 +267,20 @@ func _in_attacking_state() -> bool:
 		States.ATCK_JUMP,
 	]
 
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	match (anim_name
+			.trim_suffix($AnimationPlayer.anim_left_suf)
+			.trim_suffix($AnimationPlayer.anim_right_suf)):
+		"attack_normal/a", "attack_normal/b", "attack_normal/c":
+			animation_ended = true
+		"attack_command/crouch_a", "attack_command/crouch_b", "attack_command/crouch_c":
+			animation_ended = true
+		"attack_jumping/a", "attack_jumping/b", "attack_jumping/c":
+			animation_ended = true
+		"attack_motion/projectile", "attack_motion/projectile_air":
+			animation_ended = true
+		"attack_motion/spin_approach", "attack_motion/spin_approach_air":
+			animation_ended = true
 
 func _in_hurting_state() -> bool:
 	return current_state in [
@@ -507,7 +520,7 @@ func try_super_attack(cur_state: States) -> States:
 func try_special_attack(cur_state: States) -> States:
 	match current_state:
 		States.IDLE, States.WALK_B, States.WALK_F, States.ATCK_NRML, States.DASH_F, States.DASH_B:
-			#check z_motion first since there's a lot of overlap with quarter_circle in some cases
+			# check z_motion first since there's a lot of overlap with quarter_circle in some cases
 			if motion_input_check(Z_MOTION_FORWARD) and one_atk_just_pressed():
 				update_attack("attack_motion/uppercut")
 				jump_count = 0
@@ -529,7 +542,8 @@ func try_special_attack(cur_state: States) -> States:
 				update_attack("attack_motion/projectile_air")
 				jump_count = 0
 				return States.ATCK_MOTN
-			if motion_input_check(QUARTER_CIRCLE_BACK + TIGER_KNEE_BACK) and one_atk_just_pressed():
+			if (motion_input_check(QUARTER_CIRCLE_BACK + TIGER_KNEE_BACK) and
+					one_atk_just_pressed()):
 				update_attack("attack_motion/spin_approach_air")
 				return States.ATCK_MOTN
 		States.ATCK_NRML:
@@ -1140,3 +1154,6 @@ func _damage_step(attack : Hitbox) -> bool:
 		_: # this will definitely not be a bug in the future
 			return try_block(attack, block.nope, block.nope,
 					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL)
+
+
+

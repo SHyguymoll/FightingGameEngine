@@ -1572,14 +1572,14 @@ tracks/1/enabled = true
 tracks/1/path = NodePath("../SpriteAttack")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = PackedFloat32Array(0, 1, -0.612462, 0.811107, 0.04, 0.0500001, 1, 0.813568, 0.811107, 0.04)
+tracks/1/keys = PackedFloat32Array(0, 1, -0.612462, 0.811107, 0.04, 0.0501, 1, 0.813568, 0.811107, 0.04, 0.1, 1, 0.813568, 0.811107, 0.04, 0.1503, 1, -0.612462, 0.811107, 0.04)
 tracks/2/type = "scale_3d"
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/path = NodePath("../SpriteAttack")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/keys = PackedFloat32Array(0, 1, 0.271676, 0.271676, 0.565, 0.0166667, 1, 1.18591, 0.271676, 0.565, 0.0500001, 1, 0.271676, 0.271676, 0.565)
+tracks/2/keys = PackedFloat32Array(0, 1, 0.271676, 0.271676, 0.565, 0.0166667, 1, 1.18591, 0.271676, 0.565, 0.0500001, 1, 0.271676, 0.271676, 0.565, 0.1, 1, 0.271676, 0.271676, 0.565)
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
@@ -1587,10 +1587,10 @@ tracks/3/path = NodePath("../SpriteAttack:modulate")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.0500001, 0.0666668),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0166667, 0.0500001, 0.1, 0.1503),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -1599,7 +1599,7 @@ tracks/4/path = NodePath("../SpriteAttack:visible")
 tracks/4/interp = 0
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.0833335),
+"times": PackedFloat32Array(0, 0.1503),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
@@ -1708,14 +1708,14 @@ tracks/2/enabled = true
 tracks/2/path = NodePath("../SpriteAttack")
 tracks/2/interp = 2
 tracks/2/loop_wrap = true
-tracks/2/keys = PackedFloat32Array(0, 1, 0.086, 0.592, 0.04, 0.116667, 1, 0.955, 0.631, 0.04, 0.2, 1, 0.086, 0.592, 0.04)
+tracks/2/keys = PackedFloat32Array(0, 1, 0.086, 0.592, 0.04, 0.1169, 1, 0.955, 0.631, 0.04, 0.166667, 1, 0.955, 0.631, 0.04, 0.2338, 1, 0.086, 0.592, 0.04)
 tracks/3/type = "scale_3d"
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/path = NodePath("../SpriteAttack")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
-tracks/3/keys = PackedFloat32Array(0, 1, 1, 0.3, 1, 0.116667, 1, 1.48962, 0.3, 1, 0.166667, 1, 1, 0.3, 1)
+tracks/3/keys = PackedFloat32Array(0, 1, 1, 0.3, 1, 0.116667, 1, 1.48962, 0.3, 1, 0.166667, 1, 1.48962, 0.3, 1, 0.2004, 1, 1, 0.3, 1)
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
@@ -1723,10 +1723,10 @@ tracks/4/path = NodePath("../SpriteAttack:modulate")
 tracks/4/interp = 2
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.116667, 0.166667, 0.216667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.116667, 0.166667, 0.2004, 0.2505),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -1735,7 +1735,7 @@ tracks/5/path = NodePath("../SpriteAttack:visible")
 tracks/5/interp = 0
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.216667),
+"times": PackedFloat32Array(0, 0.2505),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
@@ -4307,25 +4307,13 @@ _data = {
 resource_name = "crouch_a"
 length = 0.350002
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.333334),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.15),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -4338,25 +4326,13 @@ tracks/1/keys = {
 resource_name = "crouch_b"
 length = 0.266668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.233333),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.15),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -4369,25 +4345,13 @@ tracks/1/keys = {
 resource_name = "crouch_c"
 length = 0.366668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.333333),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.1837, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
@@ -4413,25 +4377,13 @@ _data = {
 resource_name = "a"
 length = 0.183335
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.133334),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.0500001),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -4444,25 +4396,13 @@ tracks/1/keys = {
 resource_name = "b"
 length = 0.266668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.233333),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.1),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -4475,25 +4415,13 @@ tracks/1/keys = {
 resource_name = "c"
 length = 0.500002
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.383333),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.2),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -4513,25 +4441,13 @@ _data = {
 resource_name = "projectile"
 length = 0.666668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
+tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.650001),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.316667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -4547,25 +4463,13 @@ tracks/1/keys = {
 resource_name = "projectile_air"
 length = 0.666668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
+tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.650001),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.2338, 0.316667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
@@ -4584,25 +4488,13 @@ tracks/1/keys = {
 resource_name = "spin_approach"
 length = 1.08334
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(1.01667),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0167, 0.0835, 0.133334, 0.266667, 0.400001, 0.533334, 0.666668),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
@@ -4636,25 +4528,13 @@ tracks/1/keys = {
 resource_name = "spin_approach_air"
 length = 0.516669
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.500001),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0167, 0.0666668, 0.133334, 0.216667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
@@ -4731,25 +4611,13 @@ _data = {
 resource_name = "a"
 length = 0.166669
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.116667),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.0333334),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -4765,25 +4633,13 @@ tracks/1/keys = {
 resource_name = "b"
 length = 0.266668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.216667),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.116667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -4799,25 +4655,13 @@ tracks/1/keys = {
 resource_name = "c"
 length = 0.366668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:animation_ended")
-tracks/0/interp = 0
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.333333),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.166667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -5137,15 +4981,14 @@ shape = ExtResource("3_8q5n8")
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.135012, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
-visible = false
-modulate = Color(0.803922, 0.686275, 0, 0)
+transform = Transform3D(0.467686, 0, 0, 0, 0.327046, 0, 0, 0, 1, -0.810371, 0.46016, 0.04)
+modulate = Color(0.68421, 1, 1, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
@@ -5158,3 +5001,5 @@ texture = ExtResource("14_03fpi")
 [node name="AttackAudio" type="AudioStreamPlayer" parent="."]
 
 [node name="OtherAudio" type="AudioStreamPlayer" parent="."]
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
