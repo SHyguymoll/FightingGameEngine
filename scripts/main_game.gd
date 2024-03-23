@@ -204,6 +204,9 @@ func make_hud():
 		p2_round_group.add_child(p2_round)
 	match round_change_behavior:
 		RoundChangeTypes.ADD:
+			for n in range(GameGlobal.win_threshold):
+				(p1_round_group.get_node(str(n)) as RoundElement).unfulfill()
+				(p2_round_group.get_node(str(n)) as RoundElement).unfulfill()
 			for n in range(GameGlobal.p1_wins):
 				(p1_round_group.get_node(str(n)) as RoundElement).fulfill()
 			for n in range(GameGlobal.p2_wins):
