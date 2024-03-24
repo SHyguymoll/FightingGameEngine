@@ -146,25 +146,25 @@ var current_attack : String
 
 var attack_return_states := {
 	"attack_normal/a": States.IDLE,
-	"attack_normal/a_inp": States.IDLE,
+	"attack_normal/a_imp": States.IDLE,
 	"attack_normal/b": States.IDLE,
-	"attack_normal/b_inp": States.IDLE,
+	"attack_normal/b_imp": States.IDLE,
 	"attack_normal/c": States.IDLE,
-	"attack_normal/c_inp": States.IDLE,
+	"attack_normal/c_imp": States.IDLE,
 	"attack_normal/grab_followup": States.IDLE,
 	"attack_normal/grab_whiff": States.IDLE,
 	"attack_command/crouch_a": States.CRCH,
-	"attack_command/crouch_a_inp": States.CRCH,
+	"attack_command/crouch_a_imp": States.CRCH,
 	"attack_command/crouch_b": States.CRCH,
-	"attack_command/crouch_b_inp": States.CRCH,
+	"attack_command/crouch_b_imp": States.CRCH,
 	"attack_command/crouch_c": States.CRCH,
-	"attack_command/crouch_c_inp": States.CRCH,
+	"attack_command/crouch_c_imp": States.CRCH,
 	"attack_jumping/a": States.JUMP,
-	"attack_jumping/a_inp": States.JUMP,
+	"attack_jumping/a_imp": States.JUMP,
 	"attack_jumping/b": States.JUMP_NO_ACT,
-	"attack_jumping/b_inp": States.JUMP,
+	"attack_jumping/b_imp": States.JUMP,
 	"attack_jumping/c": States.JUMP_NO_ACT,
-	"attack_jumping/c_inp": States.JUMP,
+	"attack_jumping/c_imp": States.JUMP,
 	"attack_motion/projectile": States.IDLE,
 	"attack_motion/projectile_air": States.JUMP_NO_ACT,
 	"attack_motion/uppercut": States.JUMP_NO_ACT,
@@ -226,7 +226,7 @@ func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
 		reset_facing()
 		ticks_since_state_change += 1
 
-	$AnimationPlayer.speed_scale = float(_in_impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
+	$AnimationPlayer.speed_scale = float(impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
 
 func _initialize_training_mode_elements():
 	if player:
@@ -283,18 +283,6 @@ func _in_attacking_state() -> bool:
 		States.ATCK_GRAB_START,
 		States.ATCK_GRAB_END,
 		States.ATCK_JUMP,
-		States.ATCK_NRML_IMP,
-		States.ATCK_JUMP_IMP,
-		States.ATCK_CMND_IMP,
-		States.ATCK_MOTN_IMP,
-	]
-
-func _in_impact_state() -> bool:
-	return current_state in [
-		States.ATCK_NRML_IMP,
-		States.ATCK_JUMP_IMP,
-		States.ATCK_CMND_IMP,
-		States.ATCK_MOTN_IMP,
 	]
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
@@ -318,6 +306,14 @@ func _in_grabbed_state() -> bool:
 func training_mode_set_meter(val):
 	meter = val
 	(ui_elements[0] as TextureProgressBar).value = meter
+
+func impact_state() -> bool:
+	return current_state in [
+		States.ATCK_NRML_IMP,
+		States.ATCK_JUMP_IMP,
+		States.ATCK_CMND_IMP,
+		States.ATCK_MOTN_IMP,
+	]
 
 
 func airborne() -> bool:
@@ -997,16 +993,12 @@ func resolve_state_transitions():
 			if check_true:
 				set_state(States.OUTRO_LIE)
 		States.ATCK_NRML when attack_connected:
-			update_attack(current_attack + "_imp")
 			set_state(States.ATCK_NRML_IMP)
 		States.ATCK_JUMP when attack_connected:
-			update_attack(current_attack + "_imp")
 			set_state(States.ATCK_JUMP_IMP)
 		States.ATCK_CMND when attack_connected:
-			update_attack(current_attack + "_imp")
 			set_state(States.ATCK_CMND_IMP)
 		#States.ATCK_MOTN when attack_connected:
-			#update_attack(current_attack + "_imp")
 			#set_state(States.ATCK_MOTN_IMP)
 		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
@@ -1027,6 +1019,11 @@ func update_character_animation():
 	if _in_attacking_state():
 		$AnimationPlayer.play(
 				current_attack + (
+						$AnimationPlayer.anim_right_suf if right_facing
+						else $AnimationPlayer.anim_left_suf))
+	elif impact_state():
+		$AnimationPlayer.play(
+				current_attack + "_imp" + (
 						$AnimationPlayer.anim_right_suf if right_facing
 						else $AnimationPlayer.anim_left_suf))
 	else:
