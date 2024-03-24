@@ -15,7 +15,8 @@ enum States {
 	IDLE, CRCH, # basic basics
 	WALK_F, WALK_B, DASH_F, DASH_B, # lateral motions
 	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial motions
-	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB, ATCK_JUMP, ATCK_SUPR, # attacking
+	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, # attacking
+	ATCK_NRML_INP, ATCK_CMND_INP, ATCK_MOTN_INP, ATCK_JUMP_INP, ATCK_SUPR_INP, # attack impacts
 	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
 	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, # not handling getting attacked well
 	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
@@ -143,23 +144,34 @@ var aerial_vel : Vector3
 
 var current_attack : String
 
-var attack_return_state := {
+var attack_return_states := {
 	"attack_normal/a": States.IDLE,
+	"attack_normal/a_inp": States.IDLE,
 	"attack_normal/b": States.IDLE,
+	"attack_normal/b_inp": States.IDLE,
 	"attack_normal/c": States.IDLE,
+	"attack_normal/c_inp": States.IDLE,
+	"attack_normal/grab_followup": States.IDLE,
+	"attack_normal/grab_whiff": States.IDLE,
 	"attack_command/crouch_a": States.CRCH,
+	"attack_command/crouch_a_inp": States.CRCH,
 	"attack_command/crouch_b": States.CRCH,
+	"attack_command/crouch_b_inp": States.CRCH,
 	"attack_command/crouch_c": States.CRCH,
+	"attack_command/crouch_c_inp": States.CRCH,
 	"attack_motion/projectile": States.IDLE,
+	"attack_motion/projectile_air": States.JUMP_NO_ACT,
 	"attack_motion/uppercut": States.JUMP_NO_ACT,
 	"attack_motion/spin_approach": States.JUMP_NO_ACT,
 	"attack_motion/spin_approach_air": States.JUMP_NO_ACT,
+	"attack_super/projectile": States.IDLE,
+	"attack_super/projectile_air": States.JUMP_NO_ACT,
 }
 
 var grab_return_states := {
 	"attack_normal/grab": {
 		true: "attack_normal/grab_followup",
-		false: "attack_normal/grab_whiff"
+		false: "attack_normal/grab_whiff",
 	},
 }
 
@@ -208,8 +220,8 @@ func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
 		reset_facing()
 		ticks_since_state_change += 1
 
-	$AnimationPlayer.speed_scale = float(not dramatic_freeze)
-	$FunctionPlayer.speed_scale = float(not dramatic_freeze)
+	$AnimationPlayer.speed_scale = float(_in_impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
+	$FunctionPlayer.speed_scale = float(GameGlobal.global_hitstop == 0 and not dramatic_freeze)
 
 func _initialize_training_mode_elements():
 	if player:
@@ -263,24 +275,29 @@ func _in_attacking_state() -> bool:
 		States.ATCK_CMND,
 		States.ATCK_MOTN,
 		States.ATCK_SUPR,
-		States.ATCK_GRAB,
+		States.ATCK_GRAB_START,
+		States.ATCK_GRAB_END,
 		States.ATCK_JUMP,
+		States.ATCK_NRML_INP,
+		States.ATCK_JUMP_INP,
+		States.ATCK_CMND_INP,
+		States.ATCK_MOTN_INP,
+	]
+
+func _in_impact_state() -> bool:
+	return current_state in [
+		States.ATCK_NRML_INP,
+		States.ATCK_JUMP_INP,
+		States.ATCK_CMND_INP,
+		States.ATCK_MOTN_INP,
 	]
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	match (anim_name
+	if (anim_name
 			.trim_suffix($AnimationPlayer.anim_left_suf)
-			.trim_suffix($AnimationPlayer.anim_right_suf)):
-		"attack_normal/a", "attack_normal/b", "attack_normal/c":
-			animation_ended = true
-		"attack_command/crouch_a", "attack_command/crouch_b", "attack_command/crouch_c":
-			animation_ended = true
-		"attack_jumping/a", "attack_jumping/b", "attack_jumping/c":
-			animation_ended = true
-		"attack_motion/projectile", "attack_motion/projectile_air":
-			animation_ended = true
-		"attack_motion/spin_approach", "attack_motion/spin_approach_air":
-			animation_ended = true
+			.trim_suffix($AnimationPlayer.anim_right_suf)) in (
+					attack_return_states.keys() + grab_return_states.keys()):
+		animation_ended = true
 
 func _in_hurting_state() -> bool:
 	return current_state in [
@@ -302,7 +319,7 @@ func airborne() -> bool:
 	return current_state in [
 		States.JUMP, States.JUMP_NO_ACT, States.JUMP_AIR_INIT,
 		States.DASH_A_B, States.DASH_A_F,
-		States.ATCK_JUMP, States.BLCK_AIR,
+		States.ATCK_JUMP, States.ATCK_JUMP_INP, States.BLCK_AIR,
 		States.HURT_BNCE, States.HURT_FALL, States.OUTRO_BNCE, States.OUTRO_FALL
 	] or force_airborne
 
@@ -582,7 +599,7 @@ func try_attack(cur_state: States) -> States:
 		States.IDLE, States.WALK_B, States.WALK_F:
 			if two_atk_just_pressed():
 				update_attack("attack_normal/grab")
-				return States.ATCK_GRAB
+				return States.ATCK_GRAB_START
 			if btn_just_pressed("button0"):
 				update_attack("attack_normal/a")
 				return States.ATCK_NRML
@@ -794,30 +811,29 @@ func handle_input() -> void:
 		States.DASH_A_F, States.DASH_A_B:
 			decision = try_attack(decision)
 # Special cases for attack canceling
-		States.ATCK_NRML:
-			if attack_connected: #if the attack landed at all
-				# dash canceling normals
-				if len(inputs.up) > 3:
-					if right_facing:
-						decision = try_dash("left", States.DASH_B, decision)
-						decision = try_dash("right", States.DASH_F, decision)
-					else:
-						decision = try_dash("left", States.DASH_F, decision)
-						decision = try_dash("right", States.DASH_B, decision)
-				# jump canceling normals
-				if decision == States.ATCK_NRML:
-					decision = try_jump(decision)
-				# magic series
-				if decision == States.ATCK_NRML:
-					match current_attack:
-						"attack_normal/a":
-							magic_series(1)
-						"attack_normal/b":
-							magic_series(2)
-						"attack_normal/c":
-							magic_series(3)
-					# special cancelling
-					decision = try_special_attack(decision)
+		States.ATCK_NRML_INP:
+			# dash canceling normals
+			if len(inputs.up) > 3:
+				if right_facing:
+					decision = try_dash("left", States.DASH_B, decision)
+					decision = try_dash("right", States.DASH_F, decision)
+				else:
+					decision = try_dash("left", States.DASH_F, decision)
+					decision = try_dash("right", States.DASH_B, decision)
+			# jump canceling normals
+			if decision == States.ATCK_NRML_INP:
+				decision = try_jump(decision)
+			# magic series
+			if decision == States.ATCK_NRML_INP:
+				match current_attack:
+					"attack_normal/a":
+						magic_series(1)
+					"attack_normal/b":
+						magic_series(2)
+					"attack_normal/c":
+						magic_series(3)
+				# special cancelling
+				decision = try_special_attack(decision)
 		States.ATCK_MOTN:
 			if attack_hurt:
 				decision = try_super_attack(decision)
@@ -975,29 +991,39 @@ func resolve_state_transitions():
 			reduce_stun()
 			if check_true:
 				set_state(States.OUTRO_LIE)
-		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR when animation_ended:
+		States.ATCK_NRML when attack_connected:
+			update_attack(current_attack + "_inp")
+			set_state(States.ATCK_NRML_INP)
+		States.ATCK_JUMP when attack_connected:
+			update_attack(current_attack + "_inp")
+			set_state(States.ATCK_JUMP_INP)
+		States.ATCK_CMND when attack_connected:
+			update_attack(current_attack + "_inp")
+			set_state(States.ATCK_CMND_INP)
+		#States.ATCK_MOTN when attack_connected:
+			#update_attack(current_attack + "_inp")
+			#set_state(States.ATCK_MOTN_INP)
+		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_INP, States.ATCK_JUMP_INP, States.ATCK_CMND_INP, States.ATCK_MOTN_INP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
-			if attack_return_state.get(current_attack) != null:
-				set_state(attack_return_state[current_attack])
+			if attack_return_states.get(current_attack) != null:
+				set_state(attack_return_states[current_attack])
 			else:
 				set_state(previous_state)
-		States.ATCK_GRAB when animation_ended:
+		States.ATCK_GRAB_START when animation_ended:
 			force_airborne = false
 			update_attack(grab_return_states[current_attack][attack_hurt])
-			set_state(States.ATCK_NRML)
-		States.ATCK_JUMP when animation_ended:
-			if attack_return_state.get(current_attack) != null:
-				set_state(attack_return_state[current_attack])
-			else:
-				set_state(previous_state)
-		States.ATCK_JUMP when is_on_floor():
+			set_state(States.ATCK_GRAB_END)
+		States.ATCK_JUMP, States.ATCK_JUMP_INP when is_on_floor():
 			var new_walk = try_walk(null, current_state)
 			set_state(new_walk)
 
 
 func update_character_animation():
 	if _in_attacking_state():
-		$AnimationPlayer.play(current_attack + ($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
+		$AnimationPlayer.play(
+				current_attack + (
+						$AnimationPlayer.anim_right_suf if right_facing
+						else $AnimationPlayer.anim_left_suf))
 	else:
 		match current_state:
 			States.WALK_F when right_facing:
