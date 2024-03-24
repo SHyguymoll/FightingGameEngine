@@ -16,7 +16,7 @@ enum States {
 	WALK_F, WALK_B, DASH_F, DASH_B, # lateral motions
 	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial motions
 	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, # attacking
-	ATCK_NRML_INP, ATCK_CMND_INP, ATCK_MOTN_INP, ATCK_JUMP_INP, ATCK_SUPR_INP, # attack impacts
+	ATCK_NRML_IMP, ATCK_CMND_IMP, ATCK_MOTN_IMP, ATCK_JUMP_IMP, ATCK_SUPR_IMP, # attack impacts
 	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
 	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, # not handling getting attacked well
 	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
@@ -159,6 +159,12 @@ var attack_return_states := {
 	"attack_command/crouch_b_inp": States.CRCH,
 	"attack_command/crouch_c": States.CRCH,
 	"attack_command/crouch_c_inp": States.CRCH,
+	"attack_jumping/a": States.JUMP,
+	"attack_jumping/a_inp": States.JUMP,
+	"attack_jumping/b": States.JUMP_NO_ACT,
+	"attack_jumping/b_inp": States.JUMP,
+	"attack_jumping/c": States.JUMP_NO_ACT,
+	"attack_jumping/c_inp": States.JUMP,
 	"attack_motion/projectile": States.IDLE,
 	"attack_motion/projectile_air": States.JUMP_NO_ACT,
 	"attack_motion/uppercut": States.JUMP_NO_ACT,
@@ -221,7 +227,6 @@ func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
 		ticks_since_state_change += 1
 
 	$AnimationPlayer.speed_scale = float(_in_impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
-	$FunctionPlayer.speed_scale = float(GameGlobal.global_hitstop == 0 and not dramatic_freeze)
 
 func _initialize_training_mode_elements():
 	if player:
@@ -278,18 +283,18 @@ func _in_attacking_state() -> bool:
 		States.ATCK_GRAB_START,
 		States.ATCK_GRAB_END,
 		States.ATCK_JUMP,
-		States.ATCK_NRML_INP,
-		States.ATCK_JUMP_INP,
-		States.ATCK_CMND_INP,
-		States.ATCK_MOTN_INP,
+		States.ATCK_NRML_IMP,
+		States.ATCK_JUMP_IMP,
+		States.ATCK_CMND_IMP,
+		States.ATCK_MOTN_IMP,
 	]
 
 func _in_impact_state() -> bool:
 	return current_state in [
-		States.ATCK_NRML_INP,
-		States.ATCK_JUMP_INP,
-		States.ATCK_CMND_INP,
-		States.ATCK_MOTN_INP,
+		States.ATCK_NRML_IMP,
+		States.ATCK_JUMP_IMP,
+		States.ATCK_CMND_IMP,
+		States.ATCK_MOTN_IMP,
 	]
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
@@ -319,7 +324,7 @@ func airborne() -> bool:
 	return current_state in [
 		States.JUMP, States.JUMP_NO_ACT, States.JUMP_AIR_INIT,
 		States.DASH_A_B, States.DASH_A_F,
-		States.ATCK_JUMP, States.ATCK_JUMP_INP, States.BLCK_AIR,
+		States.ATCK_JUMP, States.ATCK_JUMP_IMP, States.BLCK_AIR,
 		States.HURT_BNCE, States.HURT_FALL, States.OUTRO_BNCE, States.OUTRO_FALL
 	] or force_airborne
 
@@ -811,7 +816,7 @@ func handle_input() -> void:
 		States.DASH_A_F, States.DASH_A_B:
 			decision = try_attack(decision)
 # Special cases for attack canceling
-		States.ATCK_NRML_INP:
+		States.ATCK_NRML_IMP:
 			# dash canceling normals
 			if len(inputs.up) > 3:
 				if right_facing:
@@ -821,10 +826,10 @@ func handle_input() -> void:
 					decision = try_dash("left", States.DASH_F, decision)
 					decision = try_dash("right", States.DASH_B, decision)
 			# jump canceling normals
-			if decision == States.ATCK_NRML_INP:
+			if decision == States.ATCK_NRML_IMP:
 				decision = try_jump(decision)
 			# magic series
-			if decision == States.ATCK_NRML_INP:
+			if decision == States.ATCK_NRML_IMP:
 				match current_attack:
 					"attack_normal/a":
 						magic_series(1)
@@ -992,18 +997,18 @@ func resolve_state_transitions():
 			if check_true:
 				set_state(States.OUTRO_LIE)
 		States.ATCK_NRML when attack_connected:
-			update_attack(current_attack + "_inp")
-			set_state(States.ATCK_NRML_INP)
+			update_attack(current_attack + "_imp")
+			set_state(States.ATCK_NRML_IMP)
 		States.ATCK_JUMP when attack_connected:
-			update_attack(current_attack + "_inp")
-			set_state(States.ATCK_JUMP_INP)
+			update_attack(current_attack + "_imp")
+			set_state(States.ATCK_JUMP_IMP)
 		States.ATCK_CMND when attack_connected:
-			update_attack(current_attack + "_inp")
-			set_state(States.ATCK_CMND_INP)
+			update_attack(current_attack + "_imp")
+			set_state(States.ATCK_CMND_IMP)
 		#States.ATCK_MOTN when attack_connected:
-			#update_attack(current_attack + "_inp")
-			#set_state(States.ATCK_MOTN_INP)
-		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_INP, States.ATCK_JUMP_INP, States.ATCK_CMND_INP, States.ATCK_MOTN_INP, States.ATCK_GRAB_END when animation_ended:
+			#update_attack(current_attack + "_imp")
+			#set_state(States.ATCK_MOTN_IMP)
+		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
 			if attack_return_states.get(current_attack) != null:
 				set_state(attack_return_states[current_attack])
@@ -1013,7 +1018,7 @@ func resolve_state_transitions():
 			force_airborne = false
 			update_attack(grab_return_states[current_attack][attack_hurt])
 			set_state(States.ATCK_GRAB_END)
-		States.ATCK_JUMP, States.ATCK_JUMP_INP when is_on_floor():
+		States.ATCK_JUMP, States.ATCK_JUMP_IMP when is_on_floor():
 			var new_walk = try_walk(null, current_state)
 			set_state(new_walk)
 
