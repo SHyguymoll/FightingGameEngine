@@ -550,17 +550,19 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 			var hit = p1._damage_step(p1_attacker)
 			if hit:
 				spawn_audio(p1_attacker.on_hit_sound)
-				p2.attack_connected = true
-				p2.attack_hurt = true
+				if not p1_attacker.is_projectile:
+					p2.attack_connected = true
+					p2.attack_hurt = true
 				p2_combo += 1
 				p2._on_hit(p1_attacker.on_hit)
-				GameGlobal.global_hitstop = int(p1_attacker.damage_hit)
+				GameGlobal.global_hitstop = int(p1_attacker.hitstop_hit)
 			else:
 				spawn_audio(p1_attacker.on_block_sound)
-				p2.attack_connected = true
-				p2.attack_hurt = false
+				if not p1_attacker.is_projectile:
+					p2.attack_connected = true
+					p2.attack_hurt = false
 				p2._on_block(p1_attacker.on_block)
-				GameGlobal.global_hitstop = int(p1_attacker.damage_hit / 2)
+				GameGlobal.global_hitstop = int(p1_attacker.hitstop_block)
 			p1_attacker.queue_free()
 
 		var p2_attackers = (p2._return_attackers() as Array[Hitbox])
@@ -570,15 +572,17 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 			var hit = p2._damage_step(p2_attacker)
 			if hit:
 				spawn_audio(p2_attacker.on_hit_sound)
-				p1.attack_connected = true
-				p1.attack_hurt = true
+				if not p2_attacker.is_projectile:
+					p1.attack_connected = true
+					p1.attack_hurt = true
 				p1_combo += 1
 				p1._on_hit(p2_attacker.on_hit)
 				GameGlobal.global_hitstop = int(p2_attacker.damage_hit)
 			else:
 				spawn_audio(p2_attacker.on_block_sound)
-				p1.attack_connected = true
-				p1.attack_hurt = false
+				if not p2_attacker.is_projectile:
+					p1.attack_connected = true
+					p1.attack_hurt = false
 				p1._on_block(p2_attacker.on_block)
 				GameGlobal.global_hitstop = int(p2_attacker.damage_hit / 2)
 			p2_attacker.queue_free()

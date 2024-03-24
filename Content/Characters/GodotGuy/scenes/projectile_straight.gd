@@ -31,6 +31,8 @@ func _ready():
 			hitbox.damage_block = 1
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
+			hitbox.hitstop_hit = 20
+			hitbox.hitstop_block = 5
 			hitbox.kback_hit = Vector3(4, 3, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "mid"
@@ -41,6 +43,8 @@ func _ready():
 			hitbox.damage_block = 10
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
+			hitbox.hitstop_hit = 40
+			hitbox.hitstop_block = 20
 			hitbox.kback_hit = Vector3(4, 7, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "launch"
@@ -52,6 +56,8 @@ func _ready():
 			hitbox.damage_block = 1
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
+			hitbox.hitstop_hit = 15
+			hitbox.hitstop_block = 15
 			hitbox.kback_hit = Vector3(-4, 10, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "launch"
@@ -61,6 +67,9 @@ func _ready():
 	$AnimationPlayer.play(start_anim)
 
 func tick():
+	# hitstop check
+	if GameGlobal.global_hitstop:
+		return
 	# check if hitbox exists since it's removed on contact
 	if get_node_or_null(^"Hitbox"):
 		# just moves straight forward, velocity isn't even calculated here for simplicity's sake

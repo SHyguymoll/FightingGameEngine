@@ -15,6 +15,7 @@ damage_hit = 8.0
 damage_block = 2.0
 stun_hit = 20
 stun_block = 5
+hitstop_hit = 30
 kback_hit = Vector3(0.4, 10, 0)
 kback_block = Vector3(0.8, 0, 0)
 on_hit_sound = ExtResource("2_802w5")

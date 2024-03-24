@@ -155,6 +155,7 @@ script = ExtResource("3_0irt4")
 on_hit_sound = ExtResource("4_n70fa")
 on_block_sound = ExtResource("5_cwhgy")
 lifetime = -1
+is_projectile = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
 shape = SubResource("BoxShape3D_qatpa")
