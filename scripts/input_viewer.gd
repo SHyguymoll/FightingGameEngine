@@ -6,7 +6,7 @@ const JOYSTICK_CHANGE = 65.5
 @onready var button_off = preload("res://Content/Art/Menu/ControlsScreen/InputUnpressed.png")
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	$VBC/HBC/Joystick/BallTop.position = Vector2(
 			lerpf($VBC/HBC/Joystick/BallTop.position.x, 74.5 - (JOYSTICK_CHANGE * int(
 					Input.is_action_pressed(player + "_left") and
