@@ -153,6 +153,8 @@ var attack_return_states := {
 	"attack_normal/c_imp": States.IDLE,
 	"attack_normal/grab_followup": States.IDLE,
 	"attack_normal/grab_whiff": States.IDLE,
+	"attack_normal/grab_back_followup": States.IDLE,
+	"attack_normal/grab_back_whiff": States.IDLE,
 	"attack_command/crouch_a": States.CRCH,
 	"attack_command/crouch_a_imp": States.CRCH,
 	"attack_command/crouch_b": States.CRCH,
@@ -177,6 +179,10 @@ var attack_return_states := {
 var grab_return_states := {
 	"attack_normal/grab": {
 		true: "attack_normal/grab_followup",
+		false: "attack_normal/grab_whiff",
+	},
+	"attack_normal/grab_back": {
+		true: "attack_normal/grab_back_followup",
 		false: "attack_normal/grab_whiff",
 	},
 }
@@ -597,9 +603,22 @@ func try_attack(cur_state: States) -> States:
 		return special_attack
 
 	match current_state:
-		States.IDLE, States.WALK_B, States.WALK_F:
+		States.IDLE, States.WALK_F:
 			if two_atk_just_pressed():
 				update_attack("attack_normal/grab")
+				return States.ATCK_GRAB_START
+			if btn_just_pressed("button0"):
+				update_attack("attack_normal/a")
+				return States.ATCK_NRML
+			if btn_just_pressed("button1"):
+				update_attack("attack_normal/b")
+				return States.ATCK_NRML
+			if btn_just_pressed("button2"):
+				update_attack("attack_normal/c")
+				return States.ATCK_NRML
+		States.WALK_B:
+			if two_atk_just_pressed():
+				update_attack("attack_normal/grab_back")
 				return States.ATCK_GRAB_START
 			if btn_just_pressed("button0"):
 				update_attack("attack_normal/a")
