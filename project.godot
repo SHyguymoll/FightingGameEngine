@@ -234,6 +234,15 @@ training_replay={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="world_collision"
+3d_physics/layer_2="contact_with_player1"
+3d_physics/layer_3="contact_with_player_2"
+3d_physics/layer_4="player_intersection"
+3d_physics/layer_5="projectile"
+3d_physics/layer_6="hitbox_interactions"
+
 [physics]
 
 common/enable_pause_aware_picking=true
