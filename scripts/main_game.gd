@@ -8,23 +8,12 @@ enum Moments {
 	ROUND_END,
 	FADE_OUT,
 }
-enum CameraModes {
-	ORTH_BALANCED = 0,
-	ORTH_PLAYER1,
-	ORTH_PLAYER2,
-	PERS_BALANCED,
-	PERS_PLAYER1,
-	PERS_PLAYER2,
-}
+
 enum RoundChangeTypes {
 	ADD,
 	REMOVE
 }
-const ORTH_DIST = 1.328125
-const CAMERA_PERSPECTIVE = 0
-const CAMERA_ORTH = 1
-const CAMERAMAXX = 1.6
-const CAMERAMAXY = 10
+
 const MOVEMENTBOUNDX = 4.5
 
 var p1 : Fighter
@@ -75,8 +64,6 @@ var record_buffer_current := 0
 var record := false
 var replay := false
 
-var camera_mode = 0
-
 var p1_combo := 0
 var p2_combo := 0
 
@@ -91,6 +78,10 @@ func _ready():
 	reset_hitstop()
 	stage = Content.stage_resource.instantiate()
 	$FightersAndStage.add_child(stage)
+	if stage.mode == Stage.Modes.TWO_D:
+		$FighterCamera.set_mode(FighterCamera.Modes.ORTH_BALANCED)
+	else:
+		$FighterCamera.set_mode(FighterCamera.Modes.PERS_BALANCED)
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
 	p2 = Content.p2_resource.instantiate()
@@ -102,7 +93,8 @@ func _ready():
 
 
 func _physics_process(delta):
-	camera_control(camera_mode)
+	($FighterCamera as FighterCamera).p1_pos = p1.global_position
+	($FighterCamera as FighterCamera).p2_pos = p2.global_position
 	match moment:
 		Moments.FADE_IN:
 			move_inputs_and_iterate(true, false)
@@ -316,40 +308,7 @@ func reset_hitstop():
 	GameGlobal.global_hitstop = 0
 
 
-func camera_control(mode: int):
-	$Camera3D.projection = CAMERA_ORTH if mode < CameraModes.PERS_BALANCED else CAMERA_PERSPECTIVE
-	match mode:
-		#2d modes
-		CameraModes.ORTH_BALANCED:
-			$Camera3D.position.x = (p1.position.x + p2.position.x)/2
-			$Camera3D.position.y = max(p1.position.y + 1, p2.position.y + 1)
-			$Camera3D.position.z = ORTH_DIST
-			$Camera3D.size = clampf(abs(p1.position.x - p2.position.x)/2, 3.5, 6)
-		CameraModes.ORTH_PLAYER1:
-			$Camera3D.position.x = p1.position.x
-			$Camera3D.position.y = p1.position.y + 1
-			$Camera3D.position.z = ORTH_DIST
-		CameraModes.ORTH_PLAYER2:
-			$Camera3D.position.x = p2.position.x
-			$Camera3D.position.y = p2.position.y + 1
-			$Camera3D.position.z = ORTH_DIST
-		#3d modes
-		CameraModes.PERS_BALANCED:
-			$Camera3D.position.x = (p1.position.x + p2.position.x)/2
-			$Camera3D.position.y = max(p1.position.y + 1, p2.position.y + 1)
-			$Camera3D.position.z = clampf(abs(p1.position.x - p2.position.x)/2, 1.5, 1.825) + 0.5
-		CameraModes.PERS_PLAYER1:
-			$Camera3D.position.x = p1.position.x
-			$Camera3D.position.y = p1.position.y + 1
-			$Camera3D.position.z = 1.5
-		CameraModes.PERS_PLAYER2:
-			$Camera3D.position.x = p2.position.x
-			$Camera3D.position.y = p2.position.y + 1
-			$Camera3D.position.z = 1.5
-	$Camera3D.position = $Camera3D.position.clamp(
-		Vector3(-CAMERAMAXX, 0, $Camera3D.position.z),
-		Vector3(CAMERAMAXX, CAMERAMAXY, $Camera3D.position.z)
-	)
+
 
 var directionDictionary = {
 	"": "x",
@@ -693,13 +652,13 @@ func register_projectile(projectile : Projectile):
 func start_dramatic_freeze(dramatic_freeze : DramaticFreeze, source : Fighter):
 	dramatic_freeze.end_freeze.connect(end_dramatic_freeze)
 	dramatic_freeze.source = source
-	dramatic_freeze.source_2d_pos = $Camera3D.unproject_position(source.global_position)
+	dramatic_freeze.source_2d_pos = $FighterCamera.unproject_position(source.global_position)
 	if source.player:
 		dramatic_freeze.other = p2
-		dramatic_freeze.other_2d_pos = $Camera3D.unproject_position(p2.global_position)
+		dramatic_freeze.other_2d_pos = $FighterCamera.unproject_position(p2.global_position)
 	else:
 		dramatic_freeze.other = p1
-		dramatic_freeze.other_2d_pos = $Camera3D.unproject_position(p1.global_position)
+		dramatic_freeze.other_2d_pos = $FighterCamera.unproject_position(p1.global_position)
 	$DramaticFreezes.add_child(dramatic_freeze, true)
 	moment = Moments.DRAMATIC_FREEZE
 
