@@ -107,10 +107,10 @@ func _return_attackers():
 	return []
 
 
-func _input_step(recv_inputs, _dramatic_freeze : bool) -> void:
-	inputs = recv_inputs
+func _input_step() -> void:
+	pass
 
-func _visual_step(_dramatic_freeze : bool) -> void:
+func _action_step(_dramatic_freeze : bool) -> void:
 	pass
 
 # This is called when a hitbox makes contact with the other fighter, after resolving that the fighter

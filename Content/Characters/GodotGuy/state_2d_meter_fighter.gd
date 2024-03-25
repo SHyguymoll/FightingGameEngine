@@ -221,18 +221,139 @@ func _do_intro():
 	set_state(States.INTRO)
 
 
-func _input_step(recv_inputs, dramatic_freeze : bool) -> void:
-	inputs = recv_inputs
+func handle_damage(attack : Hitbox, blocked : bool, next_state : States, combo_count : int):
+	release_grab()
+	var reduction : float = float(combo_count) / 5 + 1.0
+	if not blocked:
+		health -= (attack.damage_hit * defense_mult) / reduction
+		set_stun(attack.stun_hit)
+		kback = attack.kback_hit
+		kback.y /= reduction
+		if health <= 0:
+			set_state(States.OUTRO_BNCE)
+			kback.y += 6.5
+			emit_signal(&"defeated")
+		else:
+			set_state(next_state)
+	else:
+		health = max(health - attack.damage_block * defense_mult, 1)
+		set_stun(attack.stun_block)
+		kback = attack.kback_block
+		set_state(next_state)
 
-	if GameGlobal.global_hitstop == 0 and not dramatic_freeze:
-		resolve_state_transitions()
+# If attack is blocked, return false
+# If attack isn't blocked, return true
+func try_block(attack : Hitbox,
+			ground_block_rules : Array, air_block_rules : Array,
+			fs_stand : States, fs_crouch : States, fs_air : States, combo_count : int) -> bool:
+	# still in hitstun or just can't block
+	if _in_hurting_state() or _in_attacking_state() or dashing():
+		if not airborne():
+			if crouching():
+				handle_damage(attack, false, fs_crouch, combo_count)
+				return true
+			else:
+				handle_damage(attack, false, fs_stand, combo_count)
+				return true
+		else:
+			handle_damage(attack, false, fs_air, combo_count)
+			return true
+	# Try to block
+	var directions = [
+		btn_pressed("up"),
+		btn_pressed("down"),
+		btn_pressed("left"),
+		btn_pressed("right")
+	]
+	if not right_facing:
+		var temp = directions[2]
+		directions[2] = directions[3]
+		directions[3] = temp
+	if not airborne():
+		for check_input in range(len(directions)):
+			if (
+					(directions[check_input] == true and ground_block_rules[check_input] == -1) or
+					(directions[check_input] == false and ground_block_rules[check_input] == 1)
+			):
+				if crouching():
+					handle_damage(attack, false, fs_crouch, combo_count)
+					return true
+				else:
+					handle_damage(attack, false, fs_stand, combo_count)
+					return true
+		if btn_pressed("down"):
+			handle_damage(attack, true, States.BLCK_LOW, combo_count)
+			return false
+		else:
+			handle_damage(attack, true, States.BLCK_HGH, combo_count)
+			return false
+	else:
+		for check_input in range(len(directions)):
+			if (
+					(directions[check_input] == true and air_block_rules[check_input] == -1) or
+					(directions[check_input] == false and air_block_rules[check_input] == 1)
+			):
+				handle_damage(attack, false, fs_air, combo_count)
+				return true
+		handle_damage(attack, true, States.BLCK_AIR, combo_count)
+		return false
+
+
+func try_grab(attack : Hitbox, on_ground : bool) -> bool:
+	if crouching():
+		return false
+	if on_ground and airborne():
+		return false
+
+	emit_signal(&"grabbed", player)
+	health = max(health - attack.damage_hit * defense_mult, 1)
+	set_stun(attack.stun_hit)
+	kback = Vector3.ZERO
+	set_state(States.HURT_GRB)
+	return true
+
+# Only runs when a hitbox is overlapping, return rules explained above
+func _damage_step(attack : Hitbox, combo_count : int) -> bool:
+	match attack.hit_type:
+		"mid":
+			return try_block(attack, block.away_any, block.away_any,
+					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
+		"high":
+			return try_block(attack, block.away_high, block.away_any,
+					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
+		"low":
+			return try_block(attack, block.away_low, block.away_any,
+					States.HURT_LOW, States.HURT_CRCH, States.HURT_FALL, combo_count)
+		"launch":
+			return try_block(attack, block.away_any, block.away_any,
+					States.HURT_FALL, States.HURT_FALL, States.HURT_FALL, combo_count)
+		"sweep":
+			return try_block(attack, block.away_low, block.away_any,
+					States.HURT_LIE, States.HURT_LIE, States.HURT_FALL, combo_count)
+		"slam":
+			return try_block(attack, block.away_high, block.away_any,
+					States.HURT_BNCE, States.HURT_BNCE, States.HURT_BNCE, combo_count)
+		"grab_ground":
+			return try_grab(attack, true)
+		"grab_air":
+			return try_grab(attack, false)
+		_: # this will definitely not be a bug in the future
+			return try_block(attack, block.nope, block.nope,
+					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
+
+
+func _input_step() -> void:
+	resolve_state_transitions()
 	handle_input()
+
+
+func _action_step(dramatic_freeze : bool):
 	if GameGlobal.global_hitstop == 0 and not dramatic_freeze:
 		update_character_state()
 		reset_facing()
 		ticks_since_state_change += 1
-
 	$AnimationPlayer.speed_scale = float(impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
+
 
 func _initialize_training_mode_elements():
 	if player:
@@ -1076,124 +1197,3 @@ func reset_facing():
 	else:
 		right_facing = false
 		grabbed_offset.x = GRABBED_OFFSET_X
-
-
-func handle_damage(attack : Hitbox, blocked : bool, next_state : States, combo_count : int):
-	release_grab()
-	var reduction : float = float(combo_count) / 5 + 1.0
-	if not blocked:
-		health -= (attack.damage_hit * defense_mult) / reduction
-		set_stun(attack.stun_hit)
-		kback = attack.kback_hit
-		kback.y /= reduction
-		if health <= 0:
-			set_state(States.OUTRO_BNCE)
-			kback.y += 6.5
-			emit_signal(&"defeated")
-		else:
-			set_state(next_state)
-	else:
-		health = max(health - attack.damage_block * defense_mult, 1)
-		set_stun(attack.stun_block)
-		kback = attack.kback_block
-		set_state(next_state)
-
-# If attack is blocked, return false
-# If attack isn't blocked, return true
-func try_block(attack : Hitbox,
-			ground_block_rules : Array, air_block_rules : Array,
-			fs_stand : States, fs_crouch : States, fs_air : States, combo_count : int) -> bool:
-	# still in hitstun or just can't block
-	if _in_hurting_state() or _in_attacking_state() or dashing():
-		if not airborne():
-			if crouching():
-				handle_damage(attack, false, fs_crouch, combo_count)
-				return true
-			else:
-				handle_damage(attack, false, fs_stand, combo_count)
-				return true
-		else:
-			handle_damage(attack, false, fs_air, combo_count)
-			return true
-	# Try to block
-	var directions = [
-		btn_pressed("up"),
-		btn_pressed("down"),
-		btn_pressed("left"),
-		btn_pressed("right")
-	]
-	if not right_facing:
-		var temp = directions[2]
-		directions[2] = directions[3]
-		directions[3] = temp
-	if not airborne():
-		for check_input in range(len(directions)):
-			if (
-					(directions[check_input] == true and ground_block_rules[check_input] == -1) or
-					(directions[check_input] == false and ground_block_rules[check_input] == 1)
-			):
-				if crouching():
-					handle_damage(attack, false, fs_crouch, combo_count)
-					return true
-				else:
-					handle_damage(attack, false, fs_stand, combo_count)
-					return true
-		if btn_pressed("down"):
-			handle_damage(attack, true, States.BLCK_LOW, combo_count)
-			return false
-		else:
-			handle_damage(attack, true, States.BLCK_HGH, combo_count)
-			return false
-	else:
-		for check_input in range(len(directions)):
-			if (
-					(directions[check_input] == true and air_block_rules[check_input] == -1) or
-					(directions[check_input] == false and air_block_rules[check_input] == 1)
-			):
-				handle_damage(attack, false, fs_air, combo_count)
-				return true
-		handle_damage(attack, true, States.BLCK_AIR, combo_count)
-		return false
-
-
-func try_grab(attack : Hitbox, on_ground : bool) -> bool:
-	if crouching():
-		return false
-	if on_ground and airborne():
-		return false
-
-	emit_signal(&"grabbed", player)
-	health = max(health - attack.damage_hit * defense_mult, 1)
-	set_stun(attack.stun_hit)
-	kback = Vector3.ZERO
-	set_state(States.HURT_GRB)
-	return true
-
-# Only runs when a hitbox is overlapping, return rules explained above
-func _damage_step(attack : Hitbox, combo_count : int) -> bool:
-	match attack.hit_type:
-		"mid":
-			return try_block(attack, block.away_any, block.away_any,
-					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
-		"high":
-			return try_block(attack, block.away_high, block.away_any,
-					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
-		"low":
-			return try_block(attack, block.away_low, block.away_any,
-					States.HURT_LOW, States.HURT_CRCH, States.HURT_FALL, combo_count)
-		"launch":
-			return try_block(attack, block.away_any, block.away_any,
-					States.HURT_FALL, States.HURT_FALL, States.HURT_FALL, combo_count)
-		"sweep":
-			return try_block(attack, block.away_low, block.away_any,
-					States.HURT_LIE, States.HURT_LIE, States.HURT_FALL, combo_count)
-		"slam":
-			return try_block(attack, block.away_high, block.away_any,
-					States.HURT_BNCE, States.HURT_BNCE, States.HURT_BNCE, combo_count)
-		"grab_ground":
-			return try_grab(attack, true)
-		"grab_air":
-			return try_grab(attack, false)
-		_: # this will definitely not be a bug in the future
-			return try_block(attack, block.nope, block.nope,
-					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)

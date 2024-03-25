@@ -97,7 +97,11 @@ func _physics_process(delta):
 	($FighterCamera as FighterCamera).p2_pos = p2.global_position
 	match moment:
 		Moments.FADE_IN:
-			move_inputs_and_iterate(true, false)
+			move_inputs(true)
+			p1._input_step()
+			p1._action_step(false)
+			p2._input_step()
+			p2._action_step(false)
 			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
 			if $SmoothTransitionLayer/ColorRect.color.a < 0.1:
 				$SmoothTransitionLayer/ColorRect.color.a = 0.0
@@ -105,7 +109,11 @@ func _physics_process(delta):
 				p1._do_intro()
 				p2._do_intro()
 		Moments.INTRO:
-			move_inputs_and_iterate(true, false)
+			move_inputs(true)
+			p1._input_step()
+			p1._action_step(false)
+			p2._input_step()
+			p2._action_step(false)
 			if p1._post_intro() and p2._post_intro():
 				moment = Moments.GAME
 				$HUD/Fight.visible = true
@@ -117,7 +125,11 @@ func _physics_process(delta):
 			for proj in ($Projectiles.get_children() as Array[Projectile]):
 				proj.tick()
 			create_inputs()
-			move_inputs_and_iterate(false, false)
+			move_inputs(false)
+			p1._input_step()
+			p1._action_step(false)
+			p2._input_step()
+			p2._action_step(false)
 			check_combos()
 			training_mode_settings()
 			character_positioning(delta)
@@ -125,11 +137,19 @@ func _physics_process(delta):
 			$HUD/Fight.modulate.a8 -= 10
 		Moments.DRAMATIC_FREEZE:
 			create_inputs()
-			move_inputs_and_iterate(false, true)
+			move_inputs(false)
+			p1._input_step()
+			p1._action_step(true)
+			p2._input_step()
+			p2._action_step(true)
 			character_positioning(delta)
 			update_hud()
 		Moments.ROUND_END:
-			move_inputs_and_iterate(true, false)
+			move_inputs(true)
+			p1._input_step()
+			p1._action_step(false)
+			p2._input_step()
+			p2._action_step(false)
 			check_combos()
 			character_positioning(delta)
 			if p1._post_outro() and p2._in_defeated_state():
@@ -484,10 +504,12 @@ func hitbox_hitbox_collisions():
 				hitbox.invalid = true
 
 
-func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
+func move_inputs(fake_inputs):
 	if fake_inputs:
-		p1._input_step(p1_dummy_buffer, dramatic_freeze)
-		p2._input_step(p2_dummy_buffer, dramatic_freeze)
+		p1.inputs = p1_dummy_buffer
+		p2.inputs = p2_dummy_buffer
+		p1._input_step()
+		p2._input_step()
 		return
 
 	var p1_buf = slice_input_dictionary(
@@ -552,8 +574,8 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 		p2.kback = Vector3(5, 5, 0)
 		pass
 
-	p1._input_step(p1_buf, dramatic_freeze)
-	p2._input_step(p2_buf, dramatic_freeze)
+	p1.inputs = p1_buf
+	p2.inputs = p2_buf
 
 
 func check_combos():
