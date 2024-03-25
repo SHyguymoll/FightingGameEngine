@@ -654,17 +654,15 @@ func try_attack(cur_state: States) -> States:
 	return States.INTRO
 
 
-func magic_series(level: int):
-	if level == 3:
-		return
-
+func try_magic_series(level: int, cur_state: States) -> States:
 	if level == 1 and btn_just_pressed("button1"):
 		update_attack("attack_normal/b")
-		update_character_animation()
-
-	if btn_just_pressed("button2"):
+		return States.ATCK_NRML
+	elif level == 2 and btn_just_pressed("button2"):
 		update_attack("attack_normal/c")
-		update_character_animation()
+		return States.ATCK_NRML
+	else:
+		return cur_state
 
 #returns -1 (walk away), 0 (neutral), and 1 (walk towards)
 func walk_value() -> int:
@@ -847,12 +845,13 @@ func handle_input() -> void:
 			if decision == States.ATCK_NRML_IMP:
 				match current_attack:
 					"attack_normal/a":
-						magic_series(1)
+						decision = try_magic_series(1, decision)
 					"attack_normal/b":
-						magic_series(2)
+						decision = try_magic_series(2, decision)
 					"attack_normal/c":
-						magic_series(3)
-				# special cancelling
+						decision = try_magic_series(3, decision)
+			# special cancelling
+			if decision == States.ATCK_NRML_IMP:
 				decision = try_special_attack(decision)
 		States.ATCK_MOTN:
 			if attack_hurt:
