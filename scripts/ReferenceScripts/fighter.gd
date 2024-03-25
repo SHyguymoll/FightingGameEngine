@@ -126,7 +126,7 @@ func _on_block(_on_block_data : Array):
 # Only runs when a hitbox is overlapping.
 # If attack is blocked, return false
 # If attack isn't blocked, return true
-func _damage_step(_attack : Hitbox) -> bool:
+func _damage_step(_attack : Hitbox, _combo_counter : int) -> bool:
 	return true
 
 

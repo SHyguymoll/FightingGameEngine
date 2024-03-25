@@ -506,7 +506,7 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 		for p1_attacker in p1_attackers:
 			if p1_attacker.invalid:
 				continue
-			var hit = p1._damage_step(p1_attacker)
+			var hit = p1._damage_step(p1_attacker, p2_combo)
 			if hit:
 				spawn_audio(p1_attacker.on_hit_sound)
 				if not p1_attacker.is_projectile:
@@ -528,7 +528,7 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 		for p2_attacker in p2_attackers:
 			if p2_attacker.invalid:
 				continue
-			var hit = p2._damage_step(p2_attacker)
+			var hit = p2._damage_step(p2_attacker, p1_combo)
 			if hit:
 				spawn_audio(p2_attacker.on_hit_sound)
 				if not p2_attacker.is_projectile:
