@@ -536,14 +536,14 @@ func move_inputs_and_iterate(fake_inputs, dramatic_freeze):
 					p1.attack_hurt = true
 				p1_combo += 1
 				p1._on_hit(p2_attacker.on_hit)
-				GameGlobal.global_hitstop = int(p2_attacker.damage_hit)
+				GameGlobal.global_hitstop = int(p2_attacker.hitstop_hit)
 			else:
 				spawn_audio(p2_attacker.on_block_sound)
 				if not p2_attacker.is_projectile:
 					p1.attack_connected = true
 					p1.attack_hurt = false
 				p1._on_block(p2_attacker.on_block)
-				GameGlobal.global_hitstop = int(p2_attacker.damage_hit / 2)
+				GameGlobal.global_hitstop = int(p2_attacker.hitstop_block)
 			p2_attacker.queue_free()
 	if p1.stun_time_current == -1 and p1._in_hurting_state() and p2.stun_time_current == -1 and p2._in_hurting_state():
 		p1.stun_time_current = 60
