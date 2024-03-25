@@ -430,7 +430,7 @@ tracks/13/keys = {
 "times": PackedFloat32Array(0, 0.1837, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
-"args": [Vector3(-5, 0, 0)],
+"args": [Vector3(-2, 0, 0)],
 "method": &"set_grd_vel"
 }, {
 "args": [Vector3(0, 0, 0)],
@@ -5487,21 +5487,20 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
-shape = ExtResource("3_8q5n8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.344, 0)
+shape = ExtResource("2_ahw0y")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
+transform = Transform3D(1, 0, 0, 0, 0.381826, 0, 0, 0, 1, 0, 0.275214, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
-modulate = Color(0.803922, 0.686275, 0, 1)
+transform = Transform3D(0.371134, 0, 0, 0, 0.371134, 0, 0, 0, 1, 0.229072, 0.328669, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
