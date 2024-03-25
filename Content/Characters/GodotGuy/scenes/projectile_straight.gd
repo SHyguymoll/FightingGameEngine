@@ -31,8 +31,8 @@ func _ready():
 			hitbox.damage_block = 1
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
-			hitbox.hitstop_hit = 20
-			hitbox.hitstop_block = 5
+			hitbox.hitstop_hit = 10
+			hitbox.hitstop_block = 2
 			hitbox.kback_hit = Vector3(4, 3, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "mid"
@@ -43,8 +43,8 @@ func _ready():
 			hitbox.damage_block = 10
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
-			hitbox.hitstop_hit = 40
-			hitbox.hitstop_block = 20
+			hitbox.hitstop_hit = 20
+			hitbox.hitstop_block = 3
 			hitbox.kback_hit = Vector3(4, 7, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hit_type = "launch"
