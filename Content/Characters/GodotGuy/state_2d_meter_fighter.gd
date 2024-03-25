@@ -883,19 +883,13 @@ func update_character_state():
 			jump_count = jump_total
 		States.WALK_F:
 			jump_count = jump_total
-			if not $StopPlayerIntersection.has_overlapping_areas():
-				ground_vel.x = (1 if right_facing else -1) * walk_speed
-			else:
-				ground_vel.x = 0
+			ground_vel.x = (1 if right_facing else -1) * walk_speed
 		States.WALK_B:
 			jump_count = jump_total
 			ground_vel.x = (-1 if right_facing else 1) * walk_speed
 		States.DASH_F:
 			jump_count = jump_total
-			if not $StopPlayerIntersection.has_overlapping_areas():
-				ground_vel.x = (1 if right_facing else -1) * walk_speed * 1.5
-			else:
-				ground_vel.x = 0
+			ground_vel.x = (1 if right_facing else -1) * walk_speed * 1.5
 		States.DASH_B:
 			jump_count = jump_total
 			ground_vel.x = (-1 if right_facing else 1) * walk_speed * 1.5
@@ -906,7 +900,7 @@ func update_character_state():
 		States.DASH_A_B when ticks_since_state_change == 0:
 			jump_count -= 0.5
 			aerial_vel.x = (-1 if right_facing else 1) * walk_speed * 2.5
-			aerial_vel.y = -gravity  * 3
+			aerial_vel.y = -gravity * 3
 		States.JUMP_INIT when ticks_since_state_change == 0:
 			ground_vel.x = 0
 		States.JUMP_INIT when ticks_since_state_change == JUMP_SQUAT_LENGTH:
@@ -940,6 +934,7 @@ func update_character_state():
 	#if aerial_vel.y < 0 and is_on_floor():
 		#aerial_vel.y = 0
 	velocity = aerial_vel if airborne() else ground_vel
+	$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
 	check_true = move_and_slide()
 
 

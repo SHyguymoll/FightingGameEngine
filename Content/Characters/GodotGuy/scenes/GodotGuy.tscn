@@ -5415,7 +5415,7 @@ _data = {
 size = Vector3(0.202, 1.08658, 0.27)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vbsgv"]
-size = Vector3(1.45025, 1.28207, 1)
+size = Vector3(1.2832, 1.29492, 1)
 
 [node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point")]
 collision_layer = 0
@@ -5472,13 +5472,13 @@ anim_right_suf = "_right"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54271, 0)
 shape = SubResource("BoxShape3D_38jcs")
 
-[node name="StopPlayerIntersection" type="Area3D" parent="."]
+[node name="Area3DIntersectionCheck" type="Area3D" parent="."]
 collision_layer = 8
 collision_mask = 8
 collision_priority = 5.0
 
-[node name="StopIntersection" type="CollisionShape3D" parent="StopPlayerIntersection"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.663552, 0)
+[node name="IntersectionShape" type="CollisionShape3D" parent="Area3DIntersectionCheck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.650857, 0)
 shape = SubResource("BoxShape3D_vbsgv")
 
 [node name="Hurtbox" type="Area3D" parent="."]
@@ -5494,14 +5494,14 @@ shape = ExtResource("3_8q5n8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.680619, 0.67, 0)
+transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26201, 0.656478, 0.04)
-modulate = Color(0, 1, 0, 1)
+transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
+modulate = Color(0.803922, 0.686275, 0, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

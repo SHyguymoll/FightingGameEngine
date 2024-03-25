@@ -101,7 +101,7 @@ func _ready():
 	$FightersAndStage.add_child(p2)
 
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	camera_control(camera_mode)
 	match moment:
 		Moments.FADE_IN:
@@ -118,7 +118,7 @@ func _physics_process(_delta):
 				moment = Moments.GAME
 				$HUD/Fight.visible = true
 			check_combos()
-			character_positioning()
+			character_positioning(delta)
 			update_hud()
 		Moments.GAME:
 			# handle projectiles
@@ -128,18 +128,18 @@ func _physics_process(_delta):
 			move_inputs_and_iterate(false, false)
 			check_combos()
 			training_mode_settings()
-			character_positioning()
+			character_positioning(delta)
 			update_hud()
 			$HUD/Fight.modulate.a8 -= 10
 		Moments.DRAMATIC_FREEZE:
 			create_inputs()
 			move_inputs_and_iterate(false, true)
-			character_positioning()
+			character_positioning(delta)
 			update_hud()
 		Moments.ROUND_END:
 			move_inputs_and_iterate(true, false)
 			check_combos()
-			character_positioning()
+			character_positioning(delta)
 			if p1._post_outro() and p2._in_defeated_state():
 				GameGlobal.p1_wins += 1
 				if GameGlobal.p1_wins < GameGlobal.win_threshold:
@@ -604,7 +604,7 @@ func check_combos():
 		p1_combo = 0
 
 
-func character_positioning():
+func character_positioning(delta):
 	if p1.grabbed_point.act_on_player:
 		p1.grabbed_point.global_position = p2.grab_point.global_position
 		p1.global_position = p1.grabbed_point.global_position + p1.grabbed_offset
@@ -615,10 +615,62 @@ func character_positioning():
 		p2.global_position = p2.grabbed_point.global_position + p2.grabbed_offset
 	else:
 		p2.grabbed_point.global_position = p2.global_position
+
 	p1.position.x = clamp(p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x
+	# overlap fix
+	if (not (p1.grabbed_point.act_on_player or p2.grabbed_point.act_on_player)
+			and p1.get_node_or_null("Area3DIntersectionCheck") != null
+			and p2.get_node_or_null("Area3DIntersectionCheck") != null):
+		if (p1.get_node("Area3DIntersectionCheck") as Area3D).has_overlapping_areas():
+			# motion style (faster fighter forces foe forwards)
+			var change = abs(p1.velocity.x - p2.velocity.x)*delta
+			if abs(p1.velocity.x) > abs(p2.velocity.x):
+				if p1.distance >= 0.0:
+					if p2.position.x - change >= -MOVEMENTBOUNDX:
+						p2.position.x -= change
+					else:
+						p1.position.x += change
+				else:
+					if p2.position.x + change <= MOVEMENTBOUNDX:
+						p2.position.x += change
+					else:
+						p1.position.x -= change
+			elif abs(p1.velocity.x) < abs(p2.velocity.x):
+				if p2.distance >= 0.0:
+					if p1.position.x - change >= -MOVEMENTBOUNDX:
+						p1.position.x -= change
+					else:
+						p2.position.x += change
+				else:
+					if p1.position.x + change <= MOVEMENTBOUNDX:
+						p1.position.x += change
+					else:
+						p2.position.x -= change
+			else:
+				if p1.distance >= 0.0:
+					p1.position.x += change
+					p2.position.x -= change
+				else:
+					p1.position.x -= change
+					p2.position.x += change
+			var abs_dist = abs(p1.position.x - p2.position.x)
+			# standing check (move both of them just enough to stop the overlap)
+			var p1_ssx = p1.get_node_or_null("Area3DIntersectionCheck/IntersectionShape").shape.size.x
+			var p2_ssx = p1.get_node_or_null("Area3DIntersectionCheck/IntersectionShape").shape.size.x
+			if abs_dist < p1_ssx or abs_dist < p2_ssx:
+				if p1.distance >= 0.0:
+					p1.position.x += abs(p1_ssx - abs_dist)/2
+					p2.position.x -= abs(p2_ssx - abs_dist)/2
+				else:
+					p1.position.x -= abs(p1_ssx - abs_dist)/2
+					p2.position.x += abs(p2_ssx - abs_dist)/2
+			# finally, recalculate distance
+			p1.distance = p1.position.x - p2.position.x
+			p2.distance = p2.position.x - p1.position.x
 
 
 func spawn_audio(sound : AudioStream):
