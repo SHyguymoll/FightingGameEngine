@@ -421,7 +421,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 
 func _in_hurting_state() -> bool:
 	return current_state in [
-		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH,
+		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.HURT_LIE,
 		States.HURT_GRB, States.HURT_FALL, States.HURT_BNCE,
 	]
 
@@ -458,6 +458,10 @@ func crouching() -> bool:
 
 func dashing() -> bool:
 	return current_state in [States.DASH_B, States.DASH_F, States.DASH_A_B, States.DASH_A_F]
+
+
+func blocking() -> bool:
+	return current_state in [States.BLCK_AIR, States.BLCK_HGH, States.BLCK_LOW]
 
 # Functions used by the AnimationPlayer to perform actions within animations
 func add_grd_vel(vel : Vector3):
@@ -997,6 +1001,9 @@ func handle_air_stun():
 
 
 func update_character_state():
+	if _in_hurting_state() or blocking():
+		reduce_stun()
+
 	match current_state:
 		States.IDLE, States.CRCH:
 			ground_vel = Vector3.ZERO
@@ -1090,40 +1097,32 @@ func resolve_state_transitions():
 			var new_walk = try_walk(null, current_state)
 			set_state(new_walk)
 		States.BLCK_AIR:
-			reduce_stun()
 			if is_on_floor():
 				stun_time_current = 0
 			handle_air_stun()
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW:
-			reduce_stun()
 			handle_stand_stun()
 		States.HURT_GRB:
-			reduce_stun()
 			if stun_time_current == 0:
 				set_state(States.HURT_FALL)
 		States.HURT_FALL:
-			reduce_stun()
 			handle_air_stun()
 			if check_true and stun_time_current < stun_time_start:
 				set_state(States.HURT_LIE)
 		States.HURT_BNCE:
-			reduce_stun()
 			if check_true:
 				set_state(States.HURT_FALL)
 				set_stun(stun_time_start)
 				kback.y *= -1
 		States.OUTRO_BNCE:
-			reduce_stun()
 			if check_true:
 				set_state(States.OUTRO_FALL)
 				set_stun(stun_time_start)
 				kback.y *= -1
 		States.HURT_LIE:
-			reduce_stun()
 			if stun_time_current == 0:
 				set_state(States.GET_UP)
 		States.OUTRO_FALL:
-			reduce_stun()
 			if check_true:
 				set_state(States.OUTRO_LIE)
 		States.ATCK_NRML when attack_connected:
