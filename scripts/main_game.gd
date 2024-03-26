@@ -517,6 +517,7 @@ func hitbox_hitbox_collisions():
 						GameParticle.Origins.CUSTOM,
 						(hitbox.position + (check as Hitbox).position) / 2.0,
 						null)
+				GameGlobal.global_hitstop = 10
 
 
 
