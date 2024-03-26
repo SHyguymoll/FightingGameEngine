@@ -72,6 +72,7 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 
 @onready var grab_point = preload("res://scenes/GrabPoint.tscn")
 @onready var round_element = preload("res://scenes/RoundElement.tscn")
+@onready var clash_particle = preload("res://scenes/Clash.tscn")
 
 func _ready():
 	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
@@ -285,6 +286,8 @@ func init_fighters():
 	p1.hitbox_created.connect(register_hitbox)
 	p1.projectile_created.connect(register_projectile)
 	p1.dramatic_freeze_created.connect(start_dramatic_freeze)
+	p1.audio_created.connect(spawn_audio)
+	p1.particle_created.connect(register_particle)
 	p1.grabbed.connect(grabbed)
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
@@ -305,6 +308,8 @@ func init_fighters():
 	p2.hitbox_created.connect(register_hitbox)
 	p2.projectile_created.connect(register_projectile)
 	p2.dramatic_freeze_created.connect(start_dramatic_freeze)
+	p2.audio_created.connect(spawn_audio)
+	p2.particle_created.connect(register_particle)
 	p2.grabbed.connect(grabbed)
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
@@ -495,13 +500,24 @@ func hitbox_hitbox_collisions():
 		for check in hitbox.get_overlapping_areas():
 			if hitbox.collision_layer == check.collision_layer:
 				continue
-			if (hitbox as Hitbox).hit_priority <= (check as Hitbox).hit_priority:
+			if (check as Hitbox).invalid:
+				continue
+			if (hitbox as Hitbox).hit_priority < (check as Hitbox).hit_priority:
 				#print("%s collided with %s and is now neutralized" % [hitbox, check])
 				hitbox.invalid = true
 				break
-			else:
+			elif (hitbox as Hitbox).hit_priority > (check as Hitbox).hit_priority:
 				#print("%s collided with %s and is now neutralized" % [check, hitbox])
+				(check as Hitbox).invalid = true
+			else:
 				hitbox.invalid = true
+				(check as Hitbox).invalid = true
+				register_particle(
+						clash_particle.instantiate(),
+						GameParticle.Origins.CUSTOM,
+						(hitbox.position + (check as Hitbox).position) / 2.0,
+						null)
+
 
 
 func move_inputs(fake_inputs):
@@ -660,6 +676,31 @@ func spawn_audio(sound : AudioStream):
 	new_audio.finished.connect(func(): new_audio.queue_free())
 	new_audio.autoplay = true
 	$Audio.add_child(new_audio)
+
+func register_particle(particle : GameParticle, origin : GameParticle.Origins, position_offset : Vector3, source : Fighter):
+	match origin:
+		GameParticle.Origins.SOURCE:
+			particle.position = source.position + position_offset
+			$Particles.add_child(particle)
+		GameParticle.Origins.SOURCE_STICKY:
+			particle.position = position_offset
+			source.add_child(particle)
+		GameParticle.Origins.OTHER:
+			if source.player:
+				particle.position = p2.position + position_offset
+				$Particles.add_child(particle)
+			else:
+				particle.position = p1.position + position_offset
+				$Particles.add_child(particle)
+		GameParticle.Origins.OTHER_STICKY:
+			particle.position = position_offset
+			if source.player:
+				p2.add_child(particle)
+			else:
+				p1.add_child(particle)
+		GameParticle.Origins.CUSTOM:
+			particle.position = position_offset
+			$Particles.add_child(particle)
 
 
 func register_hitbox(hitbox : Hitbox):

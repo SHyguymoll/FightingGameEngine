@@ -4,7 +4,7 @@ extends Camera3D
 const ORTH_DIST = 1.328125
 const MAXX = 1.6
 const MAXY = 10
-const DEFAULT_LERP = 0.8
+const DEFAULT_LERP = 0.5
 enum Modes {
 	ORTH_BALANCED = 0,
 	ORTH_PLAYER1,

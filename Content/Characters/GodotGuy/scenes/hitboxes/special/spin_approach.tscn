@@ -22,7 +22,7 @@ kback_block = Vector3(4, 0, 0)
 on_hit_sound = ExtResource("2_gkan5")
 on_block_sound = ExtResource("3_ymrpp")
 lifetime = 3
-hit_type = "mid"
+hit_type = "launch"
 on_hit = [1.0]
 on_block = [0.0]
 

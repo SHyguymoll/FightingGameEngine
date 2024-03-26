@@ -5,6 +5,8 @@ signal grabbed
 signal grab_released
 signal hitbox_created
 signal projectile_created
+signal audio_created
+signal particle_created
 signal dramatic_freeze_created
 signal defeated
 

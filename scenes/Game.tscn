@@ -21,6 +21,8 @@ script = ExtResource("2_bgp1m")
 
 [node name="Audio" type="Node3D" parent="."]
 
+[node name="Particles" type="Node3D" parent="."]
+
 [node name="Hitboxes" type="Node3D" parent="."]
 
 [node name="Projectiles" type="Node3D" parent="."]

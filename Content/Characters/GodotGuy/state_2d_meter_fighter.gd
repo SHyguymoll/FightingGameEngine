@@ -141,6 +141,12 @@ var aerial_vel : Vector3
 @onready var projectiles = {
 	"basic": preload("scenes/ProjectileStraight.tscn")
 }
+@onready var particles = {
+
+}
+@onready var game_instanced_sounds = {
+
+}
 
 var current_attack : String
 
@@ -196,6 +202,7 @@ func _ready():
 
 
 func _process(_delta):
+	(ui_elements[0] as TextureProgressBar).value = meter
 	$DebugData.text = """State: %s (Prev: %s)
 Vels: %s | %s | %s
 Stun: %s/%s
@@ -574,9 +581,17 @@ func create_projectile(pos : Vector3, projectile_name : String, type : int):
 
 	emit_signal(&"projectile_created", new_projectile)
 
+func create_particle(particle_name : String, origin : GameParticle.Origins, position_offset : Vector3):
+	var particle_instance : GameParticle = particles[particle_name].instantiate()
+	emit_signal(&"particle_created", particle_instance, origin, position_offset, self)
+
 func create_dramatic_freeze(ind : int):
 	var new_freeze := dramatic_freezes[ind].instantiate() as DramaticFreeze
 	emit_signal(&"dramatic_freeze_created", new_freeze, self)
+
+func create_audio(audio_name):
+	var new_audio : AudioStream = game_instanced_sounds[audio_name]
+	emit_signal(&"audio_created", new_audio)
 
 func release_grab():
 	emit_signal("grab_released", player)
@@ -584,7 +599,6 @@ func release_grab():
 
 func add_meter(add_to_meter : float):
 	meter = min(meter + add_to_meter, METER_MAX)
-	(ui_elements[0] as TextureProgressBar).value = meter
 
 
 func set_airborne():
@@ -995,7 +1009,6 @@ func handle_air_stun():
 		return
 
 	if is_on_floor():
-#		handle_stand_stun(buffer)
 		var new_walk = try_walk(null, current_state)
 		set_state(new_walk)
 

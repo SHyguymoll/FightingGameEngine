@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://1u6fdlxjwrrw"]
+
+[ext_resource type="Script" path="res://scripts/ReferenceScripts/game_particle.gd" id="1_gu4um"]
+
+[node name="Poof" type="GPUParticles3D"]
+script = ExtResource("1_gu4um")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
