@@ -73,6 +73,7 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 @onready var grab_point = preload("res://scenes/GrabPoint.tscn")
 @onready var round_element = preload("res://scenes/RoundElement.tscn")
 @onready var clash_particle = preload("res://scenes/Clash.tscn")
+@onready var clash_sound = preload("res://sound_effects/clash.wav")
 
 func _ready():
 	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
@@ -517,6 +518,7 @@ func hitbox_hitbox_collisions():
 						GameParticle.Origins.CUSTOM,
 						(hitbox.position + (check as Hitbox).position) / 2.0,
 						null)
+				spawn_audio(clash_sound)
 				GameGlobal.global_hitstop = 10
 
 

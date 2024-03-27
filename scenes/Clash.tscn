@@ -1,31 +1,36 @@
 [gd_scene load_steps=6 format=3 uid="uid://mcwtu8yk2e3r"]
 
 [ext_resource type="Script" path="res://scripts/ReferenceScripts/game_particle.gd" id="1_0athq"]
-[ext_resource type="Texture2D" uid="uid://b464h3u22rv8o" path="res://clash_effect.png" id="1_0g5tv"]
+[ext_resource type="Texture2D" uid="uid://b464h3u22rv8o" path="res://sprites/clash_effect.png" id="1_f7kso"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7jepb"]
-particle_flag_rotate_y = true
-angle_min = -123.9
-angle_max = 154.8
+particle_flag_disable_z = true
+angle_min = -11.0
+angle_max = 11.0
 direction = Vector3(0, 0, 0)
+spread = 0.0
+angular_velocity_max = 1.0
 gravity = Vector3(0, 0, 0)
+turbulence_noise_strength = 20.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0evou"]
 transparency = 1
 blend_mode = 1
 shading_mode = 0
-albedo_texture = ExtResource("1_0g5tv")
+albedo_texture = ExtResource("1_f7kso")
+billboard_keep_scale = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_cxh6h"]
 material = SubResource("StandardMaterial3D_0evou")
-size = Vector2(1, 1)
+size = Vector2(10, 1)
 orientation = 2
 
 [node name="Poof" type="GPUParticles3D"]
 emitting = false
-amount = 16
+amount = 4
 lifetime = 0.15
 one_shot = true
+explosiveness = 0.68
 process_material = SubResource("ParticleProcessMaterial_7jepb")
 draw_pass_1 = SubResource("PlaneMesh_cxh6h")
 script = ExtResource("1_0athq")
