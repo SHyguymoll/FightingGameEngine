@@ -69,6 +69,7 @@ var current_state: States = States.IDLE
 var previous_state : States
 var ticks_since_state_change : int = 0
 var force_airborne := false
+var force_collisions := false
 
 var basic_anim_state_dict := {
 	States.INTRO : "other/intro",
@@ -603,6 +604,9 @@ func add_meter(add_to_meter : float):
 
 func set_airborne():
 	force_airborne = true
+
+func set_collisions():
+	force_collisions = true
 ####################################################################################################
 
 func set_state(new_state: States):
@@ -1017,6 +1021,10 @@ func update_character_state():
 	if _in_hurting_state() or blocking():
 		reduce_stun()
 
+	if _in_hurting_state():
+		force_airborne = false
+		force_collisions = airborne()
+
 	match current_state:
 		States.IDLE, States.CRCH:
 			ground_vel = Vector3.ZERO
@@ -1074,7 +1082,11 @@ func update_character_state():
 	#if aerial_vel.y < 0 and is_on_floor():
 		#aerial_vel.y = 0
 	velocity = aerial_vel if airborne() else ground_vel
-	$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
+	if force_collisions:
+		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_INHERIT
+	else:
+		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
+
 	check_true = move_and_slide()
 
 
@@ -1082,6 +1094,7 @@ func resolve_state_transitions():
 	# complete jump bug fix
 	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT, States.DASH_A_F, States.DASH_A_B]:
 		previous_state = States.JUMP
+
 	match current_state:
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
 			set_state(States.ROUND_WIN)
@@ -1148,12 +1161,14 @@ func resolve_state_transitions():
 			#set_state(States.ATCK_MOTN_IMP)
 		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
+			force_collisions = false
 			if attack_return_states.get(current_attack) != null:
 				set_state(attack_return_states[current_attack])
 			else:
 				set_state(previous_state)
 		States.ATCK_GRAB_START when animation_ended:
 			force_airborne = false
+			force_collisions = false
 			update_attack(grab_return_states[current_attack][attack_hurt])
 			set_state(States.ATCK_GRAB_END)
 		States.ATCK_JUMP, States.ATCK_JUMP_IMP when is_on_floor():
