@@ -74,6 +74,7 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 @onready var round_element = preload("res://scenes/RoundElement.tscn")
 @onready var clash_particle = preload("res://scenes/Clash.tscn")
 @onready var clash_sound = preload("res://sound_effects/clash.wav")
+@onready var debug_targetter = preload("res://scenes/DebugTargetter.tscn")
 
 func _ready():
 	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
@@ -92,6 +93,15 @@ func _ready():
 	init_fighters()
 	$FightersAndStage.add_child(p1)
 	$FightersAndStage.add_child(p2)
+	var p1_dtar = (debug_targetter.instantiate() as DebugTargetter)
+	p1_dtar.pointer_texture = load("res://Content/Art/Menu/CharacterSelect/Player1Select.png")
+	p1_dtar.pointer_target = p1
+	$FightersAndStage.add_child(p1_dtar)
+	var p2_dtar = (debug_targetter.instantiate() as DebugTargetter)
+	p2_dtar.pointer_texture = load("res://Content/Art/Menu/CharacterSelect/Player2Select.png")
+	p2_dtar.pointer_target = p2
+	$FightersAndStage.add_child(p2_dtar)
+
 
 
 func _physics_process(delta):
@@ -332,9 +342,6 @@ func init_fighters():
 
 func reset_hitstop():
 	GameGlobal.global_hitstop = 0
-
-
-
 
 var directionDictionary = {
 	"": "x",

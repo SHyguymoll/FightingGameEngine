@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://boyh7oc7lek6w"]
+
+[ext_resource type="Script" path="res://scripts/debug_targetter.gd" id="1_rb5se"]
+
+[node name="Node3D" type="Sprite3D"]
+billboard = 1
+no_depth_test = true
+script = ExtResource("1_rb5se")
