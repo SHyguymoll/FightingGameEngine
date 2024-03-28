@@ -4,7 +4,7 @@ extends Camera3D
 const ORTH_DIST = 1.328125
 const MAXX = 1.6
 const MAXY = 10
-const DEFAULT_LERP = 0.5
+const DEFAULT_LERP = 0.25
 enum Modes {
 	ORTH_BALANCED = 0,
 	ORTH_PLAYER1,
@@ -43,6 +43,8 @@ func _physics_process(_delta: float) -> void:
 				set_mode(Modes.ORTH_BALANCED)
 			else:
 				set_mode(Modes.PERS_BALANCED)
+	if GameGlobal.global_hitstop:
+		return
 	match mode:
 		#2d modes
 		Modes.ORTH_BALANCED:

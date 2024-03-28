@@ -519,6 +519,10 @@ func hitbox_hitbox_collisions():
 						(hitbox.position + (check as Hitbox).position) / 2.0,
 						null)
 				spawn_audio(clash_sound)
+				if ($FighterCamera as FighterCamera).mode_is_orth():
+					($FighterCamera as FighterCamera).size *= 1.25
+				else:
+					($FighterCamera as FighterCamera).position.z *= 1.25
 				GameGlobal.global_hitstop = 10
 
 
