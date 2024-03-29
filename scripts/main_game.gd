@@ -302,11 +302,16 @@ func init_fighters():
 	p1.grabbed.connect(grabbed)
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
-	p1._initialize_training_mode_elements()
-	for element in p1.ui_elements:
-		$HUD/SpecialElements/P1Group.add_child(element)
-	for element in p1.ui_elements_training:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(element)
+	p1._initialize_hud_elements(true)
+	p1._connect_hud_elements(true)
+	if p1.ui_under_health:
+		$HUD/HealthAndTime/P1Group.add_child(p1.ui_under_health)
+	if p1.ui_sidebar:
+		$HUD/P1Stats.add_child(p1.ui_sidebar)
+	if p1.ui_below:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_below)
+	if p1.ui_training:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_training)
 	p1.grabbed_point = grab_point.instantiate()
 	$FightersAndStage.add_child(p1.grabbed_point)
 
@@ -324,11 +329,16 @@ func init_fighters():
 	p2.grabbed.connect(grabbed)
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
-	p2._initialize_training_mode_elements()
-	for element in p2.ui_elements:
-		$HUD/SpecialElements/P2Group.add_child(element)
-	for element in p2.ui_elements_training:
-		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(element)
+	p2._initialize_hud_elements(true)
+	p2._connect_hud_elements(true)
+	if p2.ui_under_health:
+		$HUD/HealthAndTime/P2Group.add_child(p2.ui_under_health)
+	if p2.ui_sidebar:
+		$HUD/P2Stats.add_child(p2.ui_sidebar)
+	if p2.ui_below:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p2.ui_below)
+	if p2.ui_training:
+		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(p2.ui_training)
 	p2.grabbed_point = grab_point.instantiate()
 	$FightersAndStage.add_child(p2.grabbed_point)
 

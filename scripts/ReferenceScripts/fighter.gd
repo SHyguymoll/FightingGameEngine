@@ -31,6 +31,15 @@ const INFINITE_STUN := -1
 @export var char_name : String
 @export var health : float
 
+@export var ui_p1_under_health_scene : PackedScene
+@export var ui_p1_sidebar_scene : PackedScene
+@export var ui_p1_below_scene : PackedScene
+@export var ui_p1_training_scene : PackedScene
+@export var ui_p2_under_health_scene : PackedScene
+@export var ui_p2_sidebar_scene : PackedScene
+@export var ui_p2_below_scene : PackedScene
+@export var ui_p2_training_scene : PackedScene
+
 @export var ui_elements_packed = {
 	player1=[],
 	player2=[]
@@ -64,10 +73,32 @@ var stun_time_current : int = 0
 
 var hitbox_layer : int
 var input_buffer_len : int = 10 # Must be a positive number.
-var ui_elements = []
-var ui_elements_training = []
+var ui_under_health : Node
+var ui_sidebar : Node
+var ui_below : Node
+var ui_training : Node
 
-func _initialize_training_mode_elements():
+func _initialize_hud_elements(training_mode : bool):
+	if player:
+		if ui_p1_under_health_scene:
+			ui_under_health = ui_p1_under_health_scene.instantiate()
+		if ui_p1_sidebar_scene:
+			ui_sidebar = ui_p1_sidebar_scene.instantiate()
+		if ui_p1_below_scene:
+			ui_below = ui_p1_below_scene.instantiate()
+		if training_mode and ui_p1_training_scene:
+			ui_training = ui_p1_training_scene.instantiate()
+	else:
+		if ui_p2_under_health_scene:
+			ui_under_health = ui_p2_under_health_scene.instantiate()
+		if ui_p2_sidebar_scene:
+			ui_sidebar = ui_p2_sidebar_scene.instantiate()
+		if ui_p2_below_scene:
+			ui_below = ui_p2_below_scene.instantiate()
+		if training_mode and ui_p2_training_scene:
+			ui_training = ui_p2_training_scene.instantiate()
+
+func _connect_hud_elements(_training_mode : bool):
 	pass
 
 # Functions used by the game, mostly for checks

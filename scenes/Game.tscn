@@ -138,24 +138,6 @@ layout_direction = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SpecialElements" type="HBoxContainer" parent="HUD"]
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 230.0
-offset_bottom = 230.0
-grow_horizontal = 2
-theme_override_constants/separation = 100
-alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="P1Group" type="VBoxContainer" parent="HUD/SpecialElements"]
-layout_mode = 2
-alignment = 2
-
-[node name="P2Group" type="VBoxContainer" parent="HUD/SpecialElements"]
-layout_mode = 2
-size_flags_horizontal = 8
-
 [node name="P1Stats" type="VBoxContainer" parent="HUD"]
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -304,6 +286,7 @@ size_flags_horizontal = 3
 
 [node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
 layer = 100
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="SmoothTransitionLayer"]
 offset_right = 1920.0

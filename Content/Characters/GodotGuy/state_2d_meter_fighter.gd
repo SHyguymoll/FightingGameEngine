@@ -203,7 +203,7 @@ func _ready():
 
 
 func _process(_delta):
-	(ui_elements[0] as TextureProgressBar).value = meter
+	(ui_under_health as TextureProgressBar).value = meter
 	$DebugData.text = """State: %s (Prev: %s)
 Vels: %s | %s | %s
 Stun: %s/%s
@@ -363,19 +363,9 @@ func _action_step(dramatic_freeze : bool):
 	$AnimationPlayer.speed_scale = float(impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
 
 
-func _initialize_training_mode_elements():
-	if player:
-		for scene in ui_elements_packed.player1:
-			ui_elements.append(scene.instantiate())
-		for scene in ui_elements_training_packed.player1:
-			ui_elements_training.append(scene.instantiate())
-	else:
-		for scene in ui_elements_packed.player2:
-			ui_elements.append(scene.instantiate())
-		for scene in ui_elements_training_packed.player2:
-			ui_elements_training.append(scene.instantiate())
-
-	(ui_elements_training[0] as HSlider).value_changed.connect(training_mode_set_meter)
+func _connect_hud_elements(training_mode : bool):
+	if training_mode:
+		(ui_training as HSlider).value_changed.connect(training_mode_set_meter)
 
 
 func _return_attackers():
@@ -440,7 +430,6 @@ func _in_grabbed_state() -> bool:
 
 func training_mode_set_meter(val):
 	meter = val
-	(ui_elements[0] as TextureProgressBar).value = meter
 
 func impact_state() -> bool:
 	return current_state in [
