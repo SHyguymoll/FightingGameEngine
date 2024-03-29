@@ -417,6 +417,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 					attack_return_states.keys() + grab_return_states.keys()):
 		animation_ended = true
 
+
 func _in_hurting_state() -> bool:
 	return current_state in [
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.HURT_LIE,
@@ -430,6 +431,7 @@ func _in_grabbed_state() -> bool:
 
 func training_mode_set_meter(val):
 	meter = val
+
 
 func impact_state() -> bool:
 	return current_state in [
@@ -571,12 +573,12 @@ func create_projectile(pos : Vector3, projectile_name : String, type : int):
 
 	emit_signal(&"projectile_created", new_projectile)
 
-func create_particle(particle_name : String, origin : GameParticle.Origins, position_offset : Vector3):
-	var particle_instance : GameParticle = particles[particle_name].instantiate()
-	emit_signal(&"particle_created", particle_instance, origin, position_offset, self)
+func create_particle(par_name : String, origin : GameParticle.Origins, pos_offset : Vector3):
+	var particle_instance : GameParticle = particles[par_name].instantiate()
+	emit_signal(&"particle_created", particle_instance, origin, pos_offset, self)
 
-func create_dramatic_freeze(ind : int):
-	var new_freeze := dramatic_freezes[ind].instantiate() as DramaticFreeze
+func create_dramatic_freeze(frz_name : String):
+	var new_freeze := dramatic_freezes[frz_name].instantiate() as DramaticFreeze
 	emit_signal(&"dramatic_freeze_created", new_freeze, self)
 
 func create_audio(audio_name):

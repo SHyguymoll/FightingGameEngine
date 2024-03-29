@@ -40,18 +40,8 @@ const INFINITE_STUN := -1
 @export var ui_p2_below_scene : PackedScene
 @export var ui_p2_training_scene : PackedScene
 
-@export var ui_elements_packed = {
-	player1=[],
-	player2=[]
-}
-
-@export var ui_elements_training_packed = {
-	player1=[],
-	player2=[]
-}
-
 # play these to freeze the game for added drama.
-@export var dramatic_freezes = []
+@export var dramatic_freezes = {}
 
 # Don't modify any of these, the game will initialize them.
 var player : bool # True if player 1, False if player 2.

@@ -3494,25 +3494,13 @@ tracks/10/keys = {
 "update": 1,
 "values": [false]
 }
-tracks/11/type = "value"
+tracks/11/type = "audio"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("..:gravity")
-tracks/11/interp = 0
+tracks/11/path = NodePath("../AttackAudio")
+tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [-0.5]
-}
-tracks/12/type = "audio"
-tracks/12/imported = false
-tracks/12/enabled = true
-tracks/12/path = NodePath("../AttackAudio")
-tracks/12/interp = 1
-tracks/12/loop_wrap = true
-tracks/12/keys = {
 "clips": [{
 "end_offset": 0.0,
 "start_offset": 0.0,
@@ -3520,15 +3508,15 @@ tracks/12/keys = {
 }],
 "times": PackedFloat32Array(0.2171)
 }
-tracks/12/use_blend = true
-tracks/13/type = "method"
-tracks/13/imported = false
-tracks/13/enabled = true
-tracks/13/path = NodePath("..")
-tracks/13/interp = 1
-tracks/13/loop_wrap = true
-tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.0833335, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
+tracks/11/use_blend = true
+tracks/12/type = "method"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("..")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0, 0.0166667, 0.0835, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [],
@@ -3537,7 +3525,7 @@ tracks/13/keys = {
 "args": [6.0],
 "method": &"set_y_air_vel"
 }, {
-"args": [0],
+"args": ["super_freeze"],
 "method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 3],
@@ -3672,25 +3660,13 @@ tracks/10/keys = {
 "update": 1,
 "values": [false]
 }
-tracks/11/type = "value"
+tracks/11/type = "audio"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("..:gravity")
-tracks/11/interp = 0
+tracks/11/path = NodePath("../AttackAudio")
+tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [-0.5]
-}
-tracks/12/type = "audio"
-tracks/12/imported = false
-tracks/12/enabled = true
-tracks/12/path = NodePath("../AttackAudio")
-tracks/12/interp = 1
-tracks/12/loop_wrap = true
-tracks/12/keys = {
 "clips": [{
 "end_offset": 0.0,
 "start_offset": 0.0,
@@ -3698,21 +3674,21 @@ tracks/12/keys = {
 }],
 "times": PackedFloat32Array(0.3173)
 }
-tracks/12/use_blend = true
-tracks/13/type = "method"
-tracks/13/imported = false
-tracks/13/enabled = true
-tracks/13/path = NodePath("..")
-tracks/13/interp = 1
-tracks/13/loop_wrap = true
-tracks/13/keys = {
+tracks/11/use_blend = true
+tracks/12/type = "method"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("..")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
 "times": PackedFloat32Array(0, 0.0166667, 0.316667, 0.333334, 0.350001),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
 }, {
-"args": [0],
+"args": ["super_freeze"],
 "method": &"create_dramatic_freeze"
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 2],
@@ -5422,15 +5398,9 @@ ui_p1_under_health_scene = ExtResource("2_xjhia")
 ui_p1_training_scene = ExtResource("4_m71sm")
 ui_p2_under_health_scene = ExtResource("3_yl6a6")
 ui_p2_training_scene = ExtResource("5_fjkep")
-ui_elements_packed = {
-"player1": [ExtResource("2_xjhia")],
-"player2": [ExtResource("3_yl6a6")]
+dramatic_freezes = {
+"super_freeze": ExtResource("6_xkque")
 }
-ui_elements_training_packed = {
-"player1": [ExtResource("4_m71sm")],
-"player2": [ExtResource("5_fjkep")]
-}
-dramatic_freezes = [ExtResource("6_xkque")]
 
 [node name="DebugData" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.92896, 0)
@@ -5491,14 +5461,13 @@ shape = ExtResource("3_8q5n8")
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
-modulate = Color(0.803922, 0.686275, 0, 1)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, -0.230993, 0.550286, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
