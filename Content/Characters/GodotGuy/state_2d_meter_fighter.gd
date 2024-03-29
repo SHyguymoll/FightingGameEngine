@@ -1126,6 +1126,8 @@ func resolve_state_transitions():
 			if is_on_floor():
 				stun_time_current = 0
 			handle_air_stun()
+			if not stun_time_current:
+				set_state(States.JUMP)
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW:
 			handle_stand_stun()
 		States.HURT_GRB:
