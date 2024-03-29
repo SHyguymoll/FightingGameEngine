@@ -68,7 +68,7 @@ var ui_sidebar : Node
 var ui_below : Node
 var ui_training : Node
 
-func _initialize_hud_elements(training_mode : bool):
+func _initialize_hud_elements(training_mode : bool) -> void:
 	if player:
 		if ui_p1_under_health_scene:
 			ui_under_health = ui_p1_under_health_scene.instantiate()
@@ -88,7 +88,7 @@ func _initialize_hud_elements(training_mode : bool):
 		if training_mode and ui_p2_training_scene:
 			ui_training = ui_p2_training_scene.instantiate()
 
-func _connect_hud_elements(_training_mode : bool):
+func _connect_hud_elements(_training_mode : bool) -> void:
 	pass
 
 # Functions used by the game, mostly for checks
@@ -126,7 +126,7 @@ func _in_grabbed_state() -> bool:
 	return true
 
 
-func _return_attackers():
+func _return_attackers() -> Array[Hitbox]:
 	return []
 
 
@@ -138,12 +138,12 @@ func _action_step(_dramatic_freeze : bool) -> void:
 
 # This is called when a hitbox makes contact with the other fighter, after resolving that the fighter
 # was hit by the attack. An Array is passed for maximum customizability.
-func _on_hit(_on_hit_data : Array):
+func _on_hit(_on_hit_data : Array) -> void:
 # For this fighter, the on_hit and on_block arrays stores only the meter_gain, a float.
 	pass
 
 # Ditto, but for after resolving that the opposing fighter blocked the attack.
-func _on_block(_on_block_data : Array):
+func _on_block(_on_block_data : Array) -> void:
 	pass
 
 # Only runs when a hitbox is overlapping.
@@ -162,13 +162,12 @@ func _initialize_boxes() -> void:
 		hitbox_layer = 2
 
 
-func set_stun(value):
+func set_stun(value) -> void:
 	stun_time_start = value
-	GameGlobal.global_hitstop = int(abs(value)/4)
 	stun_time_current = stun_time_start + 1 if stun_time_start != INFINITE_STUN else INFINITE_STUN
 
 
-func reduce_stun():
+func reduce_stun() -> void:
 	if stun_time_start != INFINITE_STUN:
 		stun_time_current = max(0, stun_time_current - 1)
 
@@ -177,21 +176,21 @@ func btn_state(input: String, ind: int):
 	return inputs[input][ind]
 
 
-func btn_pressed_ind(input: String, ind: int):
+func btn_pressed_ind(input: String, ind: int) -> bool:
 	return btn_state(input, ind)[1]
 
 
-func btn_pressed(input: String):
+func btn_pressed(input: String) -> bool:
 	return btn_pressed_ind(input, -1)
 
 
-func btn_just_pressed(input: String):
+func btn_just_pressed(input: String) -> bool:
 	return btn_pressed_ind_under_time(input, -1, JUST_PRESSED_BUFFER)
 
 
-func btn_pressed_ind_under_time(input: String, ind: int, duration: int):
+func btn_pressed_ind_under_time(input: String, ind: int, duration: int) -> bool:
 	return btn_state(input, ind)[0] < duration and btn_pressed_ind(input, ind)
 
 
-func btn_held_over_time(input: String, duration: int):
+func btn_held_over_time(input: String, duration: int) -> bool:
 	return btn_state(input, -1)[0] >= duration and btn_pressed(input)

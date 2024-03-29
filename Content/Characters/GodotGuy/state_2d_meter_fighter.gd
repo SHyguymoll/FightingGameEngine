@@ -368,7 +368,7 @@ func _connect_hud_elements(training_mode : bool):
 		(ui_training as HSlider).value_changed.connect(training_mode_set_meter)
 
 
-func _return_attackers():
+func _return_attackers() -> Array[Hitbox]:
 	return $Hurtbox.get_overlapping_areas() as Array[Hitbox]
 
 # This is called when a hitbox makes contact with the other fighter,
