@@ -369,7 +369,10 @@ func _connect_hud_elements(training_mode : bool):
 
 
 func _return_attackers() -> Array[Hitbox]:
-	return $Hurtbox.get_overlapping_areas() as Array[Hitbox]
+	var attackers = ($Hurtbox as Area3D).get_overlapping_areas()
+	var actual_attackers : Array[Hitbox] = []
+	actual_attackers.assign(attackers)
+	return actual_attackers
 
 # This is called when a hitbox makes contact with the other fighter,
 # after resolving that the fighter was hit by the attack.
