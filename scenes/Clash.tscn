@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ReferenceScripts/game_particle.gd" id="1_0athq"]
 [ext_resource type="Texture2D" uid="uid://b464h3u22rv8o" path="res://sprites/clash_effect.png" id="1_f7kso"]
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7jepb"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hqja2"]
 particle_flag_disable_z = true
 angle_min = -11.0
 angle_max = 11.0
@@ -13,15 +13,15 @@ angular_velocity_max = 1.0
 gravity = Vector3(0, 0, 0)
 turbulence_noise_strength = 20.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0evou"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_04pjb"]
 transparency = 1
 blend_mode = 1
 shading_mode = 0
 albedo_texture = ExtResource("1_f7kso")
 billboard_keep_scale = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_cxh6h"]
-material = SubResource("StandardMaterial3D_0evou")
+[sub_resource type="PlaneMesh" id="PlaneMesh_ltbfh"]
+material = SubResource("StandardMaterial3D_04pjb")
 size = Vector2(10, 1)
 orientation = 2
 
@@ -30,9 +30,9 @@ emitting = false
 amount = 4
 lifetime = 0.15
 one_shot = true
-explosiveness = 0.68
-process_material = SubResource("ParticleProcessMaterial_7jepb")
-draw_pass_1 = SubResource("PlaneMesh_cxh6h")
+explosiveness = 0.7
+process_material = SubResource("ParticleProcessMaterial_hqja2")
+draw_pass_1 = SubResource("PlaneMesh_ltbfh")
 script = ExtResource("1_0athq")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

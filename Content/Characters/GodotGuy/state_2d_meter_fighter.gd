@@ -143,7 +143,7 @@ var aerial_vel : Vector3
 	"basic": preload("scenes/ProjectileStraight.tscn")
 }
 @onready var particles = {
-
+	"counter_hit": preload("scenes/particles/CounterHit.tscn")
 }
 @onready var game_instanced_sounds = {
 
@@ -255,7 +255,21 @@ func try_block(attack : Hitbox,
 			ground_block_rules : Array, air_block_rules : Array,
 			fs_stand : States, fs_crouch : States, fs_air : States, combo_count : int) -> bool:
 	# still in hitstun or just can't block
-	if _in_hurting_state() or _in_attacking_state() or dashing():
+	if _in_hurting_state() or dashing():
+		if not airborne():
+			if crouching():
+				handle_damage(attack, false, fs_crouch, combo_count)
+				return true
+			else:
+				handle_damage(attack, false, fs_stand, combo_count)
+				return true
+		else:
+			handle_damage(attack, false, fs_air, combo_count)
+			return true
+	# counter-hits
+	if _in_attacking_state():
+		create_particle("counter_hit", GameParticle.Origins.SOURCE,attack.position)
+		attack.hitstop_hit = int(float(attack.hitstop_hit) * 1.5)
 		if not airborne():
 			if crouching():
 				handle_damage(attack, false, fs_crouch, combo_count)
