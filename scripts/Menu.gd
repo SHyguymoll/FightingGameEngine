@@ -43,103 +43,8 @@ var jump_dists = Vector2(X_JUMP, Y_JUMP)
 
 func _ready():
 	$Background/Background.set_texture(menu_bckgrd)
-	if prepare_game() == ReturnStates.SUCCESS:
-		$MenuButtons.show()
+	$MenuButtons.show()
 
-func prepare_game() -> ReturnStates:
-	#I/O Stuff
-	var character_file_folders = directory_traversal(CONT_DIR.path_join("Characters"))
-	var stage_file_folders = directory_traversal(CONT_DIR.path_join("Stages"))
-	var character_files = search_for_files(character_file_folders, "fighter_details.gd")
-	var stage_files = search_for_files(stage_file_folders, "stage_details.gd")
-
-	# Characters
-	for c_file in character_files:
-		var fighter_details = load(c_file).new()
-		if not "folder" in fighter_details:
-			push_error("folder variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnStates.INVALID_FIGHTER
-		else:
-			if not fighter_details.folder is String:
-				push_error("folder variable is wrong type, aborting c_file" + c_file)
-				return ReturnStates.INVALID_FIGHTER
-		if not "fighter_name" in fighter_details:
-			push_error(
-					"fighter_name variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnStates.INVALID_FIGHTER
-		else:
-			if not fighter_details.fighter_name is String:
-				push_error(
-						"fighter_name variable is wrong type, aborting c_file" + c_file)
-				return ReturnStates.INVALID_FIGHTER
-		if not "fighter_file" in fighter_details:
-			push_error(
-					"fighter_file variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnStates.INVALID_FIGHTER
-		else:
-			if not fighter_details.fighter_file is String:
-				push_error(
-						"fighter_file variable is wrong type, aborting c_file" + c_file)
-				return ReturnStates.INVALID_FIGHTER
-		if not "char_select_icon" in fighter_details:
-			push_error(
-					"char_select_icon variable missing in fighter_details.gd for c_file " + c_file)
-			return ReturnStates.INVALID_FIGHTER
-		else:
-			if not fighter_details.char_select_icon is String:
-				push_error(
-						"char_select_icon variable is wrong type, aborting c_file" + c_file)
-				return ReturnStates.INVALID_FIGHTER
-		Content.characters.append({
-			char_name = fighter_details.fighter_name,
-			fighter_file = fighter_details.fighter_file,
-			char_select_icon = fighter_details.char_select_icon,
-		})
-
-	# Stages
-	for s_file in stage_files:
-		var stage_details = load(s_file).new()
-		if not "folder" in stage_details:
-			push_error("folder variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnStates.INVALID_STAGE
-		else:
-			if not stage_details.folder is String:
-				push_error("folder variable is wrong type, aborting s_file" + s_file)
-				return ReturnStates.INVALID_STAGE
-		if not "stage_name" in stage_details:
-			push_error(
-					"stage_name variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnStates.INVALID_STAGE
-		else:
-			if not stage_details.stage_name is String:
-				push_error(
-						"stage_name variable is wrong type, aborting s_file" + s_file)
-				return ReturnStates.INVALID_STAGE
-		if not "stage_file" in stage_details:
-			push_error(
-					"stage_file variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnStates.INVALID_STAGE
-		else:
-			if not stage_details.stage_file is String:
-				push_error(
-						"stage_file variable is wrong type, aborting s_file" + s_file)
-				return ReturnStates.INVALID_STAGE
-		if not "compatible_with_3d" in stage_details:
-			push_error(
-					"compatible_with_3d variable missing in stage_details.gd for s_file " + s_file)
-			return ReturnStates.INVALID_STAGE
-		else:
-			if not stage_details.compatible_with_3d is bool:
-				push_error(
-						"compatible_with_3d variable is wrong type, aborting s_file" + s_file)
-				return ReturnStates.INVALID_STAGE
-		Content.stages.append({
-			stage_name = stage_details.stage_name,
-			stage_file = stage_details.stage_file,
-			compatible_with_3d = stage_details.compatible_with_3d
-		})
-
-	return ReturnStates.SUCCESS
 
 func _process(_delta):
 	if screen == Screens.FIGHTER_SELECT:
@@ -155,37 +60,15 @@ func _process(_delta):
 		)
 		if p1_cursor.choice_made and p2_cursor.choice_made:
 			Content.p1_resource = load(
-					Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x].fighter_file)
+					Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x][1])
 			Content.p2_resource = load(
-					Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x].fighter_file)
-			Content.stage_resource = load(Content.stages.pick_random().stage_file)
+					Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x][1])
+			Content.stage_resource = load(Content.stages.pick_random()[1])
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
 			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
 				push_error("game failed to load")
 
-#Recursive depth-first directory traversal
-func directory_traversal(current_directory: String) -> Array:
-	if not DirAccess.dir_exists_absolute(current_directory):
-		push_error(current_directory + " failed to open, aborting search.")
-		return []
-	var folders = [current_directory]
-	var directories = DirAccess.get_directories_at(current_directory)
-	for directory in directories:
-		folders.append_array(directory_traversal(current_directory + "/" + directory))
-	return folders
-
-func search_for_files(dirs: Array, file_name : String) -> Array:
-	var pck_names = []
-	for dir in dirs:
-		if not DirAccess.dir_exists_absolute(dir):
-			push_error(dir + " failed to open, aborting this search.")
-			continue
-		var files = DirAccess.get_files_at(dir)
-		for file in files:
-			if file == file_name:
-				pck_names.append(dir.path_join(file))
-	return pck_names
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
 	var processedImage
@@ -223,10 +106,10 @@ func load_character_select():
 		var prev_slice = custom_layout.definition[max(y_index - 1, 0)]
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = character.char_name
-			icon.character_data = character.fighter_file
+			icon.name = character[0]
+			icon.character_data = character[1]
 			icon.set_surface_override_material(
-					0,build_albedo(character.char_select_icon, false))
+					0,build_albedo(character[2], false))
 			$CharSelectHolder.add_child(icon)
 			while cur_slice[cur_index] == 0:
 				slice_built.append(null)
@@ -282,10 +165,10 @@ func load_character_select():
 		var char_position_working = char_top_left
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = character.char_name
-			icon.character_data = character.fighter_file
+			icon.name = character[0]
+			icon.character_data = character[1]
 			icon.set_surface_override_material(
-					0,build_albedo(character.char_select_icon, false))
+					0,build_albedo(character[2], false))
 			$CharSelectHolder.add_child(icon)
 			icon.position = char_position_working
 			char_position_working.x += X_JUMP
