@@ -266,6 +266,21 @@ func try_block(attack : Hitbox,
 		else:
 			handle_damage(attack, false, fs_air, combo_count)
 			return true
+	# auto blocking if already blocking
+	if blocking():
+		if airborne():
+			handle_damage(attack, true, current_state, combo_count)
+			return false
+		match attack.hit_type:
+			"mid":
+				handle_damage(attack, true, current_state, combo_count)
+				return false
+			"high" when current_state == States.BLCK_HGH:
+				handle_damage(attack, true, current_state, combo_count)
+				return false
+			"low" when current_state == States.BLCK_LOW:
+				handle_damage(attack, true, current_state, combo_count)
+				return false
 	# Try to block
 	var directions = [
 		btn_pressed("up"),
