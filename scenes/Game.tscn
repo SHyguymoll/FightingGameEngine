@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cd77r01gxs0ud"]
+[gd_scene load_steps=13 format=3 uid="uid://cd77r01gxs0ud"]
 
 [ext_resource type="Script" path="res://scripts/main_game.gd" id="1_a16kr"]
 [ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_bgp1m"]
@@ -7,7 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="4_7ll10"]
 [ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="5_6q5w6"]
 [ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="6_2k3f0"]
+[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_434nl"]
 [ext_resource type="Theme" uid="uid://dqy1w1gb4mp1b" path="res://HUD_TrainingSectionTheme.tres" id="9_agrsw"]
+[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_pe8d5"]
+[ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_5jtlc"]
+[ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_gqhrq"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_a16kr")
@@ -35,7 +39,7 @@ layer = 10
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 20
 
-[node name="Fight" type="Label" parent="HUD"]
+[node name="BigText" type="Label" parent="HUD"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -284,6 +288,61 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="ResultsScreen" type="CanvasLayer" parent="."]
+layer = 30
+visible = false
+
+[node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("9_434nl")
+p1_choice_positions = Array[Vector2]([Vector2(769, 808), Vector2(529, 918), Vector2(625, 1015)])
+p2_choice_positions = Array[Vector2]([Vector2(1156, 808), Vector2(1394, 918), Vector2(1293, 1015)])
+p1_select_icon = NodePath("ColorRect/P1SelectIcon")
+p2_select_icon = NodePath("ColorRect/P2SelectIcon")
+
+[node name="ColorRect" type="ColorRect" parent="ResultsScreen/ResultsScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.360784)
+
+[node name="Label" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -89.5
+offset_top = -69.0
+offset_right = 89.5
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 86
+text = "Restart Fight
+Return to Character Select
+Return to Main Menu"
+horizontal_alignment = 1
+
+[node name="P1SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
+position = Vector2(625, 1015)
+texture = ExtResource("11_5jtlc")
+
+[node name="P2SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
+position = Vector2(1293, 1017)
+texture = ExtResource("12_gqhrq")
+
 [node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
 layer = 100
 visible = false
@@ -300,3 +359,4 @@ color = Color(0, 0, 0, 1)
 [connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p2_health_reset_switch_toggled"]
 [connection signal="drag_ended" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset" to="." method="_on_p2_health_reset_drag_ended"]
 [connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/Record" to="." method="_on_record_toggled"]
+[connection signal="choices_made" from="ResultsScreen/ResultsScreen" to="." method="results_screen_choices_logic"]

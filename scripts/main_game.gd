@@ -16,6 +16,8 @@ enum RoundChangeTypes {
 
 const MOVEMENTBOUNDX = 4.5
 
+@export var results_screen_file : PackedScene
+
 var p1 : Fighter
 var p2 : Fighter
 var stage : Stage
@@ -67,6 +69,7 @@ var replay := false
 var p1_combo := 0
 var p2_combo := 0
 
+var game_ended := false
 var moment := Moments.FADE_IN
 var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 
@@ -128,7 +131,8 @@ func _physics_process(delta):
 			p2._action_step(false)
 			if p1._post_intro() and p2._post_intro():
 				moment = Moments.GAME
-				$HUD/Fight.visible = true
+				($HUD/BigText as Label).text = "FIGHT"
+				$HUD/BigText.visible = true
 			check_combos()
 			character_positioning(delta)
 			update_hud()
@@ -146,7 +150,7 @@ func _physics_process(delta):
 			training_mode_settings()
 			character_positioning(delta)
 			update_hud()
-			$HUD/Fight.modulate.a8 -= 10
+			$HUD/BigText.modulate.a8 -= 10
 		Moments.DRAMATIC_FREEZE:
 			create_inputs()
 			move_inputs(false)
@@ -157,6 +161,9 @@ func _physics_process(delta):
 			character_positioning(delta)
 			update_hud()
 		Moments.ROUND_END:
+			if GameGlobal.global_hitstop:
+				$HUD/BigText.modulate.a8 -= 4
+				return
 			move_inputs(true)
 			p1._input_step()
 			p1._action_step(false)
@@ -164,31 +171,29 @@ func _physics_process(delta):
 			p2._action_step(false)
 			check_combos()
 			character_positioning(delta)
+			if game_ended:
+				return
 			if p1._post_outro() and p2._in_defeated_state():
 				GameGlobal.p1_wins += 1
 				if GameGlobal.p1_wins < GameGlobal.win_threshold:
 					moment = Moments.FADE_OUT
 				else:
-					print("game ended with a p1 victory, restarting anyways")
-					GameGlobal.p1_wins = 0
-					moment = Moments.FADE_OUT
+					print("game ended with a p1 victory, creating results screen")
+					make_results_screen()
 			elif p1._in_defeated_state() and p2._post_outro():
 				GameGlobal.p2_wins += 1
 				if GameGlobal.p2_wins < GameGlobal.win_threshold:
 					moment = Moments.FADE_OUT
 				else:
-					print("game ended with a p2 victory, restarting anyways")
-					GameGlobal.p2_wins = 0
-					moment = Moments.FADE_OUT
+					print("game ended with a p2 victory, creating results screen")
+					make_results_screen()
 			elif p1._in_defeated_state() and p2._in_defeated_state():
 				if (
 					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
 					and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
 				):
-					print("game ended on a draw, restarting anyways")
-					GameGlobal.p1_wins = 0
-					GameGlobal.p2_wins = 0
-					moment = Moments.FADE_OUT
+					print("game ended on a draw, creating results screen")
+					make_results_screen()
 				else:
 					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
 					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
@@ -197,6 +202,26 @@ func _physics_process(delta):
 			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 1.0, 0.25)
 			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a - 1.0):
 				get_tree().reload_current_scene()
+
+
+func make_results_screen():
+	game_ended = true
+	$HUD.visible = false
+	$ResultsScreen.visible = true
+	$ResultsScreen/ResultsScreen.active = true
+
+func results_screen_choices_logic():
+	var p1_choice = $ResultsScreen/ResultsScreen.p1_choice
+	var p2_choice = $ResultsScreen/ResultsScreen.p2_choice
+	if p1_choice == ResultsScreen.Choice.REPLAY and p2_choice == p1_choice:
+		GameGlobal.p1_wins = 0
+		GameGlobal.p2_wins = 0
+		moment = Moments.FADE_OUT
+	if p1_choice == ResultsScreen.Choice.CHARACTER_SELECT or p2_choice == ResultsScreen.Choice.CHARACTER_SELECT:
+		pass
+	if p1_choice == ResultsScreen.Choice.MAIN_MENU or p2_choice == ResultsScreen.Choice.MAIN_MENU:
+		if get_tree().change_scene_to_file("res://scenes/Menu.tscn"):
+			push_error("menu failed to load")
 
 
 func make_hud():
@@ -245,7 +270,7 @@ func make_hud():
 				(p1_round_group.get_node(str(n)) as RoundElement).unfulfill()
 
 	# game itself
-	$HUD/Fight.visible = false
+	$HUD/BigText.visible = false
 	var health_reset_hud = $HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset
 	health_reset_hud.min_value = 1
 	health_reset_hud.max_value = p1.health
@@ -773,6 +798,9 @@ func grab_released(player):
 
 
 func player_defeated():
+	GameGlobal.global_hitstop = 120
+	($HUD/BigText as Label).text = "KO"
+	$HUD/BigText.modulate.a8 = 255
 	moment = Moments.ROUND_END
 	p1.game_ended = true
 	p2.game_ended = true
