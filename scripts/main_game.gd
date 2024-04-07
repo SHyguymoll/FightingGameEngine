@@ -169,6 +169,7 @@ func _physics_process(delta):
 			p2._action_step(false)
 			check_combos()
 			character_positioning(delta)
+			update_hud()
 			if game_ended:
 				return
 			if p1._post_outro() and p2._in_defeated_state():
@@ -830,7 +831,7 @@ func _on_p1_health_reset_drag_ended(value_changed):
 
 
 func _on_p2_health_reset_switch_toggled(toggled_on):
-	p1_reset_health_on_drop = toggled_on
+	p2_reset_health_on_drop = toggled_on
 
 
 func _on_p2_health_reset_drag_ended(value_changed):
