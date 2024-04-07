@@ -161,9 +161,7 @@ func _physics_process(delta):
 			character_positioning(delta)
 			update_hud()
 		Moments.ROUND_END:
-			if GameGlobal.global_hitstop:
-				$HUD/BigText.modulate.a8 -= 4
-				return
+			$HUD/BigText.modulate.a8 -= 4
 			move_inputs(true)
 			p1._input_step()
 			p1._action_step(false)
@@ -179,21 +177,21 @@ func _physics_process(delta):
 					moment = Moments.FADE_OUT
 				else:
 					print("game ended with a p1 victory, creating results screen")
-					make_results_screen()
+					make_results_screen(0)
 			elif p1._in_defeated_state() and p2._post_outro():
 				GameGlobal.p2_wins += 1
 				if GameGlobal.p2_wins < GameGlobal.win_threshold:
 					moment = Moments.FADE_OUT
 				else:
 					print("game ended with a p2 victory, creating results screen")
-					make_results_screen()
+					make_results_screen(1)
 			elif p1._in_defeated_state() and p2._in_defeated_state():
 				if (
 					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
 					and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
 				):
 					print("game ended on a draw, creating results screen")
-					make_results_screen()
+					make_results_screen(2)
 				else:
 					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
 					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
@@ -204,10 +202,17 @@ func _physics_process(delta):
 				get_tree().reload_current_scene()
 
 
-func make_results_screen():
+func make_results_screen(winner : int):
 	game_ended = true
 	$HUD.visible = false
 	$ResultsScreen.visible = true
+	match winner:
+		0:
+			$ResultsScreen/ResultsScreen.p1_winner_icon.visible = true
+		1:
+			$ResultsScreen/ResultsScreen.p2_winner_icon.visible = true
+		2:
+			$ResultsScreen/ResultsScreen.no_winner_icon.visible = true
 	$ResultsScreen/ResultsScreen.active = true
 
 func results_screen_choices_logic():

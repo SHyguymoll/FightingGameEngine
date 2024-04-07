@@ -292,7 +292,7 @@ size_flags_horizontal = 3
 layer = 30
 visible = false
 
-[node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
+[node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "p1_winner_icon", "p2_winner_icon", "no_winner_icon")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -305,6 +305,9 @@ p1_choice_positions = Array[Vector2]([Vector2(769, 808), Vector2(529, 918), Vect
 p2_choice_positions = Array[Vector2]([Vector2(1156, 808), Vector2(1394, 918), Vector2(1293, 1015)])
 p1_select_icon = NodePath("ColorRect/P1SelectIcon")
 p2_select_icon = NodePath("ColorRect/P2SelectIcon")
+p1_winner_icon = NodePath("ColorRect/P1Winner")
+p2_winner_icon = NodePath("ColorRect/P2Winner")
+no_winner_icon = NodePath("ColorRect/NoWinner")
 
 [node name="ColorRect" type="ColorRect" parent="ResultsScreen/ResultsScreen"]
 layout_mode = 1
@@ -333,6 +336,63 @@ theme_override_font_sizes/font_size = 86
 text = "Restart Fight
 Return to Character Select
 Return to Main Menu"
+horizontal_alignment = 1
+
+[node name="P1Winner" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -439.0
+offset_top = -788.0
+offset_right = 440.0
+offset_bottom = -595.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 156
+text = "PLAYER 1 WINS"
+horizontal_alignment = 1
+
+[node name="P2Winner" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -439.0
+offset_top = -788.0
+offset_right = 440.0
+offset_bottom = -595.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 156
+text = "PLAYER 2 WINS"
+horizontal_alignment = 1
+
+[node name="NoWinner" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -439.0
+offset_top = -788.0
+offset_right = 440.0
+offset_bottom = -595.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 156
+text = "DRAW"
 horizontal_alignment = 1
 
 [node name="P1SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]

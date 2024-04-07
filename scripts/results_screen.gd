@@ -20,7 +20,9 @@ var p2_choice := 0
 @export var p2_choice_positions : Array[Vector2]
 @export var p1_select_icon : Node2D
 @export var p2_select_icon : Node2D
-
+@export var p1_winner_icon : Control
+@export var p2_winner_icon : Control
+@export var no_winner_icon : Control
 
 func _physics_process(delta: float) -> void:
 	if not active:
