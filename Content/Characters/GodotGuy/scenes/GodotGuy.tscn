@@ -5389,7 +5389,6 @@ size = Vector3(1.2832, 1.29492, 1)
 
 [node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point")]
 collision_layer = 0
-axis_lock_linear_z = true
 script = ExtResource("1_5p4re")
 BUTTONCOUNT = 3
 JUST_PRESSED_BUFFER = 2

@@ -1,26 +1,35 @@
 class_name State2DMeterFighter
 extends Fighter
 
-## This script defines a FSM-based Fighter with the following features:
-## 2D Movement[br]
-## Grounded and Aerial Dashing[br]
-## Jump-Cancelling[br]
-## The Magic Series (Stronger Attacks Cancel Weaker Attacks)[br]
-## Special Cancelling (and Super Cancelling)[br]
-## Super Meter[br]
+## A Finite State Machine-based Fighter with features based off of Guilty Gear, Street Fighter, etc.
+##
+## This is an example of a fighter that someone could make in my engine.[br]
+## This Fighter implements the following gameplay features:[br]
+## [b]2D Movement[/b]: walking and jumping forwards and backwards on the X-axis.[br]
+## [b]Normal Attacks[/b]: Attack Buttons 0, 1 and 2 (from hereon A, B and C) perform simple attacks.[br]
+## [b]Command Attacks[/b]: Pressing an attack button with a direction will perform a command attack.[br]
+## [b]Motion Attacks[/b]:  Pressing any attack button after performing a motion with the direction keys will
+## perform a special attack or super attack.[br]
+## [b]Grounded Dashing and Aerial Dashing[/b]: Double tap left or right for a burst of speed.[br]
+## [b]Jump-Cancelling[/b]: During the impact frames of an attack, the fighter can jump.[br]
+## [b]The Magic Series[/b]: During the impact frames of an attack, a stronger attack can be used for combos
+## and blockstrings. [br]
+## [b]Special Cancelling[/b]: During the impact frames of a normal attack, a special attack can be used.[br]
+## [b]Super Cancelling[/b]: During the impact frames of a special attack, a super attack can be used.[br]
+## [b]Super Meter[/b]: This fighter's Super Attacks are tied to the fulfillment of a meter on the HUD.[br]
 
-## State transitions are handled by a FSM implemented as match statements in the input_step.
+## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.
 enum States {
-	INTRO, ROUND_WIN, SET_WIN, # round stuff
-	IDLE, CRCH, # basic basics
-	WALK_F, WALK_B, DASH_F, DASH_B, # lateral motions
-	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial motions
-	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, # attacking
-	ATCK_NRML_IMP, ATCK_CMND_IMP, ATCK_MOTN_IMP, ATCK_JUMP_IMP, ATCK_SUPR_IMP, # attack impacts
-	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
-	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, # not handling getting attacked well
-	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
-	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE # The final stage of not handling it
+	INTRO, ROUND_WIN, SET_WIN, ## round stuff
+	IDLE, CRCH, ## basic basics
+	WALK_F, WALK_B, DASH_F, DASH_B, ## lateral motions
+	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, ## aerial motions
+	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, ## attacking
+	ATCK_NRML_IMP, ATCK_CMND_IMP, ATCK_MOTN_IMP, ATCK_JUMP_IMP, ATCK_SUPR_IMP, ## attack impacts
+	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, ## handling getting attacked well
+	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, ## not handling getting attacked well
+	HURT_FALL, HURT_LIE, HURT_BNCE, ## REALLY not handling getting attacked well
+	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE ## The final stage of not handling it
 }
 
 enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
