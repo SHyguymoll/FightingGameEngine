@@ -15,6 +15,7 @@ stun_hit = 60
 on_hit_sound = ExtResource("2_rrm6i")
 on_block_sound = ExtResource("3_crb21")
 lifetime = 2
+hit_priority = -1
 hit_type = "grab_ground"
 on_hit = [0.0]
 on_block = [0.0]

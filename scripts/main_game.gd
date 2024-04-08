@@ -546,10 +546,14 @@ func hitbox_hitbox_collisions():
 	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
 		if hitbox.invalid:
 			continue
+		if (hitbox as Hitbox).hit_priority == -1:
+			continue
 		for check in hitbox.get_overlapping_areas():
 			if hitbox.collision_layer == check.collision_layer:
 				continue
 			if (check as Hitbox).invalid:
+				continue
+			if (check as Hitbox).hit_priority == -1:
 				continue
 			if (hitbox as Hitbox).hit_priority < (check as Hitbox).hit_priority:
 				#print("%s collided with %s and is now neutralized" % [hitbox, check])
@@ -559,6 +563,7 @@ func hitbox_hitbox_collisions():
 				#print("%s collided with %s and is now neutralized" % [check, hitbox])
 				(check as Hitbox).invalid = true
 			else:
+
 				hitbox.invalid = true
 				(check as Hitbox).invalid = true
 				register_particle(
