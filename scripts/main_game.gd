@@ -643,11 +643,13 @@ func move_inputs(fake_inputs):
 				p1._on_block(p2_attacker.on_block)
 				GameGlobal.global_hitstop = int(p2_attacker.hitstop_block)
 			p2_attacker.queue_free()
-	if p1.stun_time_current == -1 and p1._in_hurting_state() and p2.stun_time_current == -1 and p2._in_hurting_state():
-		p1.stun_time_current = 60
+	if p1.grabbed_point.act_on_player and p2.grabbed_point.act_on_player:
+		p1.stun_time_current = 5
 		p1.kback = Vector3(5, 5, 0)
-		p2.stun_time_current = 60
+		grab_released(true)
+		p2.stun_time_current = 5
 		p2.kback = Vector3(5, 5, 0)
+		grab_released(false)
 		pass
 
 	p1.inputs = p1_buf

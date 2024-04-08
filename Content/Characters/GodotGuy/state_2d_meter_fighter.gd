@@ -361,8 +361,20 @@ func try_grab(attack : Hitbox, on_ground : bool, unbreakable : bool) -> bool:
 	if unbreakable:
 		set_state(States.HURT_GRB_NOBREAK)
 	else:
-		set_state(States.HURT_GRB)
+		if two_atk_just_pressed():
+			break_grab(false)
+		else:
+			set_state(States.HURT_GRB)
 	return true
+
+func break_grab(in_input_step : bool):
+	set_stun(4)
+	kback = Vector3(3, 5, 0)
+	create_hitbox(Vector3.ZERO, "grab_break")
+	if in_input_step:
+		return States.HURT_FALL
+	else:
+		set_state(States.HURT_FALL)
 
 # Only runs when a hitbox is overlapping, return rules explained above
 func _damage_step(attack : Hitbox, combo_count : int) -> bool:
@@ -1047,11 +1059,7 @@ func handle_input() -> void:
 # grab breaks
 		States.HURT_GRB:
 			if ticks_since_state_change < 5 and two_atk_just_pressed():
-				decision = States.HURT_FALL
-				set_stun(4)
-				kback = Vector3(3, 5, 0)
-				create_hitbox(Vector3.ZERO, "grab_break")
-				pass
+				decision = break_grab(true)
 	set_state(decision)
 
 
@@ -1077,6 +1085,9 @@ func update_character_state():
 	if _in_hurting_state():
 		force_airborne = false
 		force_collisions = airborne()
+
+	if current_state not in [States.ATCK_GRAB_END, States.ATCK_GRAB_START]:
+		release_grab()
 
 	match current_state:
 		States.IDLE, States.CRCH:
