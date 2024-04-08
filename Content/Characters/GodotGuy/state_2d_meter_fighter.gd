@@ -14,22 +14,24 @@ extends Fighter
 ## [b]Jump-Cancelling[/b]: During the impact frames of an attack, the fighter can jump.[br]
 ## [b]The Magic Series[/b]: During the impact frames of an attack, a stronger attack can be used for combos
 ## and blockstrings. [br]
+## Grab Breaks: When grabbed, the grab can be broken by inputting a grab within 5 frames. This will reset
+## both fighters to a neutral state.[br]
 ## [b]Special Cancelling[/b]: During the impact frames of a normal attack, a special attack can be used.[br]
 ## [b]Super Cancelling[/b]: During the impact frames of a special attack, a super attack can be used.[br]
 ## [b]Super Meter[/b]: This fighter's Super Attacks are tied to the fulfillment of a meter on the HUD.[br]
 
 ## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.
 enum States {
-	INTRO, ROUND_WIN, SET_WIN, ## round stuff
-	IDLE, CRCH, ## basic basics
-	WALK_F, WALK_B, DASH_F, DASH_B, ## lateral motions
-	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, ## aerial motions
-	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, ## attacking
-	ATCK_NRML_IMP, ATCK_CMND_IMP, ATCK_MOTN_IMP, ATCK_JUMP_IMP, ATCK_SUPR_IMP, ## attack impacts
-	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, ## handling getting attacked well
-	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, ## not handling getting attacked well
-	HURT_FALL, HURT_LIE, HURT_BNCE, ## REALLY not handling getting attacked well
-	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE ## The final stage of not handling it
+	INTRO, ROUND_WIN, SET_WIN, # round stuff
+	IDLE, CRCH, # no movement
+	WALK_F, WALK_B, DASH_F, DASH_B, # lateral movement
+	JUMP_INIT, JUMP, JUMP_AIR_INIT, DASH_A_F, DASH_A_B, JUMP_NO_ACT, # aerial movement
+	ATCK_NRML, ATCK_CMND, ATCK_MOTN, ATCK_GRAB_START, ATCK_GRAB_END, ATCK_JUMP, ATCK_SUPR, # attack
+	ATCK_NRML_IMP, ATCK_CMND_IMP, ATCK_MOTN_IMP, ATCK_JUMP_IMP, ATCK_SUPR_IMP, # attack impacts
+	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
+	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, HURT_GRB_NOBREAK, # not handling getting attacked well
+	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
+	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE # The final stage of not handling it
 }
 
 enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
@@ -145,6 +147,7 @@ var aerial_vel : Vector3
 	"uppercut": preload("scenes/hitboxes/special/uppercut.tscn"),
 	"grab": preload("scenes/hitboxes/stand/grab.tscn"),
 	"grab_followup": preload("scenes/hitboxes/stand/grab_followup.tscn"),
+	"grab_break": preload("res://Content/Characters/GodotGuy/scenes/hitboxes/stand/grab_break.tscn"),
 	"spin_approach": preload("scenes/hitboxes/special/spin_approach.tscn"),
 	"spin_approach_final": preload("scenes/hitboxes/special/spin_approach_final.tscn"),
 }
@@ -345,7 +348,7 @@ func try_block(attack : Hitbox,
 		return false
 
 
-func try_grab(attack : Hitbox, on_ground : bool) -> bool:
+func try_grab(attack : Hitbox, on_ground : bool, unbreakable : bool) -> bool:
 	if crouching():
 		return false
 	if on_ground and airborne():
@@ -355,7 +358,10 @@ func try_grab(attack : Hitbox, on_ground : bool) -> bool:
 	health = max(health - attack.damage_hit * defense_mult, 1)
 	set_stun(attack.stun_hit)
 	kback = Vector3.ZERO
-	set_state(States.HURT_GRB)
+	if unbreakable:
+		set_state(States.HURT_GRB_NOBREAK)
+	else:
+		set_state(States.HURT_GRB)
 	return true
 
 # Only runs when a hitbox is overlapping, return rules explained above
@@ -380,9 +386,16 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 			return try_block(attack, block.away_high, block.away_any,
 					States.HURT_BNCE, States.HURT_BNCE, States.HURT_BNCE, combo_count)
 		"grab_ground":
-			return try_grab(attack, true)
+			return try_grab(attack, true, false)
+		"grab_ground_unbreakable":
+			return try_grab(attack, true, true)
 		"grab_air":
-			return try_grab(attack, false)
+			return try_grab(attack, false, false)
+		"grab_air_unbreakable":
+			return try_grab(attack, false, true)
+		"unblockable_launch":
+			return try_block(attack, block.nope, block.nope,
+					States.HURT_FALL, States.HURT_FALL, States.HURT_FALL, combo_count)
 		_: # this will definitely not be a bug in the future
 			return try_block(attack, block.nope, block.nope,
 					States.HURT_HGH, States.HURT_CRCH, States.HURT_FALL, combo_count)
@@ -1031,6 +1044,14 @@ func handle_input() -> void:
 		States.ATCK_MOTN:
 			if attack_hurt:
 				decision = try_super_attack(decision)
+# grab breaks
+		States.HURT_GRB:
+			if ticks_since_state_change < 5 and two_atk_just_pressed():
+				decision = States.HURT_FALL
+				set_stun(4)
+				kback = Vector3(3, 5, 0)
+				create_hitbox(Vector3.ZERO, "grab_break")
+				pass
 	set_state(decision)
 
 
@@ -1162,7 +1183,7 @@ func resolve_state_transitions():
 				set_state(States.JUMP)
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.BLCK_HGH, States.BLCK_LOW:
 			handle_stand_stun()
-		States.HURT_GRB:
+		States.HURT_GRB, States.HURT_GRB_NOBREAK:
 			if stun_time_current == 0:
 				set_state(States.HURT_FALL)
 		States.HURT_FALL:
