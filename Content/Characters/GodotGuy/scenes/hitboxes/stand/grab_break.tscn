@@ -17,7 +17,7 @@ on_hit_sound = ExtResource("3_aab7o")
 on_block_sound = ExtResource("3_aab7o")
 lifetime = 3
 hit_priority = -1
-hit_type = "unblockable_launch"
+hitbox_flags = 928
 on_hit = [0.0]
 on_block = [0.0]
 

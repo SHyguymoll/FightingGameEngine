@@ -21,7 +21,7 @@ kback_block = Vector3(-0.2, 0, 0)
 on_hit_sound = ExtResource("2_s4eh0")
 on_block_sound = ExtResource("3_d2jf7")
 lifetime = 3
-hit_type = "mid"
+hitbox_flags = 387
 on_hit = [3.5]
 on_block = [1.0]
 

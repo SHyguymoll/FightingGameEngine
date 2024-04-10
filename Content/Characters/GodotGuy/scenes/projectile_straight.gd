@@ -35,7 +35,6 @@ func _ready():
 			hitbox.hitstop_block = 2
 			hitbox.kback_hit = Vector3(4, 3, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
-			hitbox.hit_type = "mid"
 			hitbox.on_hit = [8]
 			hitbox.on_block = [4]
 		types.SUPER:
@@ -47,7 +46,7 @@ func _ready():
 			hitbox.hitstop_block = 3
 			hitbox.kback_hit = Vector3(4, 7, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
-			hitbox.hit_type = "launch"
+			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
 			hitbox.hit_priority = 10
 			hitbox.on_hit = [0]
 			hitbox.on_block = [0]
@@ -60,7 +59,7 @@ func _ready():
 			hitbox.hitstop_block = 15
 			hitbox.kback_hit = Vector3(-4, 10, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
-			hitbox.hit_type = "launch"
+			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
 			hitbox.hit_priority = 10
 			hitbox.on_hit = [0]
 			hitbox.on_block = [0]

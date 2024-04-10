@@ -1,6 +1,24 @@
 class_name Hitbox
 extends Area3D
 
+enum HitboxFlags {
+	BLOCK_HIGH = 1,
+	BLOCK_LOW = 2,
+	HIT_GRAB = 4,
+	CONNECT_GRAB = 8,
+	END_GRAB = 16,
+	BREAK_GRAB = 32,
+	UNBLOCK_INESCAP = 64,
+	HIT_GROUND = 128,
+	HIT_AIR = 256,
+	HIT_OTG = 512,
+}
+enum StateEffects {
+	NONE = 0,
+	KNOCKDOWN = 1,
+	LAUNCHER = 2,
+}
+
 @export_category("Damage")
 @export var damage_hit : float
 @export var damage_block : float
@@ -19,7 +37,13 @@ extends Area3D
 @export var lifetime : int
 @export var is_projectile : bool
 @export var hit_priority : int
-@export var hit_type : String
+@export_flags(
+	"Block High:1", "Block Low:2", "Block Any:3",
+	"Hit Grab:4", "Connect Grab:8", "Ends Grab:16", "Breaks Grab:32",
+	"Unblockable/Inescapable:64",
+	"Hits Grounded:128", "Hits Airborne:256", "G+A:384", "Hits OTG:512", "Always Hits:896",
+	) var hitbox_flags : int = 0
+@export_enum("None", "Knockdown", "Launcher") var state_effect : int
 @export var on_hit : Array
 @export var on_block : Array
 
