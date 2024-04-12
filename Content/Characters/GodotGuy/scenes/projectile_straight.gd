@@ -38,7 +38,7 @@ func _ready():
 			hitbox.on_hit = [8]
 			hitbox.on_block = [4]
 		types.SUPER:
-			hitbox.damage_hit = 20
+			hitbox.damage_hit = 15
 			hitbox.damage_block = 10
 			hitbox.stun_hit = 10
 			hitbox.stun_block = 5
