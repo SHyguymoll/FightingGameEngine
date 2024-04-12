@@ -51,6 +51,8 @@ const INFINITE_STUN := -1
 @export_category("Fighter Details")
 ## The name of the Fighter. Supports Unicode.
 @export var char_name : String
+## The quote that the Fighter says when they win. Supports Unicode.
+@export var win_quote : String
 ## The health of the Fighter. Typically a round number, like 100 or 420.
 @export var health : float
 ## How many inputs are held by the fighter within inputs at once. Must be a positive integer.

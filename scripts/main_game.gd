@@ -210,10 +210,15 @@ func make_results_screen(winner : int):
 	match winner:
 		0:
 			$ResultsScreen/ResultsScreen.p1_winner_icon.visible = true
+			$ResultsScreen/ResultsScreen.winner_quote.text = p1.win_quote
+			$ResultsScreen/ResultsScreen.winner_quote.visible = true
 		1:
 			$ResultsScreen/ResultsScreen.p2_winner_icon.visible = true
+			$ResultsScreen/ResultsScreen.winner_quote.text = p2.win_quote
+			$ResultsScreen/ResultsScreen.winner_quote.visible = true
 		2:
 			$ResultsScreen/ResultsScreen.no_winner_icon.visible = true
+			$ResultsScreen/ResultsScreen.winner_quote.visible = false
 	$ResultsScreen/ResultsScreen.active = true
 
 func results_screen_choices_logic():

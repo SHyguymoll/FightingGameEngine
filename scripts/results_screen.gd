@@ -23,6 +23,7 @@ var p2_choice := 0
 @export var p1_winner_icon : Control
 @export var p2_winner_icon : Control
 @export var no_winner_icon : Control
+@export var winner_quote : Label
 
 func _physics_process(delta: float) -> void:
 	if not active:

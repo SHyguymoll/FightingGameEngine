@@ -292,7 +292,7 @@ size_flags_horizontal = 3
 layer = 30
 visible = false
 
-[node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "p1_winner_icon", "p2_winner_icon", "no_winner_icon")]
+[node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "p1_winner_icon", "p2_winner_icon", "no_winner_icon", "winner_quote")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -308,6 +308,7 @@ p2_select_icon = NodePath("ColorRect/P2SelectIcon")
 p1_winner_icon = NodePath("ColorRect/P1Winner")
 p2_winner_icon = NodePath("ColorRect/P2Winner")
 no_winner_icon = NodePath("ColorRect/NoWinner")
+winner_quote = NodePath("ColorRect/WinnerQuote")
 
 [node name="ColorRect" type="ColorRect" parent="ResultsScreen/ResultsScreen"]
 layout_mode = 1
@@ -320,6 +321,7 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.360784)
 
 [node name="Label" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -394,6 +396,26 @@ theme = ExtResource("10_pe8d5")
 theme_override_font_sizes/font_size = 156
 text = "DRAW"
 horizontal_alignment = 1
+
+[node name="WinnerQuote" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -509.5
+offset_top = -526.0
+offset_right = 510.5
+offset_bottom = -333.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 81
+text = "PLAYER 1 WINS"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="P1SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
 position = Vector2(625, 1015)
