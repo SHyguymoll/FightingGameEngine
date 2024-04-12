@@ -271,7 +271,10 @@ func choose_hurting_state(attack : Hitbox):
 			return States.HURT_GRB_NOBREAK
 		else:
 			return States.HURT_GRB
-	if attack.hitbox_flags & attack.HitboxFlags.END_GRAB:
+	if (
+			attack.hitbox_flags & attack.HitboxFlags.END_GRAB or
+			attack.hitbox_flags & attack.HitboxFlags.BREAK_GRAB
+		):
 		return States.HURT_FALL
 	if airborne() or attack.state_effect == attack.StateEffects.LAUNCHER:
 		if attack.hitbox_flags & attack.HitboxFlags.BLOCK_HIGH and not attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW:
