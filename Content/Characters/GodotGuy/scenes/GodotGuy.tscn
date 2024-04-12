@@ -2794,7 +2794,7 @@ tracks/11/enabled = true
 tracks/11/path = NodePath("../Grabbing")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
-tracks/11/keys = PackedFloat32Array(0, 1, 1.04053, 0.718174, 0, 0.266667, 1, 1.01715, 1.96525, 0, 0.500001, 1, -0.571, 1.852, 0, 0.666668, 1, -0.571, 1.852, 0, 0.866668, 1, -1.998, 0.217, 0)
+tracks/11/keys = PackedFloat32Array(0, 1, 1.04053, 0.718174, 0, 0.266667, 1, 1.01715, 1.96525, 0, 0.500001, 1, -0.571, 1.852, 0, 0.666668, 1, -0.571, 1.852, 0, 0.8684, 1, -1.998, 0.468146, 0)
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
@@ -2814,12 +2814,9 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0.866668, 0.916668),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.8684),
+"transitions": PackedFloat32Array(1),
 "values": [{
-"args": [],
-"method": &"release_grab"
-}, {
 "args": [Vector3(1.99827, 0.216841, 0), "grab_followup"],
 "method": &"create_hitbox"
 }]
@@ -3080,7 +3077,7 @@ tracks/11/enabled = true
 tracks/11/path = NodePath("../Grabbing")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
-tracks/11/keys = PackedFloat32Array(0, 1, 1.04053, 0.718174, 0, 0.266667, 1, 1.01715, 1.96525, 0, 0.500001, 1, 0.570614, 1.85204, 0, 0.666668, 1, 0.570614, 1.85204, 0, 0.866668, 1, 1.99827, 0.216841, 0)
+tracks/11/keys = PackedFloat32Array(0, 1, 1.04053, 0.718174, 0, 0.266667, 1, 1.01715, 1.96525, 0, 0.500001, 1, 0.570614, 1.85204, 0, 0.666668, 1, 0.570614, 1.85204, 0, 0.8684, 1, 1.99827, 0.534078, 0)
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
@@ -3100,12 +3097,9 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0.866668, 0.916668),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.8684),
+"transitions": PackedFloat32Array(1),
 "values": [{
-"args": [],
-"method": &"release_grab"
-}, {
 "args": [Vector3(1.99827, 0.216841, 0), "grab_followup"],
 "method": &"create_hitbox"
 }]
@@ -5387,14 +5381,16 @@ size = Vector3(0.202, 1.08658, 0.27)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vbsgv"]
 size = Vector3(1.2832, 1.29492, 1)
 
-[node name="GodotGuy" type="CharacterBody3D"]
+[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point")]
 collision_layer = 0
 script = ExtResource("1_5p4re")
 BUTTONCOUNT = 3
 JUST_PRESSED_BUFFER = 2
 start_x_offset = 2.0
 grabbed_offset = Vector3(-0.46, -0.87, 0)
+grab_point = NodePath("Grabbing")
 char_name = "Godot Guy"
+win_quote = "godot 👍"
 health = 100.0
 input_buffer_len = 10
 ui_p1_under_health_scene = ExtResource("2_xjhia")
@@ -5462,17 +5458,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
 shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.998, 0.468146, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.583742, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
-modulate = Color(0.803922, 0.686275, 0, 1)
+transform = Transform3D(1.46478, 0, 0, 0, 0.349304, 0, 0, 0, 1, -2.008, 0.216, 0.04)
+modulate = Color(0, 0, 1, 0.999997)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

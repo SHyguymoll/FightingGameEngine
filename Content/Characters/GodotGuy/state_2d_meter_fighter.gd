@@ -271,6 +271,8 @@ func choose_hurting_state(attack : Hitbox):
 			return States.HURT_GRB_NOBREAK
 		else:
 			return States.HURT_GRB
+	if attack.hitbox_flags & attack.HitboxFlags.END_GRAB:
+		return States.HURT_FALL
 	if airborne() or attack.state_effect == attack.StateEffects.LAUNCHER:
 		if attack.hitbox_flags & attack.HitboxFlags.BLOCK_HIGH and not attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW:
 			return States.HURT_BNCE
@@ -585,6 +587,8 @@ func create_hitbox(pos : Vector3, hitbox_name : String):
 	new_hitbox.damage_hit *= damage_mult
 
 	emit_signal(&"hitbox_created", new_hitbox)
+	if new_hitbox.hitbox_flags & Hitbox.HitboxFlags.END_GRAB:
+		emit_signal("grab_released", player)
 
 
 func create_projectile(pos : Vector3, projectile_name : String, type : int):
