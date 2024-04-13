@@ -395,6 +395,12 @@ func _action_step(dramatic_freeze : bool):
 		ticks_since_state_change += 1
 	$AnimationPlayer.speed_scale = float(impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
 
+func update_paused(new_paused : bool):
+	paused = new_paused
+	if new_paused:
+		($AnimationPlayer as AnimationPlayer).pause()
+	else:
+		($AnimationPlayer as AnimationPlayer).play()
 
 func _connect_hud_elements(training_mode : bool):
 	if training_mode:

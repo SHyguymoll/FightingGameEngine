@@ -132,6 +132,8 @@ var inputs
 ## [color=red] DO NOT TOUCH. [/color] The hitbox layer used by this Fighter,
 ## automatically set with [method _initialize_boxes].
 var hitbox_layer : int
+## [color=red] DO NOT TOUCH. [/color] Set by [method _update_paused] when the game pausees/unpauses.
+var paused := false
 
 ## The knockback applied to a Fighter. Typically set by hitboxes through [member Hitbox.hitstop_hit]
 ## and [member Hitbox.hitstop_block] during [method _damage_step],
@@ -253,6 +255,10 @@ func set_stun(value) -> void:
 func reduce_stun() -> void:
 	if stun_time_start != INFINITE_STUN:
 		stun_time_current = max(0, stun_time_current - 1)
+
+## Used to update the paused variable. Override as needed.
+func update_paused(new_paused : bool):
+	paused = new_paused
 
 ## Returns a tuple for the given [param input] and [param ind]. with the format (int, bool).[br]
 ## The int represents the length of time that the button has been pressed/unpressed.[br]

@@ -321,7 +321,6 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.360784)
 
 [node name="Label" type="Label" parent="ResultsScreen/ResultsScreen/ColorRect"]
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -423,6 +422,61 @@ texture = ExtResource("11_5jtlc")
 
 [node name="P2SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
 position = Vector2(1293, 1017)
+texture = ExtResource("12_gqhrq")
+
+[node name="PauseScreen" type="CanvasLayer" parent="."]
+layer = 40
+visible = false
+
+[node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("9_434nl")
+p1_choice_positions = Array[Vector2]([Vector2(751, 808), Vector2(529, 918), Vector2(625, 1015)])
+p2_choice_positions = Array[Vector2]([Vector2(1174, 808), Vector2(1394, 918), Vector2(1293, 1015)])
+p1_select_icon = NodePath("ColorRect/P1SelectIcon")
+p2_select_icon = NodePath("ColorRect/P2SelectIcon")
+
+[node name="ColorRect" type="ColorRect" parent="PauseScreen/PauseScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.360784)
+
+[node name="Label" type="Label" parent="PauseScreen/PauseScreen/ColorRect"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -89.5
+offset_top = -69.0
+offset_right = 89.5
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 86
+text = "Command List
+Return to Character Select
+Return to Main Menu"
+horizontal_alignment = 1
+
+[node name="P1SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/ColorRect"]
+position = Vector2(751, 808)
+texture = ExtResource("11_5jtlc")
+
+[node name="P2SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/ColorRect"]
+position = Vector2(1174, 808)
 texture = ExtResource("12_gqhrq")
 
 [node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]

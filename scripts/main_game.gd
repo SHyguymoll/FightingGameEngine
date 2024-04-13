@@ -5,6 +5,7 @@ enum Moments {
 	INTRO,
 	GAME,
 	DRAMATIC_FREEZE,
+	PAUSE,
 	ROUND_END,
 	FADE_OUT,
 }
@@ -66,11 +67,15 @@ var record_buffer_current := 0
 var record := false
 var replay := false
 
+var p1_paused := false
+var p2_paused := false
+
 var p1_combo := 0
 var p2_combo := 0
 
 var game_ended := false
 var moment := Moments.FADE_IN
+var moment_before_pause : Moments
 var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 
 @onready var grab_point = preload("res://scenes/GrabPoint.tscn")
@@ -106,6 +111,44 @@ func _ready():
 	$FightersAndStage.add_child(p2_dtar)
 
 
+func start_pause_menu(is_p1 : bool):
+	p1.update_paused(true)
+	p2.update_paused(true)
+	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
+		hitbox.paused = true
+	for projectile in ($Projectiles.get_children() as Array[Projectile]):
+		projectile.update_paused(true)
+	($PauseScreen/PauseScreen as ResultsScreen).p1_choice_made = false
+	($PauseScreen/PauseScreen as ResultsScreen).p2_choice_made = false
+	($PauseScreen/PauseScreen as ResultsScreen).p1_choice = 0
+	($PauseScreen/PauseScreen as ResultsScreen).p2_choice = 0
+	if is_p1:
+		p1_paused = true
+		$PauseScreen/PauseScreen/ColorRect/P1SelectIcon.visible = true
+		$PauseScreen/PauseScreen/ColorRect/P2SelectIcon.visible = false
+	else:
+		p2_paused = true
+		$PauseScreen/PauseScreen/ColorRect/P1SelectIcon.visible = false
+		$PauseScreen/PauseScreen/ColorRect/P2SelectIcon.visible = true
+	moment_before_pause = moment
+	moment = Moments.PAUSE
+	($PauseScreen/PauseScreen as ResultsScreen).active = true
+	$PauseScreen.visible = true
+
+func end_pause_menu(is_p1 : bool):
+	p1.update_paused(false)
+	p2.update_paused(false)
+	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
+		hitbox.paused = false
+	for projectile in ($Projectiles.get_children() as Array[Projectile]):
+		projectile.update_paused(false)
+	if is_p1:
+		p1_paused = false
+	else:
+		p2_paused = false
+	moment = moment_before_pause
+	($PauseScreen/PauseScreen as ResultsScreen).active = false
+	$PauseScreen.visible = false
 
 func _physics_process(delta):
 	($FighterCamera as FighterCamera).p1_pos = p1.global_position
@@ -151,6 +194,10 @@ func _physics_process(delta):
 			character_positioning(delta)
 			update_hud()
 			$HUD/BigText.modulate.a8 -= 10
+			if Input.is_action_just_pressed("first_pause"):
+				start_pause_menu(true)
+			if Input.is_action_just_pressed("second_pause"):
+				start_pause_menu(false)
 		Moments.DRAMATIC_FREEZE:
 			create_inputs()
 			move_inputs(false)
@@ -160,6 +207,15 @@ func _physics_process(delta):
 			p2._action_step(true)
 			character_positioning(delta)
 			update_hud()
+			if Input.is_action_just_pressed("first_pause"):
+				start_pause_menu(true)
+			if Input.is_action_just_pressed("second_pause"):
+				start_pause_menu(false)
+		Moments.PAUSE:
+			if Input.is_action_just_pressed("first_pause") and p1_paused:
+				end_pause_menu(true)
+			if Input.is_action_just_pressed("second_pause") and p2_paused:
+				end_pause_menu(false)
 		Moments.ROUND_END:
 			$HUD/BigText.modulate.a8 -= 4
 			move_inputs(true)
@@ -611,6 +667,7 @@ func move_inputs(fake_inputs):
 				continue
 			var hit = p1._damage_step(p1_attacker, p2_combo)
 			if hit:
+				($HUD/HealthAndTime/P1Group/Health as TextureProgressBar).tint_progress.g8 = 0
 				spawn_audio(p1_attacker.on_hit_sound)
 				if not p1_attacker.is_projectile:
 					p2.attack_connected = true
@@ -633,6 +690,7 @@ func move_inputs(fake_inputs):
 				continue
 			var hit = p2._damage_step(p2_attacker, p1_combo)
 			if hit:
+				($HUD/HealthAndTime/P2Group/Health as TextureProgressBar).tint_progress.g8 = 0
 				spawn_audio(p2_attacker.on_hit_sound)
 				if not p2_attacker.is_projectile:
 					p1.attack_connected = true
@@ -664,8 +722,10 @@ func move_inputs(fake_inputs):
 func check_combos():
 	if not p1._in_hurting_state():
 		p2_combo = 0
+		($HUD/HealthAndTime/P1Group/Health as TextureProgressBar).tint_progress.g8 += 20
 	if not p2._in_hurting_state():
 		p1_combo = 0
+		($HUD/HealthAndTime/P2Group/Health as TextureProgressBar).tint_progress.g8 += 20
 
 
 func character_positioning(delta):

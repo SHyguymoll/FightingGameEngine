@@ -7,12 +7,16 @@ signal projectile_ended(proj)
 var right_facing : bool
 var type : int
 var source : int
+var paused : bool
 
 func _ready():
 	pass
 
 func tick():
 	pass
+
+func update_paused(new_paused : bool):
+	paused = new_paused
 
 func destroy():
 	if hitbox != null:

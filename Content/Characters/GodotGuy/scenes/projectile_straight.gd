@@ -76,6 +76,13 @@ func tick():
 	else:
 		destroy()
 
+func update_paused(new_paused : bool):
+	paused = new_paused
+	if new_paused:
+		$AnimationPlayer.pause()
+	else:
+		$AnimationPlayer.play()
+
 func destroy():
 	if get_node_or_null(^"Hitbox"):
 		$Hitbox.queue_free()
@@ -91,5 +98,4 @@ func _on_animation_player_animation_finished(anim_name):
 		loop_anim_right:
 			$AnimationPlayer.play(loop_anim_right)
 		end_anim:
-			queue_free()
 			emit_signal(&"projectile_ended", self)

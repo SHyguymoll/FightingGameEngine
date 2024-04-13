@@ -170,6 +170,11 @@ layout_mode = 2
 input_to_update = &"first_button5"
 visible_name = &"Button 5"
 
+[node name="Pause" parent="ControlButtons/FullOuter/P1BoxOuter" instance=ExtResource("6_4c8tv")]
+layout_mode = 2
+input_to_update = &"first_pause"
+visible_name = &"Start/Pause"
+
 [node name="VSeparator" type="VSeparator" parent="ControlButtons/FullOuter"]
 layout_mode = 2
 theme_override_constants/separation = 250
@@ -239,6 +244,11 @@ visible_name = &"Button 4"
 layout_mode = 2
 input_to_update = &"second_button5"
 visible_name = &"Button 5"
+
+[node name="Pause" parent="ControlButtons/FullOuter/P1BoxOuter2" instance=ExtResource("6_4c8tv")]
+layout_mode = 2
+input_to_update = &"second_pause"
+visible_name = &"Start/Pause"
 
 [node name="Back" type="Button" parent="ControlButtons"]
 anchors_preset = 3
@@ -581,6 +591,7 @@ color = Color(0.419608, 0, 0.537255, 0)
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button3" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button4" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Button5" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter/Pause" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Up" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Down" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Left" to="." method="_on_input_button_clicked"]
@@ -591,4 +602,5 @@ color = Color(0.419608, 0, 0.537255, 0)
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button3" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button4" to="." method="_on_input_button_clicked"]
 [connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Button5" to="." method="_on_input_button_clicked"]
+[connection signal="input_button_clicked" from="ControlButtons/FullOuter/P1BoxOuter2/Pause" to="." method="_on_input_button_clicked"]
 [connection signal="pressed" from="ControlButtons/Back" to="." method="_on_controls_back_pressed"]

@@ -48,8 +48,11 @@ enum StateEffects {
 @export var on_block : Array
 
 var invalid := false
+var paused := false
 
 func _physics_process(_d):
+	if paused:
+		return
 	if lifetime > 0:
 		lifetime -= 1
 	if lifetime == 0:
