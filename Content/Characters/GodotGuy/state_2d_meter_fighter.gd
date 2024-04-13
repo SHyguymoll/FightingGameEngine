@@ -504,6 +504,7 @@ func dashing() -> bool:
 func blocking() -> bool:
 	return current_state in [States.BLCK_AIR, States.BLCK_HGH, States.BLCK_LOW]
 
+
 # Functions used by the AnimationPlayer to perform actions within animations
 func add_grd_vel(vel : Vector3):
 	if not right_facing:
@@ -550,37 +551,37 @@ func set_y_air_vel(val : float):
 
 
 func expediate_grd_vel(vel : Vector3):
-		vel.x = abs(vel.x)
-		if ground_vel.x < 0:
-			ground_vel.x -= vel.x
-		elif ground_vel.x > 0:
+	vel.x = abs(vel.x)
+	if ground_vel.x < 0:
+		ground_vel.x -= vel.x
+	elif ground_vel.x > 0:
+		ground_vel.x += vel.x
+	else:
+		if right_facing:
 			ground_vel.x += vel.x
 		else:
-			if right_facing:
-				ground_vel.x += vel.x
-			else:
-				ground_vel.x -= vel.x
-		if ground_vel.y < 0:
-			ground_vel.y -= vel.y
-		else:
-			ground_vel.y += vel.y
+			ground_vel.x -= vel.x
+	if ground_vel.y < 0:
+		ground_vel.y -= vel.y
+	else:
+		ground_vel.y += vel.y
 
 
 func expediate_air_vel(vel : Vector3):
-		vel.x = abs(vel.x)
-		if aerial_vel.x < 0:
-			aerial_vel.x -= vel.x
-		elif aerial_vel.x > 0:
+	vel.x = abs(vel.x)
+	if aerial_vel.x < 0:
+		aerial_vel.x -= vel.x
+	elif aerial_vel.x > 0:
+		aerial_vel.x += vel.x
+	else:
+		if right_facing:
 			aerial_vel.x += vel.x
 		else:
-			if right_facing:
-				aerial_vel.x += vel.x
-			else:
-				aerial_vel.x -= vel.x
-		if aerial_vel.y < 0:
-			aerial_vel.y -= vel.y
-		else:
-			aerial_vel.y += vel.y
+			aerial_vel.x -= vel.x
+	if aerial_vel.y < 0:
+		aerial_vel.y -= vel.y
+	else:
+		aerial_vel.y += vel.y
 
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
