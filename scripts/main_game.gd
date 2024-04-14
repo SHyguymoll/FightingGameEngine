@@ -157,9 +157,9 @@ func _physics_process(delta):
 		Moments.FADE_IN:
 			move_inputs(true)
 			p1._input_step()
-			p1._action_step(false)
+			p1._action_step(false, delta)
 			p2._input_step()
-			p2._action_step(false)
+			p2._action_step(false, delta)
 			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
 			if $SmoothTransitionLayer/ColorRect.color.a < 0.1:
 				$SmoothTransitionLayer/ColorRect.color.a = 0.0
@@ -169,9 +169,9 @@ func _physics_process(delta):
 		Moments.INTRO:
 			move_inputs(true)
 			p1._input_step()
-			p1._action_step(false)
+			p1._action_step(false, delta)
 			p2._input_step()
-			p2._action_step(false)
+			p2._action_step(false, delta)
 			if p1._post_intro() and p2._post_intro():
 				moment = Moments.GAME
 				($HUD/BigText as Label).text = "FIGHT"
@@ -182,13 +182,13 @@ func _physics_process(delta):
 		Moments.GAME:
 			# handle projectiles
 			for proj in ($Projectiles.get_children() as Array[Projectile]):
-				proj.tick()
+				proj.tick(delta)
 			create_inputs()
 			move_inputs(false)
 			p1._input_step()
-			p1._action_step(false)
+			p1._action_step(false, delta)
 			p2._input_step()
-			p2._action_step(false)
+			p2._action_step(false, delta)
 			check_combos()
 			training_mode_settings()
 			character_positioning(delta)
@@ -202,9 +202,9 @@ func _physics_process(delta):
 			create_inputs()
 			move_inputs(false)
 			p1._input_step()
-			p1._action_step(true)
+			p1._action_step(true, delta)
 			p2._input_step()
-			p2._action_step(true)
+			p2._action_step(true, delta)
 			character_positioning(delta)
 			update_hud()
 			if Input.is_action_just_pressed("first_pause"):
@@ -220,9 +220,9 @@ func _physics_process(delta):
 			$HUD/BigText.modulate.a8 -= 4
 			move_inputs(true)
 			p1._input_step()
-			p1._action_step(false)
+			p1._action_step(false, delta)
 			p2._input_step()
-			p2._action_step(false)
+			p2._action_step(false, delta)
 			check_combos()
 			character_positioning(delta)
 			update_hud()

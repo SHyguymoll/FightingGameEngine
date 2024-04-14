@@ -216,7 +216,7 @@ func _input_step() -> void:
 
 ## The step taken after the input step, used for altering the Fighter's state. This step is affected
 ## by active Dramatic Freezes, hence the [param _dramatic_freeze] parameter.
-func _action_step(_dramatic_freeze : bool) -> void:
+func _action_step(_dramatic_freeze : bool, _delta : float) -> void:
 	pass
 
 ## This is called when a hitbox makes contact with the other fighter, after resolving that the fighter

@@ -65,7 +65,7 @@ func _ready():
 			hitbox.on_block = [0]
 	$AnimationPlayer.play(start_anim)
 
-func tick():
+func tick(delta : float):
 	# hitstop check
 	if GameGlobal.global_hitstop:
 		return
@@ -75,13 +75,7 @@ func tick():
 		move_and_slide()
 	else:
 		destroy()
-
-func update_paused(new_paused : bool):
-	paused = new_paused
-	if new_paused:
-		$AnimationPlayer.pause()
-	else:
-		$AnimationPlayer.play()
+	$AnimationPlayer.advance(delta)
 
 func destroy():
 	if get_node_or_null(^"Hitbox"):
@@ -99,3 +93,4 @@ func _on_animation_player_animation_finished(anim_name):
 			$AnimationPlayer.play(loop_anim_right)
 		end_anim:
 			emit_signal(&"projectile_ended", self)
+	$AnimationPlayer.advance(0)

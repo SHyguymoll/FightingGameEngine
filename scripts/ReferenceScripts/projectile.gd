@@ -12,7 +12,7 @@ var paused : bool
 func _ready():
 	pass
 
-func tick():
+func tick(_delta : float):
 	pass
 
 func update_paused(new_paused : bool):

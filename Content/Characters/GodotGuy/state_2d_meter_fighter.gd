@@ -387,20 +387,14 @@ func _input_step() -> void:
 	resolve_state_transitions()
 	handle_input()
 
-
-func _action_step(dramatic_freeze : bool):
+## NOTE: AnimationPlayer uses a manual mode in order to fix desyncing when pausing.
+func _action_step(dramatic_freeze : bool, delta : float):
 	if GameGlobal.global_hitstop == 0 and not dramatic_freeze:
 		update_character_state()
 		reset_facing()
 		ticks_since_state_change += 1
-	$AnimationPlayer.speed_scale = float(impact_state() or GameGlobal.global_hitstop == 0 and not dramatic_freeze)
+		($AnimationPlayer as AnimationPlayer).advance(delta)
 
-func update_paused(new_paused : bool):
-	paused = new_paused
-	if new_paused:
-		($AnimationPlayer as AnimationPlayer).pause()
-	else:
-		($AnimationPlayer as AnimationPlayer).play()
 
 func _connect_hud_elements(training_mode : bool):
 	if training_mode:
@@ -1263,6 +1257,8 @@ func update_character_animation():
 				$AnimationPlayer.play(dash_right_anim)
 			_:
 				$AnimationPlayer.play(basic_anim_state_dict[current_state] + ($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
+	# Update animation immediately for manual processing mode
+	($AnimationPlayer as AnimationPlayer).advance(0)
 
 
 func reset_facing():
