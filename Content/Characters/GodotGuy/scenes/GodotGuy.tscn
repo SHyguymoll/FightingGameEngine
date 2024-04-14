@@ -5417,7 +5417,7 @@ outline_size = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../SpriteMain")
-callback_mode_process = 2
+callback_mode_process = 0
 libraries = {
 "": SubResource("AnimationLibrary_1cfsu"),
 "attack_command": SubResource("AnimationLibrary_w3q8l"),
@@ -5460,15 +5460,15 @@ shape = ExtResource("3_8q5n8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1.123, 0, 0, 0, 0.351, 0, 0, 0, 1, 0, 0.247625, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.682172, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
+transform = Transform3D(0.600871, 0, 0, 0, 1.627, 0, 0, 0, 1, 1.23104, 0.685474, 0.04)
 visible = false
-modulate = Color(0.803922, 0.686275, 0, 0)
+modulate = Color(0, 1, 1, 0)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

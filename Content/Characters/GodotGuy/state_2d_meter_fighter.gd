@@ -19,6 +19,10 @@ extends Fighter
 ## [b]Special Cancelling[/b]: During the impact frames of a normal attack, a special attack can be used.[br]
 ## [b]Super Cancelling[/b]: During the impact frames of a special attack, a super attack can be used.[br]
 ## [b]Super Meter[/b]: This fighter's Super Attacks are tied to the fulfillment of a meter on the HUD.[br]
+##
+## [color=rainbow]IMPORTANT NOTE:[/color] Animations are handled in manual mode when this script runs
+## in-game as to stop unintended behavior from happening when the game is paused (spawning way too many
+## projectiles, deep-landed jumping attacks failing to come out, etc.), and that is handled in _ready.
 
 ## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.
 enum States {
@@ -210,6 +214,7 @@ var grab_return_states := {
 # real-time effects, and _ready for initialization.
 func _ready():
 	reset_facing()
+	$AnimationPlayer.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 	$AnimationPlayer.play(basic_anim_state_dict[current_state] +
 			($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
 
