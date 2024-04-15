@@ -1,6 +1,8 @@
 class_name ResultsScreen
 extends Control
 
+signal p1_choice_selected
+signal p2_choice_selected
 signal choices_made
 
 var active := false
@@ -38,6 +40,7 @@ func _physics_process(delta: float) -> void:
 			p1_choice = 0
 	if Input.is_action_just_pressed("first_button0"):
 		p1_choice_made = true
+		emit_signal("p1_choice_selected")
 	if Input.is_action_just_pressed("second_up") and not p2_choice_made:
 		p2_choice -= 1
 		if p2_choice == -1:
@@ -48,6 +51,7 @@ func _physics_process(delta: float) -> void:
 			p2_choice = 0
 	if Input.is_action_just_pressed("second_button0"):
 		p2_choice_made = true
+		emit_signal("p2_choice_selected")
 	p1_select_icon.position = p1_select_icon.position.lerp(p1_choice_positions[p1_choice], 0.2)
 	p2_select_icon.position = p2_select_icon.position.lerp(p2_choice_positions[p2_choice], 0.2)
 	if p1_choice_made and p2_choice_made:
