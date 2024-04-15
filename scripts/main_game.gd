@@ -95,8 +95,10 @@ func _ready():
 		$FighterCamera.set_mode(FighterCamera.Modes.PERS_BALANCED)
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
+	p1.player = true
 	p2 = Content.p2_resource.instantiate()
 	p2.name = "p2"
+	p2.player = false
 	make_hud()
 	init_fighters()
 	$FightersAndStage.add_child(p1)
@@ -299,6 +301,16 @@ func make_hud():
 	$HUD/HealthAndTime/P1Group/NameAndPosVel/PosVel.text = (
 			str(p1.position) + "\n" + str(p1.velocity))
 	$HUD/P1Stats/State.text = p1.States.keys()[p1.current_state]
+	p1._initialize_hud_elements(true)
+	p1._connect_hud_elements(true)
+	if p1.ui_under_health:
+		$HUD/HealthAndTime/P1Group.add_child(p1.ui_under_health)
+	if p1.ui_sidebar:
+		$HUD/P1Stats.add_child(p1.ui_sidebar)
+	if p1.ui_below:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_below)
+	if p1.ui_training:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_training)
 
 	# player 2
 	$HUD/HealthAndTime/P2Group/Health.max_value = p2.health
@@ -307,10 +319,26 @@ func make_hud():
 	$HUD/HealthAndTime/P2Group/NameAndPosVel/PosVel.text = (
 			str(p2.position) + "\n" + str(p2.velocity))
 	$HUD/P2Stats/State.text = p2.States.keys()[p2.current_state]
+	p2._initialize_hud_elements(true)
+	p2._connect_hud_elements(true)
+	if p2.ui_under_health:
+		$HUD/HealthAndTime/P2Group.add_child(p2.ui_under_health)
+	if p2.ui_sidebar:
+		$HUD/P2Stats.add_child(p2.ui_sidebar)
+	if p2.ui_below:
+		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p2.ui_below)
+	if p2.ui_training:
+		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(p2.ui_training)
 
 	# set up rounds
-	var p1_round_group = $HUD/HealthAndTime/P1Group/Rounds
-	var p2_round_group = $HUD/HealthAndTime/P2Group/Rounds
+	var p1_round_group = HBoxContainer.new()
+	p1_round_group.alignment = BoxContainer.ALIGNMENT_END
+	p1_round_group.name = "Rounds"
+	$HUD/HealthAndTime/P1Group.add_child(p1_round_group)
+	var p2_round_group = HBoxContainer.new()
+	p2_round_group.alignment = BoxContainer.ALIGNMENT_BEGIN
+	p2_round_group.name = "Rounds"
+	$HUD/HealthAndTime/P2Group.add_child(p2_round_group)
 	for n in range(GameGlobal.win_threshold):
 		var p1_round = round_element.instantiate()
 		p1_round.name = str(n)
@@ -383,7 +411,6 @@ func init_fighters():
 	for i in range(p1.BUTTONCOUNT):
 		p1_inputs["button" + str(i)] = [[0, false]]
 		p1_dummy_buffer["button" + str(i)] = [[0, false]]
-	p1.player = true
 	p1.position = Vector3(abs(p1.start_x_offset) * -1, 0, 0)
 	p1._initialize_boxes()
 	p1.hitbox_created.connect(register_hitbox)
@@ -394,23 +421,12 @@ func init_fighters():
 	p1.grabbed.connect(grabbed)
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
-	p1._initialize_hud_elements(true)
-	p1._connect_hud_elements(true)
-	if p1.ui_under_health:
-		$HUD/HealthAndTime/P1Group.add_child(p1.ui_under_health)
-	if p1.ui_sidebar:
-		$HUD/P1Stats.add_child(p1.ui_sidebar)
-	if p1.ui_below:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_below)
-	if p1.ui_training:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_training)
 	p1.grabbed_point = grab_point.instantiate()
 	$FightersAndStage.add_child(p1.grabbed_point)
 
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
 		p2_dummy_buffer["button" + str(i)] = [[0, false]]
-	p2.player = false
 	p2.position = Vector3(abs(p2.start_x_offset), 0, 0)
 	p2._initialize_boxes()
 	p2.hitbox_created.connect(register_hitbox)
@@ -421,16 +437,6 @@ func init_fighters():
 	p2.grabbed.connect(grabbed)
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
-	p2._initialize_hud_elements(true)
-	p2._connect_hud_elements(true)
-	if p2.ui_under_health:
-		$HUD/HealthAndTime/P2Group.add_child(p2.ui_under_health)
-	if p2.ui_sidebar:
-		$HUD/P2Stats.add_child(p2.ui_sidebar)
-	if p2.ui_below:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p2.ui_below)
-	if p2.ui_training:
-		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(p2.ui_training)
 	p2.grabbed_point = grab_point.instantiate()
 	$FightersAndStage.add_child(p2.grabbed_point)
 
