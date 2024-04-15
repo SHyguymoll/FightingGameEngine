@@ -155,7 +155,7 @@ func _initialize_hud_elements(training_mode : bool) -> void:
 			ui_sidebar = ui_p1_sidebar_scene.instantiate()
 		if ui_p1_below_scene:
 			ui_below = ui_p1_below_scene.instantiate()
-		if training_mode and ui_p1_training_scene:
+		if ui_p1_training_scene and training_mode:
 			ui_training = ui_p1_training_scene.instantiate()
 	else:
 		if ui_p2_under_health_scene:
@@ -164,7 +164,7 @@ func _initialize_hud_elements(training_mode : bool) -> void:
 			ui_sidebar = ui_p2_sidebar_scene.instantiate()
 		if ui_p2_below_scene:
 			ui_below = ui_p2_below_scene.instantiate()
-		if training_mode and ui_p2_training_scene:
+		if ui_p2_training_scene and training_mode:
 			ui_training = ui_p2_training_scene.instantiate()
 
 ## Used to connect the hud elements to the Fighter's logic through signals.
