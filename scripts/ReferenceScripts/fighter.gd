@@ -47,6 +47,17 @@ const INFINITE_STUN := -1
 @export var grabbed_offset : Vector3
 ## A reference to the Fighter's GrabPoint node, used for when the Fighter grabs the opponent.
 @export var grab_point : GrabPoint
+## An array of commands that the Fighter has. Use for listing attacks, special details, etc. [br]
+## Format: <Command Name>|[Command Input]|[Command Description][br]
+## Command Input Details: Directions are rendered with numpad notation. Multiple inputs for the
+## same command are separated with a forward slash.[br]
+## Certain combinations of inputs can be rendered with one icon (236 as a quarter circle forward,
+## [4] as a held back, etc.)
+## Button imputs are rendered with BX, where X is a value from 0 to 5, or A for any.[br]
+## Certain "tags" can be added to the end of the input (J for airborne, O for attacks that can hurt
+## on-the-ground opponents, etc.)[br]
+## The Command Description uses a RichTextLabel, so BBCode is supported.
+@export var command_list : Array[String]
 
 @export_category("Fighter Details")
 ## The name of the Fighter. Supports Unicode.
