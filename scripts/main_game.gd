@@ -435,7 +435,6 @@ func make_command_list():
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
 		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P1Commands.add_child(new_command)
-		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P1Commands.add_child(HSeparator.new())
 	for command in p2.command_list:
 		var command_split := command.split("|", true, 2)
 		var new_command : FighterCommand = command_item.instantiate()
@@ -443,7 +442,6 @@ func make_command_list():
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
 		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P2Commands.add_child(new_command)
-		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P2Commands.add_child(HSeparator.new())
 
 func make_hud():
 	# player 1

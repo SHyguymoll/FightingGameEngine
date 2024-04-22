@@ -498,24 +498,36 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.360784)
 
+[node name="Label" type="Label" parent="CommandScreen/CommandScreen/ColorRect"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 64
+text = "Commands (Facing Right)"
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="CommandScreen/CommandScreen/ColorRect"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_bottom = 4978.0
+offset_top = 80.0
+offset_bottom = 1080.0
 grow_horizontal = 2
 alignment = 1
 
 [node name="P1Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBoxContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="VSeparator" type="VSeparator" parent="CommandScreen/CommandScreen/ColorRect/HBoxContainer"]
-layout_mode = 2
 
 [node name="P2Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBoxContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 2
 
 [node name="SmoothTransitionLayer" type="CanvasLayer" parent="."]
 layer = 100
