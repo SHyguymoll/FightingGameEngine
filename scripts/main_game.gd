@@ -395,24 +395,32 @@ func create_commands(inputs : String) -> Array[TextureRect]:
 	# if input_held is true after iterating through the string, a hold was never escaped,
 	# so break them all on purpose to maximize the possibility of the creator seeing it
 	if input_held:
-		inputs_patterns.replace("H_S", "?")
+		inputs_patterns = inputs_patterns.replace("H_S", "?")
+	# replace empty holds with more question marks
+	inputs_patterns = inputs_patterns.replace("H_S H_E", "?")
 	# split by holds
 	var final_input_string := ""
 	var hold_starts := inputs_patterns.split("H_S")
 	if len(hold_starts) > 1: #if there's more than one item (meaning a split was found)
 		for hold_start in hold_starts:
+			if hold_start.strip_edges() == "":
+				continue
 			var hold_ends := hold_start.split("H_E") #then split on the ends too.
 			for held in hold_ends[0].split(" "): #for each input in the held section,
-				final_input_string += "H" + held + " " #append H to it and add it to the final string
-			final_input_string += hold_ends[1] #then just add the rest of the string in
+				if held.strip_edges() == "":
+					continue
+				if held == "5":
+					final_input_string += "? "
+				else:
+					final_input_string += "H" + held + " " #append H to it and add it to the final string
+			if len(hold_ends) > 1:
+				final_input_string += hold_ends[1] #then just add the rest of the string in
 	else:
 		final_input_string += hold_starts[0]
 	# reduce spaces
 	final_input_string = final_input_string.strip_edges()
-	# (this is a really dumb way of doing it lol)
-	final_input_string = final_input_string.replace("  ", " ")
-	final_input_string = final_input_string.replace("  ", " ")
-	final_input_string = final_input_string.replace("  ", " ")
+	while final_input_string.contains("  "):
+		final_input_string = final_input_string.replace("  ", " ")
 	# group certain series of inputs into motions, from most complex to least
 	final_input_string = final_input_string.replace("4 1 2 3 6", "41236")
 	final_input_string = final_input_string.replace("6 3 2 1 4", "63214")
@@ -434,14 +442,14 @@ func make_command_list():
 		new_command.title = command_split[0]
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
-		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P1Commands.add_child(new_command)
+		$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll/P1Commands.add_child(new_command)
 	for command in p2.command_list:
 		var command_split := command.split("|", true, 2)
 		var new_command : FighterCommand = command_item.instantiate()
 		new_command.title = command_split[0]
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
-		$CommandScreen/CommandScreen/ColorRect/HBoxContainer/P2Commands.add_child(new_command)
+		$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll/P2Commands.add_child(new_command)
 
 func make_hud():
 	# player 1

@@ -509,7 +509,8 @@ theme_override_font_sizes/font_size = 64
 text = "Commands (Facing Right)"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CommandScreen/CommandScreen/ColorRect"]
+[node name="HBox" type="HBoxContainer" parent="CommandScreen/CommandScreen/ColorRect"]
+clip_contents = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -518,12 +519,20 @@ offset_bottom = 1080.0
 grow_horizontal = 2
 alignment = 1
 
-[node name="P1Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBoxContainer"]
+[node name="P1Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="P1Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="P2Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBoxContainer"]
+[node name="P2Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="P2Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
