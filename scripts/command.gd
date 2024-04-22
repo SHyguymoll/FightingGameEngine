@@ -5,9 +5,9 @@ var title : String
 var inputs : Array[TextureRect]
 var description : String
 
-@onready var _title_label := $VBoxContainer/TitleAndInput/HBoxContainer/Title
-@onready var _inputs_hbox := $VBoxContainer/TitleAndInput/HBoxContainer/Inputs
-@onready var _description_label := $VBoxContainer/Description/RichTextLabel
+@onready var _title_label := $HBoxContainer/Title
+@onready var _inputs_hbox := $HBoxContainer/Inputs
+@onready var _description_label := $RichTextLabel
 
 func _ready() -> void:
 	_title_label.text = title
