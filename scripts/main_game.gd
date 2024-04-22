@@ -420,6 +420,8 @@ func create_commands(inputs : String) -> Array[TextureRect]:
 	final_input_string = final_input_string.replace("6 9 8 7 4", "69874")
 	final_input_string = final_input_string.replace("2 3 6", "236")
 	final_input_string = final_input_string.replace("2 1 4", "214")
+	final_input_string = final_input_string.replace("6 2 3", "623")
+	final_input_string = final_input_string.replace("4 2 1", "421")
 	# finally, actually making the command's inputs
 	for input in final_input_string.split(" "):
 		commands_final.append(create_input_texture_rect(input_icons[input]))
