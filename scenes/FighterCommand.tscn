@@ -14,7 +14,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("2_bgbhr")
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 48
 
 [node name="Inputs" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -23,6 +23,6 @@ size_flags_horizontal = 3
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 layout_mode = 2
 theme = ExtResource("2_bgbhr")
-theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 fit_content = true

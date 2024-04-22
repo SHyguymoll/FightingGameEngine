@@ -418,7 +418,6 @@ texture = ExtResource("12_gqhrq")
 
 [node name="PauseScreen" type="CanvasLayer" parent="."]
 layer = 40
-visible = false
 
 [node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
 layout_mode = 3
@@ -473,6 +472,7 @@ texture = ExtResource("12_gqhrq")
 
 [node name="CommandScreen" type="CanvasLayer" parent="."]
 layer = 40
+visible = false
 
 [node name="CommandScreen" type="Control" parent="CommandScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
 layout_mode = 3
@@ -496,7 +496,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.360784)
+color = Color(0, 0, 0, 0.686275)
 
 [node name="Label" type="Label" parent="CommandScreen/CommandScreen/ColorRect"]
 layout_mode = 1
@@ -514,13 +514,16 @@ clip_contents = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
+offset_left = 98.0
 offset_top = 80.0
-offset_bottom = 1080.0
+offset_right = -98.0
+offset_bottom = 974.0
 grow_horizontal = 2
 alignment = 1
 
 [node name="P1Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
 layout_mode = 2
+mouse_filter = 2
 horizontal_scroll_mode = 0
 
 [node name="P1Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll"]
@@ -530,6 +533,7 @@ size_flags_horizontal = 3
 
 [node name="P2Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
 layout_mode = 2
+mouse_filter = 2
 horizontal_scroll_mode = 0
 
 [node name="P2Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll"]
@@ -555,3 +559,4 @@ color = Color(0, 0, 0, 1)
 [connection signal="drag_ended" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset" to="." method="_on_p2_health_reset_drag_ended"]
 [connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/Record" to="." method="_on_record_toggled"]
 [connection signal="choices_made" from="ResultsScreen/ResultsScreen" to="." method="results_screen_choices_logic"]
+[connection signal="p1_choice_selected" from="PauseScreen/PauseScreen" to="." method="_on_pause_screen_player1_choice_selected"]

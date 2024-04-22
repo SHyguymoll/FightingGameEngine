@@ -191,6 +191,16 @@ func start_pause_menu(is_p1 : bool):
 	($PauseScreen/PauseScreen as ResultsScreen).active = true
 	$PauseScreen.visible = true
 
+func show_command_list():
+	$CommandScreen.visible = true
+	$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll.mouse_filter = Control.MOUSE_FILTER_PASS
+	$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll.mouse_filter = Control.MOUSE_FILTER_PASS
+
+func hide_command_list():
+	$CommandScreen.visible = false
+	$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 func end_pause_menu(is_p1 : bool):
 	p1.update_paused(false)
 	p2.update_paused(false)
@@ -205,6 +215,16 @@ func end_pause_menu(is_p1 : bool):
 	moment = moment_before_pause
 	($PauseScreen/PauseScreen as ResultsScreen).active = false
 	$PauseScreen.visible = false
+
+func _on_pause_screen_player1_choice_selected() -> void:
+	match $PauseScreen/PauseScreen.p1_choice:
+		0:
+			show_command_list()
+		1:
+			pass
+		2:
+			if get_tree().change_scene_to_file("res://scenes/Menu.tscn"):
+				push_error("menu failed to load")
 
 func _physics_process(delta):
 	($FighterCamera as FighterCamera).p1_pos = p1.global_position
@@ -1084,3 +1104,6 @@ func _on_record_toggled(toggled_on):
 
 func _on_reset_button_up():
 	get_tree().reload_current_scene()
+
+
+
