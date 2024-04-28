@@ -67,9 +67,6 @@ var record_buffer_current := 0
 var record := false
 var replay := false
 
-var p1_paused := false
-var p2_paused := false
-
 var p1_combo := 0
 var p2_combo := 0
 
@@ -84,6 +81,8 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 @onready var clash_sound = preload("res://sound_effects/clash.wav")
 @onready var debug_targetter = preload("res://scenes/DebugTargetter.tscn")
 @onready var command_item = preload("res://scenes/FighterCommand.tscn")
+
+@export var pause_screen_node : PauseScreen
 
 @onready var input_icons := {
 	"8" = preload("res://Content/Art/Menu/ButtonIcons/ArrowU.png"),
@@ -138,6 +137,10 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 }
 
 func _ready():
+	$DramaticFreezes.visible = true
+	$HUD.visible = true
+	$ResultsScreen.visible = false
+	$PauseScreen.visible = false
 	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
 	reset_hitstop()
 	stage = Content.stage_resource.instantiate()
@@ -174,57 +177,29 @@ func start_pause_menu(is_p1 : bool):
 		hitbox.paused = true
 	for projectile in ($Projectiles.get_children() as Array[Projectile]):
 		projectile.update_paused(true)
-	($PauseScreen/PauseScreen as ResultsScreen).p1_choice_made = false
-	($PauseScreen/PauseScreen as ResultsScreen).p2_choice_made = false
-	($PauseScreen/PauseScreen as ResultsScreen).p1_choice = 0
-	($PauseScreen/PauseScreen as ResultsScreen).p2_choice = 0
-	if is_p1:
-		p1_paused = true
-		$PauseScreen/PauseScreen/ColorRect/P1SelectIcon.visible = true
-		$PauseScreen/PauseScreen/ColorRect/P2SelectIcon.visible = false
-	else:
-		p2_paused = true
-		$PauseScreen/PauseScreen/ColorRect/P1SelectIcon.visible = false
-		$PauseScreen/PauseScreen/ColorRect/P2SelectIcon.visible = true
+	pause_screen_node.p1_active = is_p1
+	pause_screen_node.p2_active = not is_p1
+	pause_screen_node.p1_choice = 0
+	pause_screen_node.p2_choice = 0
+	pause_screen_node.p1_select_icon.visible = is_p1
+	pause_screen_node.p2_select_icon.visible = not is_p1
 	moment_before_pause = moment
 	moment = Moments.PAUSE
-	($PauseScreen/PauseScreen as ResultsScreen).active = true
+	pause_screen_node.active = true
 	$PauseScreen.visible = true
 
-func show_command_list():
-	$CommandScreen.visible = true
-	$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll.mouse_filter = Control.MOUSE_FILTER_PASS
-	$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll.mouse_filter = Control.MOUSE_FILTER_PASS
 
-func hide_command_list():
-	$CommandScreen.visible = false
-	$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-func end_pause_menu(is_p1 : bool):
+func end_pause_menu():
 	p1.update_paused(false)
 	p2.update_paused(false)
 	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
 		hitbox.paused = false
 	for projectile in ($Projectiles.get_children() as Array[Projectile]):
 		projectile.update_paused(false)
-	if is_p1:
-		p1_paused = false
-	else:
-		p2_paused = false
 	moment = moment_before_pause
-	($PauseScreen/PauseScreen as ResultsScreen).active = false
+	pause_screen_node.active = false
 	$PauseScreen.visible = false
 
-func _on_pause_screen_player1_choice_selected() -> void:
-	match $PauseScreen/PauseScreen.p1_choice:
-		0:
-			show_command_list()
-		1:
-			pass
-		2:
-			if get_tree().change_scene_to_file("res://scenes/Menu.tscn"):
-				push_error("menu failed to load")
 
 func _physics_process(delta):
 	($FighterCamera as FighterCamera).p1_pos = p1.global_position
@@ -288,10 +263,8 @@ func _physics_process(delta):
 			if Input.is_action_just_pressed("second_pause"):
 				start_pause_menu(false)
 		Moments.PAUSE:
-			if Input.is_action_just_pressed("first_pause") and p1_paused:
-				end_pause_menu(true)
-			if Input.is_action_just_pressed("second_pause") and p2_paused:
-				end_pause_menu(false)
+			await $PauseScreen/PauseScreen.tree_exited
+			end_pause_menu()
 		Moments.ROUND_END:
 			$HUD/BigText.modulate.a8 -= 4
 			move_inputs(true)
@@ -462,14 +435,14 @@ func make_command_list():
 		new_command.title = command_split[0]
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
-		$CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll/P1Commands.add_child(new_command)
+		$PauseScreen/PauseScreen/CommandList/HBox/P1Scroll/P1Commands.add_child(new_command)
 	for command in p2.command_list:
 		var command_split := command.split("|", true, 2)
 		var new_command : FighterCommand = command_item.instantiate()
 		new_command.title = command_split[0]
 		new_command.description = command_split[2]
 		new_command.inputs = create_commands(command_split[1])
-		$CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll/P2Commands.add_child(new_command)
+		$PauseScreen/PauseScreen/CommandList/HBox/P2Scroll/P2Commands.add_child(new_command)
 
 func make_hud():
 	# player 1

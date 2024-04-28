@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cd77r01gxs0ud"]
+[gd_scene load_steps=14 format=3 uid="uid://cd77r01gxs0ud"]
 
 [ext_resource type="Script" path="res://scripts/main_game.gd" id="1_a16kr"]
 [ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_bgp1m"]
@@ -7,14 +7,16 @@
 [ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="4_7ll10"]
 [ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="5_6q5w6"]
 [ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="6_2k3f0"]
-[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_434nl"]
+[ext_resource type="Script" path="res://scripts/pause_screen.gd" id="9_2q0pw"]
+[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_5pmf4"]
 [ext_resource type="Theme" uid="uid://dqy1w1gb4mp1b" path="res://HUD_TrainingSectionTheme.tres" id="9_agrsw"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_pe8d5"]
 [ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_5jtlc"]
 [ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_gqhrq"]
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("pause_screen_node")]
 script = ExtResource("1_a16kr")
+pause_screen_node = NodePath("PauseScreen/PauseScreen")
 
 [node name="FighterCamera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.269, 7.742)
@@ -282,7 +284,6 @@ size_flags_horizontal = 3
 
 [node name="ResultsScreen" type="CanvasLayer" parent="."]
 layer = 30
-visible = false
 
 [node name="ResultsScreen" type="Control" parent="ResultsScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "p1_winner_icon", "p2_winner_icon", "no_winner_icon", "winner_quote")]
 layout_mode = 3
@@ -292,9 +293,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("9_434nl")
-p1_choice_positions = Array[Vector2]([Vector2(769, 808), Vector2(529, 918), Vector2(625, 1015)])
-p2_choice_positions = Array[Vector2]([Vector2(1156, 808), Vector2(1394, 918), Vector2(1293, 1015)])
+script = ExtResource("9_5pmf4")
+p1_choice_positions = Array[Vector2]([Vector2(780, 806), Vector2(535, 918), Vector2(625, 1015)])
+p2_choice_positions = Array[Vector2]([Vector2(1145, 806), Vector2(1387, 918), Vector2(1293, 1017)])
 p1_select_icon = NodePath("ColorRect/P1SelectIcon")
 p2_select_icon = NodePath("ColorRect/P2SelectIcon")
 p1_winner_icon = NodePath("ColorRect/P1Winner")
@@ -409,17 +410,18 @@ horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="P1SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
-position = Vector2(625, 1015)
+position = Vector2(780, 806)
 texture = ExtResource("11_5jtlc")
 
 [node name="P2SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
-position = Vector2(1293, 1017)
+position = Vector2(1145, 804)
 texture = ExtResource("12_gqhrq")
 
 [node name="PauseScreen" type="CanvasLayer" parent="."]
 layer = 40
+visible = false
 
-[node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
+[node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "main_screen", "command_list_screen", "cmd_list_p1_scroll", "cmd_list_p2_scroll")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -427,13 +429,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("9_434nl")
+script = ExtResource("9_2q0pw")
 p1_choice_positions = Array[Vector2]([Vector2(751, 808), Vector2(529, 918), Vector2(625, 1015)])
 p2_choice_positions = Array[Vector2]([Vector2(1174, 808), Vector2(1394, 918), Vector2(1293, 1015)])
-p1_select_icon = NodePath("ColorRect/P1SelectIcon")
-p2_select_icon = NodePath("ColorRect/P2SelectIcon")
+p1_select_icon = NodePath("Main/P1SelectIcon")
+p2_select_icon = NodePath("Main/P2SelectIcon")
+main_screen = NodePath("Main")
+command_list_screen = NodePath("CommandList")
+cmd_list_p1_scroll = NodePath("CommandList/HBox/P1Scroll")
+cmd_list_p2_scroll = NodePath("CommandList/HBox/P2Scroll")
 
-[node name="ColorRect" type="ColorRect" parent="PauseScreen/PauseScreen"]
+[node name="Main" type="ColorRect" parent="PauseScreen/PauseScreen"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -443,7 +449,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.360784)
 
-[node name="Label" type="Label" parent="PauseScreen/PauseScreen/ColorRect"]
+[node name="Label" type="Label" parent="PauseScreen/PauseScreen/Main"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -462,33 +468,15 @@ Return to Character Select
 Return to Main Menu"
 horizontal_alignment = 1
 
-[node name="P1SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/ColorRect"]
+[node name="P1SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/Main"]
 position = Vector2(751, 808)
 texture = ExtResource("11_5jtlc")
 
-[node name="P2SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/ColorRect"]
+[node name="P2SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/Main"]
 position = Vector2(1174, 808)
 texture = ExtResource("12_gqhrq")
 
-[node name="CommandScreen" type="CanvasLayer" parent="."]
-layer = 40
-visible = false
-
-[node name="CommandScreen" type="Control" parent="CommandScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon")]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("9_434nl")
-p1_choice_positions = Array[Vector2]([Vector2(751, 808), Vector2(529, 918), Vector2(625, 1015)])
-p2_choice_positions = Array[Vector2]([Vector2(1174, 808), Vector2(1394, 918), Vector2(1293, 1015)])
-p1_select_icon = NodePath("../../PauseScreen/PauseScreen/ColorRect/P1SelectIcon")
-p2_select_icon = NodePath("../../PauseScreen/PauseScreen/ColorRect/P2SelectIcon")
-
-[node name="ColorRect" type="ColorRect" parent="CommandScreen/CommandScreen"]
+[node name="CommandList" type="ColorRect" parent="PauseScreen/PauseScreen"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -498,7 +486,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.686275)
 
-[node name="Label" type="Label" parent="CommandScreen/CommandScreen/ColorRect"]
+[node name="Label" type="Label" parent="PauseScreen/PauseScreen/CommandList"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -509,34 +497,48 @@ theme_override_font_sizes/font_size = 64
 text = "Commands (Facing Right)"
 horizontal_alignment = 1
 
-[node name="HBox" type="HBoxContainer" parent="CommandScreen/CommandScreen/ColorRect"]
+[node name="Label2" type="Label" parent="PauseScreen/PauseScreen/CommandList"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("10_pe8d5")
+theme_override_font_sizes/font_size = 64
+text = "Press Start to Exit"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="PauseScreen/PauseScreen/CommandList"]
 clip_contents = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_left = 98.0
-offset_top = 80.0
+offset_top = 89.0
 offset_right = -98.0
-offset_bottom = 974.0
+offset_bottom = 991.365
 grow_horizontal = 2
 alignment = 1
 
-[node name="P1Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
+[node name="P1Scroll" type="ScrollContainer" parent="PauseScreen/PauseScreen/CommandList/HBox"]
 layout_mode = 2
 mouse_filter = 2
 horizontal_scroll_mode = 0
 
-[node name="P1Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P1Scroll"]
+[node name="P1Commands" type="VBoxContainer" parent="PauseScreen/PauseScreen/CommandList/HBox/P1Scroll"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="P2Scroll" type="ScrollContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox"]
+[node name="P2Scroll" type="ScrollContainer" parent="PauseScreen/PauseScreen/CommandList/HBox"]
 layout_mode = 2
 mouse_filter = 2
 horizontal_scroll_mode = 0
 
-[node name="P2Commands" type="VBoxContainer" parent="CommandScreen/CommandScreen/ColorRect/HBox/P2Scroll"]
+[node name="P2Commands" type="VBoxContainer" parent="PauseScreen/PauseScreen/CommandList/HBox/P2Scroll"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -558,5 +560,4 @@ color = Color(0, 0, 0, 1)
 [connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p2_health_reset_switch_toggled"]
 [connection signal="drag_ended" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset" to="." method="_on_p2_health_reset_drag_ended"]
 [connection signal="toggled" from="HUD/TrainingModeControls/P2Controls/HBoxContainer/Record" to="." method="_on_record_toggled"]
-[connection signal="choices_made" from="ResultsScreen/ResultsScreen" to="." method="results_screen_choices_logic"]
-[connection signal="p1_choice_selected" from="PauseScreen/PauseScreen" to="." method="_on_pause_screen_player1_choice_selected"]
+[connection signal="exited" from="PauseScreen/PauseScreen" to="." method="end_pause_menu"]
