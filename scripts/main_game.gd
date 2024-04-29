@@ -84,7 +84,7 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 
 @export var pause_screen_node : PauseScreen
 
-func _ready():
+func construct_game():
 	$DramaticFreezes.visible = true
 	$HUD.visible = true
 	$ResultsScreen.visible = false
@@ -108,14 +108,10 @@ func _ready():
 	init_fighters()
 	$FightersAndStage.add_child(p1)
 	$FightersAndStage.add_child(p2)
-	var p1_dtar = (debug_targetter.instantiate() as DebugTargetter)
-	p1_dtar.pointer_texture = load("res://Content/Art/Menu/CharacterSelect/Player1Select.png")
-	p1_dtar.pointer_target = p1
-	$FightersAndStage.add_child(p1_dtar)
-	var p2_dtar = (debug_targetter.instantiate() as DebugTargetter)
-	p2_dtar.pointer_texture = load("res://Content/Art/Menu/CharacterSelect/Player2Select.png")
-	p2_dtar.pointer_target = p2
-	$FightersAndStage.add_child(p2_dtar)
+
+
+func _ready():
+	construct_game()
 
 
 func start_pause_menu(is_p1 : bool):
