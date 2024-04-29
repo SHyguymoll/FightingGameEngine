@@ -421,7 +421,7 @@ texture = ExtResource("12_gqhrq")
 layer = 40
 visible = false
 
-[node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "main_screen", "command_list_screen", "cmd_list_p1_scroll", "cmd_list_p2_scroll")]
+[node name="PauseScreen" type="Control" parent="PauseScreen" node_paths=PackedStringArray("p1_select_icon", "p2_select_icon", "main_screen", "command_list_screen", "cmd_list_p1_scroll", "cmd_list_p2_scroll", "p1_cmd_list", "p2_cmd_list")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -438,6 +438,8 @@ main_screen = NodePath("Main")
 command_list_screen = NodePath("CommandList")
 cmd_list_p1_scroll = NodePath("CommandList/HBox/P1Scroll")
 cmd_list_p2_scroll = NodePath("CommandList/HBox/P2Scroll")
+p1_cmd_list = NodePath("CommandList/HBox/P1Scroll/P1Commands")
+p2_cmd_list = NodePath("CommandList/HBox/P2Scroll/P2Commands")
 
 [node name="Main" type="ColorRect" parent="PauseScreen/PauseScreen"]
 layout_mode = 1
