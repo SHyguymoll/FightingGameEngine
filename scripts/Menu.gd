@@ -66,7 +66,7 @@ func _process(_delta):
 			Content.stage_resource = load(Content.stages.pick_random()[1])
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
-			if get_tree().change_scene_to_file("res://scenes/Game.tscn"):
+			if get_tree().change_scene_to_file("res://scenes/VersusGame.tscn"):
 				push_error("game failed to load")
 
 

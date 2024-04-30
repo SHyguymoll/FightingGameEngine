@@ -18,16 +18,9 @@ enum RoundChangeTypes {
 
 const MOVEMENTBOUNDX = 4.5
 
-@export var results_screen_file : PackedScene
-
 var p1 : Fighter
 var p2 : Fighter
 var stage : Stage
-
-var p1_reset_health_on_drop := true
-var p2_reset_health_on_drop := true
-var p1_health_reset : float
-var p2_health_reset : float
 
 var p1_buttons = [false, false, false, false, false, false, false, false, false, false]
 var p2_buttons = [false, false, false, false, false, false, false, false, false, false]
@@ -82,21 +75,54 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 @onready var clash_sound = preload("res://sound_effects/clash.wav")
 @onready var debug_targetter = preload("res://scenes/DebugTargetter.tscn")
 
+@export var fighter_camera : FighterCamera
+
+@export var game_fighters_and_stage : Node3D
+@export var game_projectiles : Node3D
+@export var game_hitboxes : Node3D
+@export var game_particles : Node3D
+@export var game_audio : Node3D
+
+@export var ui_splash_text : Label
+@export var ui_p1_health : TextureProgressBar
+@export var ui_p2_health : TextureProgressBar
+@export var ui_p1_name : Label
+@export var ui_p2_name : Label
+@export var ui_timer : Label
+@export var ui_p1_combo_counter : Label
+@export var ui_p2_combo_counter : Label
+
+@export var ui_p1_under_health_section : Control
+@export var ui_p2_under_health_section : Control
+@export var ui_p1_sidebar_section : Control
+@export var ui_p2_sidebar_section : Control
+@export var ui_p1_below_section : Control
+@export var ui_p2_below_section : Control
+
+@export var layer_hud : CanvasLayer
+@export var layer_drama_freeze : CanvasLayer
+@export var layer_results_screen : CanvasLayer
+@export var layer_pause_screen : CanvasLayer
+@export var layer_smooth_transistions : CanvasLayer
+
 @export var pause_screen_node : PauseScreen
+@export var results_screen_node : ResultsScreen
+
+@export var smooth_transition : ColorRect
 
 func construct_game():
-	$DramaticFreezes.visible = true
-	$HUD.visible = true
-	$ResultsScreen.visible = false
-	$PauseScreen.visible = false
-	$SmoothTransitionLayer/ColorRect.color = Color(0, 0, 0, 1)
-	reset_hitstop()
+	layer_drama_freeze.visible = true
+	layer_hud.visible = true
+	layer_results_screen.visible = false
+	layer_pause_screen.visible = false
+	smooth_transition.color = Color(0, 0, 0, 1)
+	GameGlobal.global_hitstop = 0
 	stage = Content.stage_resource.instantiate()
-	$FightersAndStage.add_child(stage)
+	game_fighters_and_stage.add_child(stage)
 	if stage.mode == Stage.Modes.TWO_D:
-		$FighterCamera.set_mode(FighterCamera.Modes.ORTH_BALANCED)
+		fighter_camera.set_mode(FighterCamera.Modes.ORTH_BALANCED)
 	else:
-		$FighterCamera.set_mode(FighterCamera.Modes.PERS_BALANCED)
+		fighter_camera.set_mode(FighterCamera.Modes.PERS_BALANCED)
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
 	p1.player = true
@@ -106,8 +132,8 @@ func construct_game():
 	make_hud()
 	pause_screen_node.make_command_list(p1, p2)
 	init_fighters()
-	$FightersAndStage.add_child(p1)
-	$FightersAndStage.add_child(p2)
+	game_fighters_and_stage.add_child(p1)
+	game_fighters_and_stage.add_child(p2)
 
 
 func _ready():
@@ -117,9 +143,9 @@ func _ready():
 func start_pause_menu(is_p1 : bool):
 	p1.update_paused(true)
 	p2.update_paused(true)
-	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
+	for hitbox in (game_hitboxes.get_children() as Array[Hitbox]):
 		hitbox.paused = true
-	for projectile in ($Projectiles.get_children() as Array[Projectile]):
+	for projectile in (game_projectiles.get_children() as Array[Projectile]):
 		projectile.update_paused(true)
 	pause_screen_node.p1_active = is_p1
 	pause_screen_node.p2_active = not is_p1
@@ -130,206 +156,215 @@ func start_pause_menu(is_p1 : bool):
 	moment_before_pause = moment
 	moment = Moments.PAUSE
 	pause_screen_node.active = true
-	$PauseScreen.visible = true
+	layer_pause_screen.visible = true
 
 
 func end_pause_menu():
 	p1.update_paused(false)
 	p2.update_paused(false)
-	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
+	for hitbox in (game_hitboxes.get_children() as Array[Hitbox]):
 		hitbox.paused = false
-	for projectile in ($Projectiles.get_children() as Array[Projectile]):
+	for projectile in (game_projectiles.get_children() as Array[Projectile]):
 		projectile.update_paused(false)
 	moment = moment_before_pause
 	pause_screen_node.active = false
-	$PauseScreen.visible = false
+	layer_pause_screen.visible = false
+
+
+func fade_in_function(delta):
+	move_inputs(true)
+	p1._input_step()
+	p1._action_step(false, delta)
+	p2._input_step()
+	p2._action_step(false, delta)
+	smooth_transition.color.a = lerpf(smooth_transition.color.a, 0.0, 0.25)
+	if smooth_transition.color.a < 0.1:
+		smooth_transition.color.a = 0.0
+		moment = Moments.INTRO
+		p1._do_intro()
+		p2._do_intro()
+
+
+func intro_function(delta):
+	move_inputs(true)
+	p1._input_step()
+	p1._action_step(false, delta)
+	p2._input_step()
+	p2._action_step(false, delta)
+	if p1._post_intro() and p2._post_intro():
+		moment = Moments.GAME
+		ui_splash_text.text = "FIGHT"
+		ui_splash_text.visible = true
+	check_combos()
+	character_positioning(delta)
+	update_hud()
+
+
+func game_function(delta):
+	# handle projectiles
+	for proj in (game_projectiles.get_children() as Array[Projectile]):
+		proj.tick(delta)
+	# handle players
+	create_inputs()
+	move_inputs(false)
+	p1._input_step()
+	p1._action_step(false, delta)
+	p2._input_step()
+	p2._action_step(false, delta)
+	check_combos()
+	character_positioning(delta)
+	update_hud()
+	ui_splash_text.modulate.a8 -= 10
+	if Input.is_action_just_pressed("first_pause"):
+		start_pause_menu(true)
+	if Input.is_action_just_pressed("second_pause"):
+		start_pause_menu(false)
+
+
+func drama_freeze_function(delta):
+	create_inputs()
+	move_inputs(false)
+	p1._input_step()
+	p1._action_step(true, delta)
+	p2._input_step()
+	p2._action_step(true, delta)
+	character_positioning(delta)
+	update_hud()
+	if Input.is_action_just_pressed("first_pause"):
+		start_pause_menu(true)
+	if Input.is_action_just_pressed("second_pause"):
+		start_pause_menu(false)
+
+
+func pause_function(delta):
+	await pause_screen_node.exited
+	end_pause_menu()
+
+
+func round_end_function(delta):
+	ui_splash_text.modulate.a8 -= 4
+	move_inputs(true)
+	p1._input_step()
+	p1._action_step(false, delta)
+	p2._input_step()
+	p2._action_step(false, delta)
+	check_combos()
+	character_positioning(delta)
+	update_hud()
+	if game_ended:
+		return
+	if p1._post_outro() and p2._in_defeated_state():
+		GameGlobal.p1_wins += 1
+		if GameGlobal.p1_wins < GameGlobal.win_threshold:
+			moment = Moments.FADE_OUT
+		else:
+			print("game ended with a p1 victory, creating results screen")
+			make_results_screen(0)
+	elif p1._in_defeated_state() and p2._post_outro():
+		GameGlobal.p2_wins += 1
+		if GameGlobal.p2_wins < GameGlobal.win_threshold:
+			moment = Moments.FADE_OUT
+		else:
+			print("game ended with a p2 victory, creating results screen")
+			make_results_screen(1)
+	elif p1._in_defeated_state() and p2._in_defeated_state():
+		if (
+			GameGlobal.p1_wins == GameGlobal.win_threshold - 1
+			and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
+		):
+			print("game ended on a draw, creating results screen")
+			make_results_screen(2)
+		else:
+			GameGlobal.p1_wins = GameGlobal.win_threshold - 1
+			GameGlobal.p2_wins = GameGlobal.win_threshold - 1
+			moment = Moments.FADE_OUT
+
+
+func fade_out_function(delta):
+	smooth_transition.color.a = lerpf(smooth_transition.color.a, 1.0, 0.25)
+	if is_zero_approx(smooth_transition.color.a - 1.0):
+		get_tree().reload_current_scene()
 
 
 func _physics_process(delta):
-	($FighterCamera as FighterCamera).p1_pos = p1.global_position
-	($FighterCamera as FighterCamera).p2_pos = p2.global_position
+	fighter_camera.p1_pos = p1.global_position
+	fighter_camera.p2_pos = p2.global_position
 	match moment:
 		Moments.FADE_IN:
-			move_inputs(true)
-			p1._input_step()
-			p1._action_step(false, delta)
-			p2._input_step()
-			p2._action_step(false, delta)
-			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 0.0, 0.25)
-			if $SmoothTransitionLayer/ColorRect.color.a < 0.1:
-				$SmoothTransitionLayer/ColorRect.color.a = 0.0
-				moment = Moments.INTRO
-				p1._do_intro()
-				p2._do_intro()
+			fade_in_function(delta)
 		Moments.INTRO:
-			move_inputs(true)
-			p1._input_step()
-			p1._action_step(false, delta)
-			p2._input_step()
-			p2._action_step(false, delta)
-			if p1._post_intro() and p2._post_intro():
-				moment = Moments.GAME
-				($HUD/BigText as Label).text = "FIGHT"
-				$HUD/BigText.visible = true
-			check_combos()
-			character_positioning(delta)
-			update_hud()
+			intro_function(delta)
 		Moments.GAME:
-			# handle projectiles
-			for proj in ($Projectiles.get_children() as Array[Projectile]):
-				proj.tick(delta)
-			create_inputs()
-			move_inputs(false)
-			p1._input_step()
-			p1._action_step(false, delta)
-			p2._input_step()
-			p2._action_step(false, delta)
-			check_combos()
-			training_mode_settings()
-			character_positioning(delta)
-			update_hud()
-			$HUD/BigText.modulate.a8 -= 10
-			if Input.is_action_just_pressed("first_pause"):
-				start_pause_menu(true)
-			if Input.is_action_just_pressed("second_pause"):
-				start_pause_menu(false)
+			game_function(delta)
 		Moments.DRAMATIC_FREEZE:
-			create_inputs()
-			move_inputs(false)
-			p1._input_step()
-			p1._action_step(true, delta)
-			p2._input_step()
-			p2._action_step(true, delta)
-			character_positioning(delta)
-			update_hud()
-			if Input.is_action_just_pressed("first_pause"):
-				start_pause_menu(true)
-			if Input.is_action_just_pressed("second_pause"):
-				start_pause_menu(false)
+			drama_freeze_function(delta)
 		Moments.PAUSE:
-			await $PauseScreen/PauseScreen.tree_exited
-			end_pause_menu()
+			pause_function(delta)
 		Moments.ROUND_END:
-			$HUD/BigText.modulate.a8 -= 4
-			move_inputs(true)
-			p1._input_step()
-			p1._action_step(false, delta)
-			p2._input_step()
-			p2._action_step(false, delta)
-			check_combos()
-			character_positioning(delta)
-			update_hud()
-			if game_ended:
-				return
-			if p1._post_outro() and p2._in_defeated_state():
-				GameGlobal.p1_wins += 1
-				if GameGlobal.p1_wins < GameGlobal.win_threshold:
-					moment = Moments.FADE_OUT
-				else:
-					print("game ended with a p1 victory, creating results screen")
-					make_results_screen(0)
-			elif p1._in_defeated_state() and p2._post_outro():
-				GameGlobal.p2_wins += 1
-				if GameGlobal.p2_wins < GameGlobal.win_threshold:
-					moment = Moments.FADE_OUT
-				else:
-					print("game ended with a p2 victory, creating results screen")
-					make_results_screen(1)
-			elif p1._in_defeated_state() and p2._in_defeated_state():
-				if (
-					GameGlobal.p1_wins == GameGlobal.win_threshold - 1
-					and GameGlobal.p2_wins == GameGlobal.win_threshold - 1
-				):
-					print("game ended on a draw, creating results screen")
-					make_results_screen(2)
-				else:
-					GameGlobal.p1_wins = GameGlobal.win_threshold - 1
-					GameGlobal.p2_wins = GameGlobal.win_threshold - 1
-					moment = Moments.FADE_OUT
+			round_end_function(delta)
 		Moments.FADE_OUT:
-			$SmoothTransitionLayer/ColorRect.color.a = lerpf($SmoothTransitionLayer/ColorRect.color.a, 1.0, 0.25)
-			if is_zero_approx($SmoothTransitionLayer/ColorRect.color.a - 1.0):
-				get_tree().reload_current_scene()
+			fade_out_function(delta)
 
 
 func make_results_screen(winner : int):
 	game_ended = true
-	$HUD.visible = false
-	$ResultsScreen.visible = true
-	match winner:
-		0:
-			$ResultsScreen/ResultsScreen.p1_winner_icon.visible = true
-			$ResultsScreen/ResultsScreen.winner_quote.text = p1.win_quote
-			$ResultsScreen/ResultsScreen.winner_quote.visible = true
-		1:
-			$ResultsScreen/ResultsScreen.p2_winner_icon.visible = true
-			$ResultsScreen/ResultsScreen.winner_quote.text = p2.win_quote
-			$ResultsScreen/ResultsScreen.winner_quote.visible = true
-		2:
-			$ResultsScreen/ResultsScreen.no_winner_icon.visible = true
-			$ResultsScreen/ResultsScreen.winner_quote.visible = false
-	$ResultsScreen/ResultsScreen.active = true
+	layer_hud.visible = false
+	layer_results_screen.visible = true
+	results_screen_node.start_results_screen(
+			winner, p1.win_quote, p2.win_quote)
 
 func results_screen_choices_logic():
-	var p1_choice = $ResultsScreen/ResultsScreen.p1_choice
-	var p2_choice = $ResultsScreen/ResultsScreen.p2_choice
-	if p1_choice == ResultsScreen.Choice.REPLAY and p2_choice == p1_choice:
+	var p1_c = results_screen_node.p1_choice
+	var p2_c = results_screen_node.p2_choice
+	if p1_c == ResultsScreen.Choice.REPLAY and p2_c == p1_c:
 		GameGlobal.p1_wins = 0
 		GameGlobal.p2_wins = 0
 		moment = Moments.FADE_OUT
-	if p1_choice == ResultsScreen.Choice.CHARACTER_SELECT or p2_choice == ResultsScreen.Choice.CHARACTER_SELECT:
+	if p1_c == ResultsScreen.Choice.CHARACTER_SELECT or p2_c == ResultsScreen.Choice.CHARACTER_SELECT:
 		pass
-	if p1_choice == ResultsScreen.Choice.MAIN_MENU or p2_choice == ResultsScreen.Choice.MAIN_MENU:
+	if p1_c == ResultsScreen.Choice.MAIN_MENU or p2_c == ResultsScreen.Choice.MAIN_MENU:
 		if get_tree().change_scene_to_file("res://scenes/Menu.tscn"):
 			push_error("menu failed to load")
 
 
 func make_hud():
 	# player 1
-	$HUD/HealthAndTime/P1Group/Health.max_value = p1.health
-	$HUD/HealthAndTime/P1Group/Health.value = p1.health
-	$HUD/HealthAndTime/P1Group/NameAndPosVel/Char.text = p1.char_name
-	$HUD/HealthAndTime/P1Group/NameAndPosVel/PosVel.text = (
-			str(p1.position) + "\n" + str(p1.velocity))
-	$HUD/P1Stats/State.text = p1.States.keys()[p1.current_state]
+	ui_p1_health.max_value = p1.health
+	ui_p1_health.value = p1.health
+	ui_p1_name.text = p1.char_name
+
 	p1._initialize_hud_elements(true)
 	p1._connect_hud_elements(true)
 	if p1.ui_under_health:
-		$HUD/HealthAndTime/P1Group.add_child(p1.ui_under_health)
+		ui_p1_under_health_section.add_child(p1.ui_under_health)
 	if p1.ui_sidebar:
-		$HUD/P1Stats.add_child(p1.ui_sidebar)
+		ui_p1_sidebar_section.add_child(p1.ui_sidebar)
 	if p1.ui_below:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_below)
-	if p1.ui_training:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p1.ui_training)
+		ui_p1_below_section.add_child(p1.ui_below)
 
 	# player 2
-	$HUD/HealthAndTime/P2Group/Health.max_value = p2.health
-	$HUD/HealthAndTime/P2Group/Health.value = p2.health
-	$HUD/HealthAndTime/P2Group/NameAndPosVel/Char.text = p2.char_name
-	$HUD/HealthAndTime/P2Group/NameAndPosVel/PosVel.text = (
-			str(p2.position) + "\n" + str(p2.velocity))
-	$HUD/P2Stats/State.text = p2.States.keys()[p2.current_state]
+	ui_p2_health.max_value = p2.health
+	ui_p2_health.value = p2.health
+	ui_p2_name.text = p2.char_name
+
 	p2._initialize_hud_elements(true)
 	p2._connect_hud_elements(true)
 	if p2.ui_under_health:
-		$HUD/HealthAndTime/P2Group.add_child(p2.ui_under_health)
+		ui_p2_under_health_section.add_child(p2.ui_under_health)
 	if p2.ui_sidebar:
-		$HUD/P2Stats.add_child(p2.ui_sidebar)
+		ui_p2_sidebar_section.add_child(p2.ui_sidebar)
 	if p2.ui_below:
-		$HUD/TrainingModeControlsSpecial/P1Controls.add_child(p2.ui_below)
-	if p2.ui_training:
-		$HUD/TrainingModeControlsSpecial/P2Controls.add_child(p2.ui_training)
+		ui_p2_below_section.add_child(p2.ui_below)
 
 	# set up rounds
 	var p1_round_group = HBoxContainer.new()
 	p1_round_group.alignment = BoxContainer.ALIGNMENT_END
 	p1_round_group.name = "Rounds"
-	$HUD/HealthAndTime/P1Group.add_child(p1_round_group)
+	ui_p1_under_health_section.add_child(p1_round_group)
 	var p2_round_group = HBoxContainer.new()
 	p2_round_group.alignment = BoxContainer.ALIGNMENT_BEGIN
 	p2_round_group.name = "Rounds"
-	$HUD/HealthAndTime/P2Group.add_child(p2_round_group)
+	ui_p2_under_health_section.add_child(p2_round_group)
 	for n in range(GameGlobal.win_threshold):
 		var p1_round = round_element.instantiate()
 		p1_round.name = str(n)
@@ -355,47 +390,14 @@ func make_hud():
 			for n in range(GameGlobal.p2_wins, -1, -1):
 				(p1_round_group.get_node(str(n)) as RoundElement).unfulfill()
 
-	# game itself
-	$HUD/BigText.visible = false
-	var health_reset_hud = $HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset
-	health_reset_hud.min_value = 1
-	health_reset_hud.max_value = p1.health
-	health_reset_hud.value = health_reset_hud.max_value
-	$HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthResetSwitch.set_pressed_no_signal(p1_reset_health_on_drop)
-	health_reset_hud = $HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset
-	health_reset_hud.min_value = 1
-	health_reset_hud.max_value = p2.health
-	health_reset_hud.value = health_reset_hud.max_value
-	$HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch.set_pressed_no_signal(p2_reset_health_on_drop)
+	ui_splash_text.visible = false
 
 
 func update_hud():
-	# player 1
-	$HUD/HealthAndTime/P1Group/Health.value = p1.health
-	$HUD/P1Stats/State.text = p1.States.keys()[p1.current_state]
-	if "attack" in $HUD/P1Stats/State.text:
-		$HUD/P1Stats/State.text += " : " + p1.current_attack
-	$HUD/HealthAndTime/P1Group/NameAndPosVel/PosVel.text = (
-			str(p1.position) + "\n" + str(p1.velocity))
-	$HUD/P1Stats/Combo.text = str(p1_combo)
-
-	# player 2
-	$HUD/HealthAndTime/P2Group/Health.value = p2.health
-	$HUD/P2Stats/State.text = p2.States.keys()[p2.current_state]
-	if "attack" in $HUD/P2Stats/State.text:
-		$HUD/P2Stats/State.text += " : " + p2.current_attack
-	$HUD/HealthAndTime/P2Group/NameAndPosVel/PosVel.text = (
-			str(p2.position) + "\n" + str(p2.velocity))
-	$HUD/P2Stats/Combo.text = str(p2_combo)
-
-	# training
-	$HUD/TrainingModeControls/P2Controls/HBoxContainer/RecordStatus.text = (
-		"%s/%s %s" % [
-			record_buffer_current,
-			len(player_record_buffer),
-			"PLY" if replay else ("REC" if record else "STP"),
-		]
-	)
+	ui_p1_health.value = p1.health
+	ui_p1_combo_counter.text = str(p1_combo)
+	ui_p2_health.value = p2.health
+	ui_p1_combo_counter.text = str(p2_combo)
 
 
 func init_fighters():
@@ -413,7 +415,7 @@ func init_fighters():
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
 	p1.grabbed_point = grab_point.instantiate()
-	$FightersAndStage.add_child(p1.grabbed_point)
+	game_fighters_and_stage.add_child(p1.grabbed_point)
 
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
@@ -429,25 +431,13 @@ func init_fighters():
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
 	p2.grabbed_point = grab_point.instantiate()
-	$FightersAndStage.add_child(p2.grabbed_point)
+	game_fighters_and_stage.add_child(p2.grabbed_point)
 
 	p1.position.x = clamp(p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x
-	p1_health_reset = p1.health
-	p2_health_reset = p2.health
 
-
-func reset_hitstop():
-	GameGlobal.global_hitstop = 0
-
-var directionDictionary = {
-	"": "x",
-	"up": "↑", "down": "↓", "left": "←", "right": "→",
-	"upleft": "↖", "downleft": "↙",
-	"upright": "↗", "downright": "↘"
-}
 
 func slice_input_dictionary(input_dict: Dictionary, from: int, to: int):
 	var ret_dict = {
@@ -461,37 +451,6 @@ func slice_input_dictionary(input_dict: Dictionary, from: int, to: int):
 		ret_dict["button" + str(i)] = input_dict["button" + str(i)].slice(from, to)
 	return ret_dict
 
-
-func generate_input_hud(buf : Dictionary, input_label : Label):
-	var lookup_string := ""
-	var dirs := ["up", "down", "left", "right"]
-
-	input_label.text = ""
-	for i in range(len(buf.up)):
-		lookup_string = ""
-		lookup_string += dirs[0] if buf[dirs[0]][i][1] else ""
-		lookup_string += dirs[1] if buf[dirs[1]][i][1] else ""
-		lookup_string += dirs[2] if buf[dirs[2]][i][1] else ""
-		lookup_string += dirs[3] if buf[dirs[3]][i][1] else ""
-		input_label.text += directionDictionary[lookup_string]
-		input_label.text += "\t"
-		for button in buf:
-			if button in dirs:
-				if buf[button][i][1]:
-					input_label.text += (
-							"| %s, %s " % [str(buf[button][i][0]), directionDictionary[button]])
-				else:
-					input_label.text += (
-							"| %s, x " % [str(buf[button][i][0])])
-			else:
-				input_label.text += (
-					"| %s, %s " % [buf[button][i][0], ("Ø" if buf[button][i][1] else "0")])
-		input_label.text += "\n"
-
-
-func build_input_tracker(p1_buf : Dictionary, p2_buf : Dictionary) -> void:
-	generate_input_hud(p1_buf, $HUD/P1Stats/Inputs)
-	generate_input_hud(p2_buf, $HUD/P2Stats/Inputs)
 
 #convert to hash to simplify comparisons
 func generate_current_input_hash(buttons : Array, button_count : int) -> int:
@@ -601,7 +560,7 @@ func create_inputs():
 
 
 func hitbox_hitbox_collisions():
-	for hitbox in ($Hitboxes.get_children() as Array[Hitbox]):
+	for hitbox in (game_hitboxes.get_children() as Array[Hitbox]):
 		if hitbox.invalid:
 			continue
 		if (hitbox as Hitbox).hit_priority == -1:
@@ -630,33 +589,21 @@ func hitbox_hitbox_collisions():
 						(hitbox.position + (check as Hitbox).position) / 2.0,
 						null)
 				spawn_audio(clash_sound)
-				if ($FighterCamera as FighterCamera).mode_is_orth():
-					($FighterCamera as FighterCamera).size *= 1.25
+				if fighter_camera.mode_is_orth():
+					fighter_camera.size *= 1.25
 				else:
-					($FighterCamera as FighterCamera).position.z *= 1.25
+					fighter_camera.position.z *= 1.25
 				GameGlobal.global_hitstop = 10
 
 
-
-func move_inputs(fake_inputs):
+func move_inputs(fake_inputs : bool):
 	if fake_inputs:
 		p1.inputs = p1_dummy_buffer
 		p2.inputs = p2_dummy_buffer
 		p1._input_step()
 		p2._input_step()
 		return
-
-	var p1_buf = slice_input_dictionary(
-			p1_inputs, max(0, p1_input_index - p1.input_buffer_len),
-			p1_input_index + 1
-	)
-	var p2_buf = slice_input_dictionary(
-			p2_inputs, max(0, p2_input_index - p2.input_buffer_len),
-			p2_input_index + 1
-	)
-	build_input_tracker(p1_buf, p2_buf)
-
-	if not fake_inputs:
+	else:
 		hitbox_hitbox_collisions()
 		var p1_attackers = (p1._return_attackers() as Array[Hitbox])
 		for p1_attacker in p1_attackers:
@@ -664,7 +611,7 @@ func move_inputs(fake_inputs):
 				continue
 			var hit = p1._damage_step(p1_attacker, p2_combo)
 			if hit:
-				($HUD/HealthAndTime/P1Group/Health as TextureProgressBar).tint_progress.g8 = 0
+				ui_p1_health.tint_progress.g8 = 0
 				spawn_audio(p1_attacker.on_hit_sound)
 				if not p1_attacker.is_projectile:
 					p2.attack_connected = true
@@ -687,7 +634,7 @@ func move_inputs(fake_inputs):
 				continue
 			var hit = p2._damage_step(p2_attacker, p1_combo)
 			if hit:
-				($HUD/HealthAndTime/P2Group/Health as TextureProgressBar).tint_progress.g8 = 0
+				ui_p2_health.tint_progress.g8 = 0
 				spawn_audio(p2_attacker.on_hit_sound)
 				if not p2_attacker.is_projectile:
 					p1.attack_connected = true
@@ -712,17 +659,23 @@ func move_inputs(fake_inputs):
 		grab_released(false)
 		pass
 
-	p1.inputs = p1_buf
-	p2.inputs = p2_buf
+	p1.inputs = slice_input_dictionary(
+			p1_inputs, max(0, p1_input_index - p1.input_buffer_len),
+			p1_input_index + 1
+	)
+	p2.inputs = slice_input_dictionary(
+			p2_inputs, max(0, p2_input_index - p2.input_buffer_len),
+			p2_input_index + 1
+	)
 
 
 func check_combos():
 	if not p1._in_hurting_state():
 		p2_combo = 0
-		($HUD/HealthAndTime/P1Group/Health as TextureProgressBar).tint_progress.g8 += 20
+		ui_p1_health.tint_progress.g8 += 20
 	if not p2._in_hurting_state():
 		p1_combo = 0
-		($HUD/HealthAndTime/P2Group/Health as TextureProgressBar).tint_progress.g8 += 20
+		ui_p2_health.tint_progress.g8 += 20
 
 
 func character_positioning(delta):
@@ -799,23 +752,23 @@ func spawn_audio(sound : AudioStream):
 	new_audio.stream = sound
 	new_audio.finished.connect(func(): new_audio.queue_free())
 	new_audio.autoplay = true
-	$Audio.add_child(new_audio)
+	game_audio.add_child(new_audio)
 
 func register_particle(particle : GameParticle, origin : GameParticle.Origins, position_offset : Vector3, source : Fighter):
 	match origin:
 		GameParticle.Origins.SOURCE:
 			particle.position = source.position + position_offset
-			$Particles.add_child(particle)
+			game_particles.add_child(particle)
 		GameParticle.Origins.SOURCE_STICKY:
 			particle.position = position_offset
 			source.add_child(particle)
 		GameParticle.Origins.OTHER:
 			if source.player:
 				particle.position = p2.position + position_offset
-				$Particles.add_child(particle)
+				game_particles.add_child(particle)
 			else:
 				particle.position = p1.position + position_offset
-				$Particles.add_child(particle)
+				game_particles.add_child(particle)
 		GameParticle.Origins.OTHER_STICKY:
 			particle.position = position_offset
 			if source.player:
@@ -824,29 +777,29 @@ func register_particle(particle : GameParticle, origin : GameParticle.Origins, p
 				p1.add_child(particle)
 		GameParticle.Origins.CUSTOM:
 			particle.position = position_offset
-			$Particles.add_child(particle)
+			game_particles.add_child(particle)
 
 
 func register_hitbox(hitbox : Hitbox):
-	$Hitboxes.add_child(hitbox, true)
+	game_hitboxes.add_child(hitbox, true)
 
 
 func register_projectile(projectile : Projectile):
 	projectile.projectile_ended.connect(delete_projectile)
-	$Projectiles.add_child(projectile, true)
+	game_projectiles.add_child(projectile, true)
 
 
 func start_dramatic_freeze(dramatic_freeze : DramaticFreeze, source : Fighter):
 	dramatic_freeze.end_freeze.connect(end_dramatic_freeze)
 	dramatic_freeze.source = source
-	dramatic_freeze.source_2d_pos = $FighterCamera.unproject_position(source.global_position)
+	dramatic_freeze.source_2d_pos = fighter_camera.unproject_position(source.global_position)
 	if source.player:
 		dramatic_freeze.other = p2
-		dramatic_freeze.other_2d_pos = $FighterCamera.unproject_position(p2.global_position)
+		dramatic_freeze.other_2d_pos = fighter_camera.unproject_position(p2.global_position)
 	else:
 		dramatic_freeze.other = p1
-		dramatic_freeze.other_2d_pos = $FighterCamera.unproject_position(p1.global_position)
-	$DramaticFreezes.add_child(dramatic_freeze, true)
+		dramatic_freeze.other_2d_pos = fighter_camera.unproject_position(p1.global_position)
+	layer_drama_freeze.add_child(dramatic_freeze, true)
 	moment = Moments.DRAMATIC_FREEZE
 
 
@@ -874,49 +827,10 @@ func grab_released(player):
 
 func player_defeated():
 	GameGlobal.global_hitstop = 120
-	($HUD/BigText as Label).text = "KO"
-	$HUD/BigText.modulate.a8 = 255
+	ui_splash_text.text = "KO"
+	ui_splash_text.modulate.a8 = 255
 	moment = Moments.ROUND_END
 	p1.game_ended = true
 	p2.game_ended = true
-	for projectile in ($Projectiles.get_children() as Array[Projectile]):
+	for projectile in (game_projectiles.get_children() as Array[Projectile]):
 		projectile.destroy()
-
-
-func training_mode_settings():
-	if p1_reset_health_on_drop and not p2_combo:
-		p1.health = p1_health_reset
-	if p2_reset_health_on_drop and not p1_combo:
-		p2.health = p2_health_reset
-
-
-func _on_p1_health_reset_switch_toggled(toggled_on):
-	p1_reset_health_on_drop = toggled_on
-
-
-func _on_p1_health_reset_drag_ended(value_changed):
-	if value_changed and p1_reset_health_on_drop:
-		p1_health_reset = $HUD/TrainingModeControls/P1Controls/HBoxContainer/HealthReset.value
-
-
-func _on_p2_health_reset_switch_toggled(toggled_on):
-	p2_reset_health_on_drop = toggled_on
-
-
-func _on_p2_health_reset_drag_ended(value_changed):
-	if value_changed and p2_reset_health_on_drop:
-		p2_health_reset = $HUD/TrainingModeControls/P2Controls/HBoxContainer/HealthReset.value
-
-
-func _on_record_toggled(toggled_on):
-	if toggled_on:
-		player_record_buffer.clear()
-		record_buffer_current = 0
-	record = toggled_on
-
-
-func _on_reset_button_up():
-	get_tree().reload_current_scene()
-
-
-

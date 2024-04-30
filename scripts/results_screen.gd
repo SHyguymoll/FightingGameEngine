@@ -27,6 +27,21 @@ var p2_choice := 0
 @export var no_winner_icon : Control
 @export var winner_quote : Label
 
+func start_results_screen(winner : int, p1_quote : String, p2_quote : String):
+	match winner:
+		0:
+			p1_winner_icon.visible = true
+			winner_quote.text = p1_quote
+			winner_quote.visible = true
+		1:
+			p2_winner_icon.visible = true
+			winner_quote.text = p2_quote
+			winner_quote.visible = true
+		2:
+			no_winner_icon.visible = true
+			winner_quote.visible = false
+	active = true
+
 func _physics_process(delta: float) -> void:
 	if not active:
 		return

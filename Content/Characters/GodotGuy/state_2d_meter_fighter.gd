@@ -403,7 +403,10 @@ func _action_step(dramatic_freeze : bool, delta : float):
 
 func _connect_hud_elements(training_mode : bool):
 	if training_mode:
-		(ui_training as HSlider).value_changed.connect(training_mode_set_meter)
+		(ui_training.get_node("HSlider") as HSlider).value_changed.connect(training_mode_set_meter)
+		(ui_training.get_node("Label") as Label).text = States.keys()[current_state]
+		if "attack" in (ui_training.get_node("Label") as Label).text:
+			(ui_training.get_node("Label") as Label).text += " : " + current_attack
 
 
 func _return_attackers() -> Array[Hitbox]:
