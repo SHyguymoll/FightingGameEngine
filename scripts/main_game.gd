@@ -404,7 +404,8 @@ func init_fighters():
 	for i in range(p1.BUTTONCOUNT):
 		p1_inputs["button" + str(i)] = [[0, false]]
 		p1_dummy_buffer["button" + str(i)] = [[0, false]]
-	p1.position = Vector3(abs(p1.start_x_offset) * -1, 0, 0)
+	p1.position = Vector3.ZERO
+	p1.position.x = clamp(abs(p1.start_x_offset) * -1, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p1._initialize_boxes()
 	p1.hitbox_created.connect(register_hitbox)
 	p1.projectile_created.connect(register_projectile)
@@ -420,7 +421,8 @@ func init_fighters():
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
 		p2_dummy_buffer["button" + str(i)] = [[0, false]]
-	p2.position = Vector3(abs(p2.start_x_offset), 0, 0)
+	p2.position = Vector3.ZERO
+	p2.position.x = clamp(abs(p2.start_x_offset), -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p2._initialize_boxes()
 	p2.hitbox_created.connect(register_hitbox)
 	p2.projectile_created.connect(register_projectile)
@@ -433,8 +435,6 @@ func init_fighters():
 	p2.grabbed_point = grab_point.instantiate()
 	game_fighters_and_stage.add_child(p2.grabbed_point)
 
-	p1.position.x = clamp(p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
-	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x
 
