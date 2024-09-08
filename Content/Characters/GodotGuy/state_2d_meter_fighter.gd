@@ -1229,13 +1229,11 @@ func resolve_state_transitions():
 func update_character_animation():
 	if _in_attacking_state():
 		$AnimationPlayer.play(
-				current_attack + (
-						$AnimationPlayer.anim_right_suf if right_facing
+				current_attack + ($AnimationPlayer.anim_right_suf if right_facing
 						else $AnimationPlayer.anim_left_suf))
 	elif impact_state():
 		$AnimationPlayer.play(
-				current_attack + "_imp" + (
-						$AnimationPlayer.anim_right_suf if right_facing
+				current_attack + "_imp" + ($AnimationPlayer.anim_right_suf if right_facing
 						else $AnimationPlayer.anim_left_suf))
 	else:
 		match current_state:
@@ -1270,9 +1268,5 @@ func update_character_animation():
 
 
 func reset_facing():
-	if distance < 0:
-		right_facing = true
-		grabbed_offset.x = -GRABBED_OFFSET_X
-	else:
-		right_facing = false
-		grabbed_offset.x = GRABBED_OFFSET_X
+	right_facing = distance < 0
+	grabbed_offset.x = GRABBED_OFFSET_X * (-1 ^ int(distance < 0))
