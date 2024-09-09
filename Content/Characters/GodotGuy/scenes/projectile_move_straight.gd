@@ -72,11 +72,8 @@ func tick(delta : float):
 	# hitstop check
 	if GameGlobal.global_hitstop:
 		return
-	# check if hitbox exists since it's removed on contact
-	if get_node_or_null(^"Hitbox"):
-		# move in direction of velocity
-		global_position += velocity
-	else:
+	global_position += velocity
+	if hitbox == null:
 		destroy()
 	$AnimationPlayer.advance(delta)
 
