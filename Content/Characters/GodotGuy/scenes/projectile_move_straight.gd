@@ -18,13 +18,13 @@ enum types {
 func _ready():
 	match type:
 		types.STRAIGHT:
-			velocity = Vector3.RIGHT * 6
+			velocity = Vector3.RIGHT * 0.05
 		types.DIAGONAL_DOWN:
-			velocity = (Vector3.RIGHT * 5) + (Vector3.DOWN * 1.5)
+			velocity = (Vector3.RIGHT * 0.05) + (Vector3.DOWN * 0.07)
 		types.SUPER:
-			velocity = Vector3.RIGHT * 10
+			velocity = Vector3.RIGHT * 0.12
 		types.DIAGONAL_DOWN_SUPER:
-			velocity = (Vector3.RIGHT * 1) + (Vector3.DOWN * 0.5)
+			velocity = (Vector3.RIGHT * 0.03) + (Vector3.DOWN * 0.03)
 	velocity.x *= 1 if right_facing else -1
 	match type:
 		types.STRAIGHT, types.DIAGONAL_DOWN:
@@ -47,6 +47,7 @@ func _ready():
 			hitbox.hitstop_block = 3
 			hitbox.kback_hit = Vector3(4, 7, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
+			hitbox.hitbox_flags += Hitbox.HitboxFlags.SUPER
 			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
 			hitbox.hit_priority = 10
 			hitbox.on_hit = [0]
@@ -60,6 +61,7 @@ func _ready():
 			hitbox.hitstop_block = 15
 			hitbox.kback_hit = Vector3(-4, 10, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
+			hitbox.hitbox_flags += Hitbox.HitboxFlags.SUPER
 			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
 			hitbox.hit_priority = 10
 			hitbox.on_hit = [0]
@@ -79,8 +81,7 @@ func tick(delta : float):
 	$AnimationPlayer.advance(delta)
 
 func destroy():
-	if get_node_or_null(^"Hitbox"):
-		$Hitbox.queue_free()
+	super()
 	velocity = Vector3.ZERO
 	$AnimationPlayer.play(end_anim)
 

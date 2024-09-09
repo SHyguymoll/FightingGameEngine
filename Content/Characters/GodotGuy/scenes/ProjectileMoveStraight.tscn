@@ -169,3 +169,7 @@ collision_mask = 17
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="ProjectileContact"]
 shape = SubResource("BoxShape3D_4ie6c")
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="area_entered" from="ProjectileContact" to="." method="_on_projectile_contact"]
+[connection signal="body_entered" from="ProjectileContact" to="." method="_on_projectile_contact"]
