@@ -12,11 +12,15 @@ enum HitboxFlags {
 	HIT_GROUND = 128,
 	HIT_AIR = 256,
 	HIT_OTG = 512,
+	SUPER = 1024,
+	NO_KO = 2048,
 }
 enum StateEffects {
 	NONE = 0,
 	KNOCKDOWN = 1,
 	LAUNCHER = 2,
+	COLLAPSE = 3,
+	BOUNCE = 4,
 }
 
 @export_category("Damage")
@@ -42,8 +46,9 @@ enum StateEffects {
 	"Hit Grab:4", "Connect Grab:8", "Ends Grab:16", "Breaks Grab:32",
 	"Unblockable/Inescapable:64",
 	"Hits Grounded:128", "Hits Airborne:256", "G+A:384", "Hits OTG:512", "Always Hits:896",
+	"Super Attack:1024", "Cannot KO:2048",
 	) var hitbox_flags : int = 0
-@export_enum("None", "Knockdown", "Launcher") var state_effect : int
+@export_enum("None", "Knockdown", "Launcher", "Collapse", "Camera/Wall Bounce") var state_effect : int
 @export var on_hit : Array
 @export var on_block : Array
 
