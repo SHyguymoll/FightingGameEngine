@@ -1,4 +1,4 @@
-class_name ProjectileStraight
+class_name ProjectileMoveStraight
 extends Projectile
 
 @export var start_anim : StringName
@@ -6,6 +6,7 @@ extends Projectile
 @export var loop_anim_right : StringName
 @export var end_anim : StringName
 
+var velocity : Vector3
 
 enum types {
 	STRAIGHT = 0,
@@ -71,8 +72,8 @@ func tick(delta : float):
 		return
 	# check if hitbox exists since it's removed on contact
 	if get_node_or_null(^"Hitbox"):
-		# just moves straight forward, velocity isn't even calculated here for simplicity's sake
-		move_and_slide()
+		# move in direction of velocity
+		global_position += velocity
 	else:
 		destroy()
 	$AnimationPlayer.advance(delta)

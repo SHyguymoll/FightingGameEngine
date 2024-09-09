@@ -156,7 +156,7 @@ var aerial_vel : Vector3
 	"spin_approach_final": preload("scenes/hitboxes/special/spin_approach_final.tscn"),
 }
 @onready var projectiles = {
-	"basic": preload("scenes/ProjectileStraight.tscn")
+	"basic": preload("scenes/ProjectileMoveStraight.tscn")
 }
 @onready var particles = {
 	"counter_hit": preload("scenes/particles/CounterHit.tscn")
