@@ -1,5 +1,5 @@
 class_name Projectile
-extends CharacterBody3D
+extends Node3D
 
 signal projectile_ended(proj)
 
@@ -21,7 +21,6 @@ func update_paused(new_paused : bool):
 func destroy():
 	if hitbox != null:
 		hitbox.queue_free()
-	velocity = Vector3.ZERO
 
 func _on_projectile_contact(other):
 	if hitbox == null:

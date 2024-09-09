@@ -11,7 +11,7 @@ extends CharacterBody3D
 ## _action_step() is called right after in order to process state changes.
 ## For safety, nothing should modify the fighter's state in _process, _physics_process,
 ## or _ready. _process and _physics_process are purely for real-time effects,
-## and _ready for initialization.
+## and _ready for initialization.[br]
 
 ## When the Fighter is grabbed in the damage step, this signal should fire to start the grab logic.
 signal grabbed

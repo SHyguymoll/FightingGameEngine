@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bni3ld6dsombb"]
 
-[ext_resource type="Script" path="res://scripts/ReferenceScripts/hitbox.gd" id="1_4nfd2"]
+[ext_resource type="Script" path="res://scripts/references/hitbox.gd" id="1_4nfd2"]
 [ext_resource type="AudioStream" uid="uid://bytcuvmfoag06" path="res://Content/Characters/GodotGuy/sounds/atk_blocked.wav" id="3_aab7o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l2bov"]
