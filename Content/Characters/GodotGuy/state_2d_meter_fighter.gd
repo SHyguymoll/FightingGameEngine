@@ -22,7 +22,7 @@ extends Fighter
 ##
 ## [color=rainbow]IMPORTANT NOTE:[/color] Animations are handled in manual mode when this script runs
 ## in-game as to stop unintended behavior from happening when the game is paused (spawning way too many
-## projectiles, deep-landed jumping attacks failing to come out, etc.), and that is handled in _ready.
+## projectiles, deep-landed jumping attacks failing to come out, etc.), and that is updated in _ready.
 
 ## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.
 enum States {
@@ -151,7 +151,7 @@ var aerial_vel : Vector3
 	"uppercut": preload("scenes/hitboxes/special/uppercut.tscn"),
 	"grab": preload("scenes/hitboxes/stand/grab.tscn"),
 	"grab_followup": preload("scenes/hitboxes/stand/grab_followup.tscn"),
-	"grab_break": preload("res://Content/Characters/GodotGuy/scenes/hitboxes/stand/grab_break.tscn"),
+	"grab_break": preload("scenes/hitboxes/stand/grab_break.tscn"),
 	"spin_approach": preload("scenes/hitboxes/special/spin_approach.tscn"),
 	"spin_approach_final": preload("scenes/hitboxes/special/spin_approach_final.tscn"),
 }
