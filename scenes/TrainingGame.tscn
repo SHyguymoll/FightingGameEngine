@@ -1,20 +1,32 @@
-[gd_scene load_steps=13 format=3 uid="uid://cd77r01gxs0ud"]
+[gd_scene load_steps=14 format=3 uid="uid://dajlhw551dmop"]
 
-[ext_resource type="Script" path="res://scripts/main_game.gd" id="1_k83nq"]
-[ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_6dae8"]
-[ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="3_paiiu"]
-[ext_resource type="Texture2D" uid="uid://danexq1ufr4qj" path="res://Content/Art/HUD/Player1Background.png" id="4_0uavl"]
-[ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="5_mffto"]
-[ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="6_7qvqi"]
-[ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="7_dgrbo"]
-[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_bmxyn"]
-[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_lagwi"]
-[ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_j877c"]
-[ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_d5gw3"]
-[ext_resource type="Script" path="res://scripts/pause_screen.gd" id="13_jiiwd"]
+[ext_resource type="Script" path="res://scripts/training_mode.gd" id="1_m4gad"]
+[ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_d6xmc"]
+[ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="3_rad5f"]
+[ext_resource type="Texture2D" uid="uid://danexq1ufr4qj" path="res://Content/Art/HUD/Player1Background.png" id="4_vd8ct"]
+[ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="5_c7bgh"]
+[ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="6_uf34b"]
+[ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="7_3pslj"]
+[ext_resource type="Theme" uid="uid://dqy1w1gb4mp1b" path="res://HUD_TrainingSectionTheme.tres" id="8_4l8k5"]
+[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_bab2q"]
+[ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_noe3s"]
+[ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_c25kw"]
+[ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_p0xqr"]
+[ext_resource type="Script" path="res://scripts/pause_screen.gd" id="13_i00w0"]
 
-[node name="Node3D" type="Node3D" node_paths=PackedStringArray("fighter_camera", "game_fighters_and_stage", "game_projectiles", "game_hitboxes", "game_particles", "game_audio", "ui_splash_text", "ui_p1_health", "ui_p2_health", "ui_p1_name", "ui_p2_name", "ui_timer", "ui_p1_combo_counter", "ui_p2_combo_counter", "ui_p1_under_health_section", "ui_p2_under_health_section", "ui_p1_sidebar_section", "ui_p2_sidebar_section", "ui_p1_below_section", "ui_p2_below_section", "layer_hud", "layer_drama_freeze", "layer_results_screen", "layer_pause_screen", "layer_smooth_transistions", "pause_screen_node", "results_screen_node", "smooth_transition")]
-script = ExtResource("1_k83nq")
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("ui_p1_position_velocity", "ui_p2_position_velocity", "ui_p1_reset_health_slider", "ui_p2_reset_health_slider", "ui_p1_reset_health_button", "ui_p2_reset_health_button", "ui_p1_inputs", "ui_p2_inputs", "ui_input_record_status", "ui_p1_training_special_section", "ui_p2_training_special_section", "fighter_camera", "game_fighters_and_stage", "game_projectiles", "game_hitboxes", "game_particles", "game_audio", "ui_splash_text", "ui_p1_health", "ui_p2_health", "ui_p1_name", "ui_p2_name", "ui_timer", "ui_p1_combo_counter", "ui_p2_combo_counter", "ui_p1_under_health_section", "ui_p2_under_health_section", "ui_p1_sidebar_section", "ui_p2_sidebar_section", "ui_p1_below_section", "ui_p2_below_section", "layer_hud", "layer_drama_freeze", "layer_results_screen", "layer_pause_screen", "layer_smooth_transistions", "pause_screen_node", "results_screen_node", "smooth_transition")]
+script = ExtResource("1_m4gad")
+ui_p1_position_velocity = NodePath("HUD/HealthAndTime/P1Group/NameAndPosVel/PosVel")
+ui_p2_position_velocity = NodePath("HUD/HealthAndTime/P2Group/NameAndPosVel/PosVel")
+ui_p1_reset_health_slider = NodePath("HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer/HealthReset")
+ui_p2_reset_health_slider = NodePath("HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/HealthReset")
+ui_p1_reset_health_button = NodePath("HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer/HealthResetSwitch")
+ui_p2_reset_health_button = NodePath("HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch")
+ui_p1_inputs = NodePath("HUD/P1_Side_UI/P1Stats/Inputs")
+ui_p2_inputs = NodePath("HUD/P2_Side_UI/P2Stats/Inputs")
+ui_input_record_status = NodePath("HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/RecordStatus")
+ui_p1_training_special_section = NodePath("HUD/UI_Lower/TrainingModeControlsSpecial/P1Controls")
+ui_p2_training_special_section = NodePath("HUD/UI_Lower/TrainingModeControlsSpecial/P2Controls")
 fighter_camera = NodePath("FighterCamera")
 game_fighters_and_stage = NodePath("FightersAndStage")
 game_projectiles = NodePath("Projectiles")
@@ -49,7 +61,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.269, 7.742)
 projection = 1
 current = true
 size = 3.5
-script = ExtResource("2_6dae8")
+script = ExtResource("2_d6xmc")
 
 [node name="Audio" type="Node3D" parent="."]
 
@@ -79,7 +91,7 @@ offset_right = 281.5
 offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 219
 text = "FIGHT"
 horizontal_alignment = 1
@@ -103,8 +115,8 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 value = 10.0
 fill_mode = 1
-texture_under = ExtResource("4_0uavl")
-texture_progress = ExtResource("5_mffto")
+texture_under = ExtResource("4_vd8ct")
+texture_progress = ExtResource("5_c7bgh")
 
 [node name="NameAndPosVel" type="HBoxContainer" parent="HUD/HealthAndTime/P1Group"]
 layout_mode = 2
@@ -112,7 +124,7 @@ alignment = 2
 
 [node name="PosVel" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 24
 text = "p,v"
 horizontal_alignment = 1
@@ -120,13 +132,13 @@ horizontal_alignment = 1
 [node name="Char" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
 layout_mode = 2
 size_flags_horizontal = 8
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 64
 text = "Player 1 Character"
 
 [node name="Time" type="Label" parent="HUD/HealthAndTime"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 64
 text = "999"
 horizontal_alignment = 1
@@ -141,8 +153,8 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 value = 10.0
-texture_under = ExtResource("6_7qvqi")
-texture_progress = ExtResource("7_dgrbo")
+texture_under = ExtResource("6_uf34b")
+texture_progress = ExtResource("7_3pslj")
 
 [node name="NameAndPosVel" type="HBoxContainer" parent="HUD/HealthAndTime/P2Group"]
 layout_mode = 2
@@ -150,14 +162,14 @@ alignment = 2
 
 [node name="Char" type="Label" parent="HUD/HealthAndTime/P2Group/NameAndPosVel"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 64
 text = "Player 2 Character"
 horizontal_alignment = 2
 
 [node name="PosVel" type="Label" parent="HUD/HealthAndTime/P2Group/NameAndPosVel"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 24
 text = "p,v"
 horizontal_alignment = 1
@@ -177,9 +189,15 @@ alignment = 1
 
 [node name="Combo" type="Label" parent="HUD/P1_Side_UI/P1Stats"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 60
 text = "999"
+
+[node name="Inputs" type="Label" parent="HUD/P1_Side_UI/P1Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rad5f")
+theme_override_font_sizes/font_size = 24
+text = "inputs"
 
 [node name="P2_Side_UI" type="HBoxContainer" parent="HUD"]
 anchors_preset = 11
@@ -196,9 +214,16 @@ alignment = 1
 
 [node name="Combo" type="Label" parent="HUD/P2_Side_UI/P2Stats"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
+theme_override_fonts/font = ExtResource("3_rad5f")
 theme_override_font_sizes/font_size = 60
 text = "999"
+horizontal_alignment = 2
+
+[node name="Inputs" type="Label" parent="HUD/P2_Side_UI/P2Stats"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rad5f")
+theme_override_font_sizes/font_size = 24
+text = "inputs"
 horizontal_alignment = 2
 
 [node name="Special" type="Control" parent="HUD/P2_Side_UI"]
@@ -213,6 +238,84 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
 alignment = 2
+
+[node name="TrainingModeControls" type="HBoxContainer" parent="HUD/UI_Lower"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="P1Controls" type="PanelContainer" parent="HUD/UI_Lower/TrainingModeControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/UI_Lower/TrainingModeControls/P1Controls"]
+layout_mode = 2
+
+[node name="HealthReset" type="HSlider" parent="HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+tick_count = 10
+ticks_on_borders = true
+
+[node name="HealthResetSwitch" type="CheckButton" parent="HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme = ExtResource("8_4l8k5")
+text = "Reset P1 Health"
+alignment = 2
+
+[node name="Reset" type="Button" parent="HUD/UI_Lower/TrainingModeControls"]
+layout_mode = 2
+theme = ExtResource("8_4l8k5")
+text = "Reset"
+
+[node name="P2Controls" type="PanelContainer" parent="HUD/UI_Lower/TrainingModeControls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/UI_Lower/TrainingModeControls/P2Controls"]
+layout_mode = 2
+
+[node name="HealthResetSwitch" type="CheckButton" parent="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("8_4l8k5")
+text = "Reset P2 Health"
+
+[node name="HealthReset" type="HSlider" parent="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_direction = 3
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tick_count = 10
+ticks_on_borders = true
+
+[node name="Record" type="CheckButton" parent="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("8_4l8k5")
+text = "Record"
+
+[node name="RecordStatus" type="Label" parent="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("8_4l8k5")
+text = "9/9 STP"
+horizontal_alignment = 2
+
+[node name="TrainingModeControlsSpecial" type="HBoxContainer" parent="HUD/UI_Lower"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="P1Controls" type="PanelContainer" parent="HUD/UI_Lower/TrainingModeControlsSpecial"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="P2Controls" type="PanelContainer" parent="HUD/UI_Lower/TrainingModeControlsSpecial"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Special" type="HBoxContainer" parent="HUD/UI_Lower"]
 layout_mode = 2
@@ -239,7 +342,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("9_bmxyn")
+script = ExtResource("9_bab2q")
 p1_choice_positions = Array[Vector2]([Vector2(780, 806), Vector2(535, 918), Vector2(625, 1015)])
 p2_choice_positions = Array[Vector2]([Vector2(1145, 806), Vector2(1387, 918), Vector2(1293, 1017)])
 p1_select_icon = NodePath("ColorRect/P1SelectIcon")
@@ -271,7 +374,7 @@ offset_top = -69.0
 offset_right = 89.5
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 86
 text = "Restart Fight
 Return to Character Select
@@ -292,7 +395,7 @@ offset_right = 440.0
 offset_bottom = -595.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 156
 text = "PLAYER 1 WINS"
 horizontal_alignment = 1
@@ -311,7 +414,7 @@ offset_right = 440.0
 offset_bottom = -595.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 156
 text = "PLAYER 2 WINS"
 horizontal_alignment = 1
@@ -330,7 +433,7 @@ offset_right = 440.0
 offset_bottom = -595.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 156
 text = "DRAW"
 horizontal_alignment = 1
@@ -349,7 +452,7 @@ offset_right = 510.5
 offset_bottom = -333.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 81
 text = "PLAYER 1 WINS"
 horizontal_alignment = 1
@@ -357,11 +460,11 @@ vertical_alignment = 2
 
 [node name="P1SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
 position = Vector2(780, 806)
-texture = ExtResource("11_j877c")
+texture = ExtResource("11_c25kw")
 
 [node name="P2SelectIcon" type="Sprite2D" parent="ResultsScreen/ResultsScreen/ColorRect"]
 position = Vector2(1145, 804)
-texture = ExtResource("12_d5gw3")
+texture = ExtResource("12_p0xqr")
 
 [node name="PauseScreen" type="CanvasLayer" parent="."]
 layer = 40
@@ -375,7 +478,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("13_jiiwd")
+script = ExtResource("13_i00w0")
 p1_choice_positions = Array[Vector2]([Vector2(751, 808), Vector2(529, 918), Vector2(625, 1015)])
 p2_choice_positions = Array[Vector2]([Vector2(1174, 808), Vector2(1394, 918), Vector2(1293, 1015)])
 p1_select_icon = NodePath("Main/P1SelectIcon")
@@ -409,7 +512,7 @@ offset_top = -69.0
 offset_right = 89.5
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 86
 text = "Command List
 Return to Character Select
@@ -418,11 +521,11 @@ horizontal_alignment = 1
 
 [node name="P1SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/Main"]
 position = Vector2(751, 808)
-texture = ExtResource("11_j877c")
+texture = ExtResource("11_c25kw")
 
 [node name="P2SelectIcon" type="Sprite2D" parent="PauseScreen/PauseScreen/Main"]
 position = Vector2(1174, 808)
-texture = ExtResource("12_d5gw3")
+texture = ExtResource("12_p0xqr")
 
 [node name="CommandList" type="ColorRect" parent="PauseScreen/PauseScreen"]
 layout_mode = 1
@@ -440,7 +543,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 80.0
 grow_horizontal = 2
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 64
 text = "Commands (Facing Right)"
 horizontal_alignment = 1
@@ -454,7 +557,7 @@ anchor_bottom = 1.0
 offset_top = -80.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("10_lagwi")
+theme = ExtResource("10_noe3s")
 theme_override_font_sizes/font_size = 64
 text = "Press Start to Exit"
 horizontal_alignment = 1
@@ -502,5 +605,11 @@ offset_bottom = 1080.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
+[connection signal="drag_ended" from="HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer/HealthReset" to="." method="_on_p1_health_reset_drag_ended"]
+[connection signal="toggled" from="HUD/UI_Lower/TrainingModeControls/P1Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p1_health_reset_switch_toggled"]
+[connection signal="button_up" from="HUD/UI_Lower/TrainingModeControls/Reset" to="." method="_on_reset_button_up"]
+[connection signal="toggled" from="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/HealthResetSwitch" to="." method="_on_p2_health_reset_switch_toggled"]
+[connection signal="drag_ended" from="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/HealthReset" to="." method="_on_p2_health_reset_drag_ended"]
+[connection signal="toggled" from="HUD/UI_Lower/TrainingModeControls/P2Controls/HBoxContainer/Record" to="." method="_on_record_toggled"]
 [connection signal="choices_made" from="ResultsScreen/ResultsScreen" to="." method="results_screen_choices_logic"]
 [connection signal="exited" from="PauseScreen/PauseScreen" to="." method="end_pause_menu"]

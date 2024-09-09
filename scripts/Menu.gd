@@ -35,6 +35,7 @@ enum Screens {
 @onready var p1_select = preload("res://scenes/Player1Select.tscn")
 @onready var p2_select = preload("res://scenes/Player2Select.tscn")
 var screen := Screens.MAIN_MENU
+var training_mode := false
 var p1_cursor : PlayerSelect
 var p2_cursor : PlayerSelect
 var char_top_left = Vector3(X_LEFT,Y_TOP,Z_POSITION)
@@ -66,8 +67,12 @@ func _process(_delta):
 			Content.stage_resource = load(Content.stages.pick_random()[1])
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
-			if get_tree().change_scene_to_file("res://scenes/VersusGame.tscn"):
-				push_error("game failed to load")
+			if training_mode:
+				if get_tree().change_scene_to_file("res://scenes/TrainingGame.tscn"):
+					push_error("game failed to load")
+			else:
+				if get_tree().change_scene_to_file("res://scenes/VersusGame.tscn"):
+					push_error("game failed to load")
 
 
 func build_texture(image: String, needsProcessing: bool = true) -> ImageTexture:
@@ -233,6 +238,12 @@ func try_load_c_select():
 
 
 func _on_PlayerVsPlayer_pressed() -> void:
+	training_mode = false
+	await transition_and_call(transitions[1], [$MenuButtons.hide, $Logo.hide, try_load_c_select])
+
+
+func _on_training_mode_pressed() -> void:
+	training_mode = true
 	await transition_and_call(transitions[1], [$MenuButtons.hide, $Logo.hide, try_load_c_select])
 
 
@@ -255,3 +266,4 @@ func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
 	await new_prompt.prompt_completed
 	new_prompt.queue_free()
 	$ControlPrompt.hide()
+

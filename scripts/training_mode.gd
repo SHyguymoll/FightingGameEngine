@@ -106,8 +106,8 @@ func generate_input_hud(buf : Dictionary, input_label : Label):
 		input_label.text += "\n"
 
 func build_input_tracker(p1_buf : Dictionary, p2_buf : Dictionary) -> void:
-	generate_input_hud(p1_buf, $HUD/P1Stats/Inputs)
-	generate_input_hud(p2_buf, $HUD/P2Stats/Inputs)
+	generate_input_hud(p1_buf, ui_p1_inputs)
+	generate_input_hud(p2_buf, ui_p2_inputs)
 
 
 func move_inputs(fake_inputs : bool):
