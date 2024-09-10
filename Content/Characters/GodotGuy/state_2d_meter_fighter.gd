@@ -49,8 +49,7 @@ const QUARTER_CIRCLE_BACK = [[2,1,4], [2,4]]
 # Referencing the Street Fighter 2 input
 const TIGER_KNEE_FORWARD = [[2,3,6,9]]
 const TIGER_KNEE_BACK = [[2,1,4,7]]
-const Z_MOTION_FORWARD = [
-	[6,2,3], #canonical
+const Z_MOTION_FORWARD = [[6,2,3], #canonical
 	[6,5,2,3], #forward then down
 	[6,2,3,6], #overshot a little
 	[6,3,2,3], #rolling method
@@ -59,23 +58,12 @@ const Z_MOTION_FORWARD = [
 	[6,5,4,1,2,3], #forward to one away from a half circle
 	[6,5,4,1,2,3,6], #forward to a half circle, maximumly lenient
 ]
-const Z_MOTION_BACK = [
-	[4,2,1],
-	[4,5,2,1],
-	[4,1,2,3],
-	[4,1,2,3,2,1],
-	[4,5,3,2,1],
-	[4,5,6,3,2,1],
-	[4,5,6,3,2,1,4],
+const Z_MOTION_BACK = [[4,2,1], [4,5,2,1], [4,1,2,3],
+	[4,1,2,3,2,1], [4,5,3,2,1], [4,5,6,3,2,1], [4,5,6,3,2,1,4],
 ]
 # Name is a reference to the common Guilty Gear Overdrive input of a half circle back to forward
-const GG_INPUT = [
-	[6,3,2,1,4,6],
-	[6,3,2,1,4,5,6],
-	[6,2,1,4,6],
-	[6,2,4,6],
-	[6,2,4,5,6],
-	[6,2,1,4,5,6],
+const GG_INPUT = [ [6,3,2,1,4,6], [6,3,2,1,4,5,6], [6,2,1,4,6],
+	[6,2,4,6], [6,2,4,5,6], [6,2,1,4,5,6],
 ]
 
 const GRABBED_OFFSET_X = 0.46
@@ -155,15 +143,9 @@ var aerial_vel : Vector3
 	"spin_approach": preload("scenes/hitboxes/special/spin_approach.tscn"),
 	"spin_approach_final": preload("scenes/hitboxes/special/spin_approach_final.tscn"),
 }
-@onready var projectiles = {
-	"basic": preload("scenes/ProjectileMoveStraight.tscn")
-}
-@onready var particles = {
-	"counter_hit": preload("scenes/particles/CounterHit.tscn")
-}
-@onready var game_instanced_sounds = {
-
-}
+@onready var projectiles = {"basic": preload("scenes/ProjectileMoveStraight.tscn")}
+@onready var particles = {"counter_hit": preload("scenes/particles/CounterHit.tscn")}
+@onready var game_instanced_sounds = {}
 
 var current_attack : String
 
