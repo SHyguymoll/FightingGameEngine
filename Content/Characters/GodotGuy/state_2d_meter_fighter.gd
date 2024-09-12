@@ -196,6 +196,7 @@ var grab_return_states := {
 # real-time effects, and _ready for initialization.
 func _ready():
 	reset_facing()
+	$DebugData.visible = get_parent().get_parent() is TrainingModeGame
 	$AnimationPlayer.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 	$AnimationPlayer.play(basic_anim_state_dict[current_state] +
 			($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
@@ -203,6 +204,8 @@ func _ready():
 
 func _process(_delta):
 	(ui_under_health as TextureProgressBar).value = meter
+	if not get_parent().get_parent() is TrainingModeGame:
+		return
 	$DebugData.text = """State: %s (Prev: %s)
 Vels: %s | %s | %s
 Stun: %s/%s
