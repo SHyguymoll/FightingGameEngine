@@ -600,8 +600,6 @@ func move_inputs(fake_inputs : bool):
 	if fake_inputs:
 		p1.inputs = p1_dummy_buffer
 		p2.inputs = p2_dummy_buffer
-		p1._input_step()
-		p2._input_step()
 		return
 	else:
 		hitbox_hitbox_collisions()
