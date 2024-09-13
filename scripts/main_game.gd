@@ -625,7 +625,6 @@ func move_inputs(fake_inputs : bool):
 				p2._on_block(p1_attacker.on_block)
 				GameGlobal.global_hitstop = int(p1_attacker.hitstop_block)
 			p1_attacker.queue_free()
-
 		var p2_attackers = (p2._return_attackers() as Array[Hitbox])
 		for p2_attacker in p2_attackers:
 			if p2_attacker.invalid:
@@ -656,15 +655,12 @@ func move_inputs(fake_inputs : bool):
 		p2.kback = Vector3(5, 5, 0)
 		grab_released(false)
 		pass
-
 	p1.inputs = slice_input_dictionary(
 			p1_inputs, max(0, p1_input_index - p1.input_buffer_len),
-			p1_input_index + 1
-	)
+			p1_input_index + 1)
 	p2.inputs = slice_input_dictionary(
 			p2_inputs, max(0, p2_input_index - p2.input_buffer_len),
-			p2_input_index + 1
-	)
+			p2_input_index + 1)
 
 
 func check_combos():

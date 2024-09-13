@@ -211,17 +211,9 @@ Vels: %s | %s | %s
 Stun: %s/%s
 Current Animation : %s
 Jumps: %s/%s
-""" % [
-		States.keys()[current_state],
-		States.keys()[previous_state],
-		ground_vel,
-		aerial_vel,
-		kback,
-		stun_time_current,
-		stun_time_start,
-		$AnimationPlayer.current_animation,
-		jump_count,
-		jump_total,
+""" % [States.keys()[current_state], States.keys()[previous_state],
+		ground_vel, aerial_vel, kback, stun_time_current, stun_time_start,
+		$AnimationPlayer.current_animation, jump_count, jump_total,
 	]
 	#if len(inputs.up) > 0:
 		#$DebugData.text += str(inputs_as_numpad()[0])
@@ -253,18 +245,14 @@ func handle_damage(attack : Hitbox, hit : bool, next_state : States, combo_count
 
 
 func choose_hurting_state(attack : Hitbox):
-	if (
-			attack.hitbox_flags & attack.HitboxFlags.HIT_GRAB or
-			attack.hitbox_flags & attack.HitboxFlags.CONNECT_GRAB
-		):
+	if (attack.hitbox_flags & attack.HitboxFlags.HIT_GRAB or
+		attack.hitbox_flags & attack.HitboxFlags.CONNECT_GRAB):
 		if attack.hitbox_flags & attack.HitboxFlags.UNBLOCK_INESCAP:
 			return States.HURT_GRB_NOBREAK
 		else:
 			return States.HURT_GRB
-	if (
-			attack.hitbox_flags & attack.HitboxFlags.END_GRAB or
-			attack.hitbox_flags & attack.HitboxFlags.BREAK_GRAB
-		):
+	if (attack.hitbox_flags & attack.HitboxFlags.END_GRAB or
+		attack.hitbox_flags & attack.HitboxFlags.BREAK_GRAB):
 		return States.HURT_FALL
 	if airborne() or attack.state_effect == attack.StateEffects.LAUNCHER:
 		if attack.hitbox_flags & attack.HitboxFlags.BLOCK_HIGH and not attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW:
@@ -310,7 +298,6 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 				emit_signal(&"grabbed", player)
 				handle_damage(attack, true, choose_hurting_state(attack), combo_count)
 				return true
-
 	# handling attacks
 	# autofail blocking if in following states:
 	# still in hitstun or just can't block or attack is unblockable
@@ -325,11 +312,9 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 		return true
 	# auto blocking attacks if already blocking
 	if blocking():
-		if (
-				airborne() or
-				attack.hitbox_flags & attack.HitboxFlags.BLOCK_HIGH and current_state == States.BLCK_HGH or
-				attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW and current_state == States.BLCK_LOW
-			):
+		if (airborne() or
+		attack.hitbox_flags & attack.HitboxFlags.BLOCK_HIGH and current_state == States.BLCK_HGH or
+		attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW and current_state == States.BLCK_LOW):
 			handle_damage(attack, false, current_state, combo_count)
 			return false
 	# manually blocking attacks
@@ -639,10 +624,6 @@ func set_state(new_state: States):
 		ticks_since_state_change = 0
 
 
-func ground_cancelled_attack_ended() -> bool:
-	return is_on_floor()
-
-
 func update_attack(new_attack: String) -> void:
 	current_attack = new_attack
 	animation_ended = false
@@ -651,35 +632,27 @@ func update_attack(new_attack: String) -> void:
 
 
 func any_atk_just_pressed():
-	return (
-			btn_just_pressed("button0") or
+	return (btn_just_pressed("button0") or
 			btn_just_pressed("button1") or
-			btn_just_pressed("button2")
-	)
+			btn_just_pressed("button2"))
 
 
 func all_atk_just_pressed():
-	return (
-			btn_just_pressed("button0") and
+	return (btn_just_pressed("button0") and
 			btn_just_pressed("button1") and
-			btn_just_pressed("button2")
-	)
+			btn_just_pressed("button2"))
 
 
 func two_atk_just_pressed():
-	return (
-			int(btn_just_pressed("button0")) +
+	return (int(btn_just_pressed("button0")) +
 			int(btn_just_pressed("button1")) +
-			int(btn_just_pressed("button2")) == 2
-	)
+			int(btn_just_pressed("button2")) == 2)
 
 
 func one_atk_just_pressed():
-	return (
-			int(btn_just_pressed("button0")) +
+	return (int(btn_just_pressed("button0")) +
 			int(btn_just_pressed("button1")) +
-			int(btn_just_pressed("button2")) == 1
-	)
+			int(btn_just_pressed("button2")) == 1)
 
 
 func try_super_attack(cur_state: States) -> States:
