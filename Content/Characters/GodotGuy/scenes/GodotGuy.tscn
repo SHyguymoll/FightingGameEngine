@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://bfr0auflihcnh" path="res://Content/Characters/GodotGuy/sounds/super_projectile_fire.wav" id="13_748ol"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
 [ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/velocity_affecting_anim_player.gd" id="16_7li7g"]
+[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/state_2d_anim_player.gd" id="16_7li7g"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
 
@@ -5588,20 +5588,19 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
-shape = ExtResource("3_8q5n8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.344, 0)
+shape = ExtResource("2_ahw0y")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(0.436192, 0, 0, 0, 0.436192, 0, 0, 0, 1, -0.548704, 0.298626, 0)
+transform = Transform3D(1, 0, 0, 0, 0.381826, 0, 0, 0, 1, 0, 0.275214, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.086, 0.592, 0.04)
-visible = false
+transform = Transform3D(0.371134, 0, 0, 0, 0.371134, 0, 0, 0, 1, 0.229072, 0.328669, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
