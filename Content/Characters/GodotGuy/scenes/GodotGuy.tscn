@@ -7,7 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://cx5hcekevi8v7" path="res://Content/Characters/GodotGuy/sounds/crouch_c_launch.wav" id="3_sx7kg"]
 [ext_resource type="PackedScene" uid="uid://bheinqfnk6wxk" path="res://Content/Characters/GodotGuy/scenes/SuperBarP2.tscn" id="3_yl6a6"]
 [ext_resource type="PackedScene" uid="uid://bjnhblqpyw7vp" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP1.tscn" id="4_m71sm"]
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/dupli_flipping_2d_animation_player.gd" id="5_e82io"]
+[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/dupe_2d_anim_player.gd" id="5_e82io"]
 [ext_resource type="PackedScene" uid="uid://deergjaym2msh" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP2.tscn" id="5_fjkep"]
 [ext_resource type="AudioStream" uid="uid://c2tgndwonbirx" path="res://Content/Characters/GodotGuy/sounds/step.wav" id="5_wtfc2"]
 [ext_resource type="PackedScene" uid="uid://byer6bjupb33k" path="res://Content/Characters/GodotGuy/scenes/Animated2DSuperFreeze.tscn" id="6_xkque"]
