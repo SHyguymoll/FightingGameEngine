@@ -85,10 +85,6 @@ var basic_anim_state_dict := {
 	States.OUTRO_LIE : "hurting/lying",
 }
 var animation_ended = true
-var move_left_anim : StringName = &"basic/walk_left"
-var move_right_anim : StringName = &"basic/walk_right"
-var dash_left_anim : StringName = &"basic/dash"
-var dash_right_anim : StringName = &"basic/dash"
 
 var walk_speed : float = 2
 var jump_total : float = 2
@@ -126,6 +122,8 @@ var aerial_vel : Vector3
 @onready var projectiles = {"basic": preload("scenes/ProjectileMoveStraight.tscn")}
 @onready var particles = {"counter_hit": preload("scenes/particles/CounterHit.tscn")}
 @onready var game_instanced_sounds = {}
+
+@onready var s_2d_anim_player : State2DAnimationPlayer = $AnimationPlayer
 
 var current_attack : String
 
@@ -177,9 +175,9 @@ var grab_return_states := {
 func _ready():
 	reset_facing()
 	$DebugData.visible = get_parent().get_parent() is TrainingModeGame
-	$AnimationPlayer.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
-	$AnimationPlayer.play(basic_anim_state_dict[current_state] +
-			($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
+	s_2d_anim_player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+	s_2d_anim_player.play(basic_anim_state_dict[current_state] +
+			(s_2d_anim_player.anim_right_suf if right_facing else s_2d_anim_player.anim_left_suf))
 
 
 func _process(_delta):
@@ -193,7 +191,7 @@ Current Animation : %s
 Jumps: %s/%s
 """ % [States.keys()[current_state], States.keys()[previous_state],
 		ground_vel, aerial_vel, kback, stun_time_current, stun_time_start,
-		$AnimationPlayer.current_animation, jump_count, jump_total,
+		s_2d_anim_player.current_animation, jump_count, jump_total,
 	]
 	#if len(inputs.up) > 0:
 		#$DebugData.text += str(inputs_as_numpad()[0])
@@ -348,7 +346,7 @@ func _action_step(dramatic_freeze : bool, delta : float):
 		update_character_state()
 		reset_facing()
 		ticks_since_state_change += 1
-		($AnimationPlayer as AnimationPlayer).advance(delta)
+		(s_2d_anim_player as AnimationPlayer).advance(delta)
 
 
 func _connect_hud_elements(training_mode : bool):
@@ -382,7 +380,7 @@ func _post_intro() -> bool:
 
 
 func _post_outro() -> bool:
-	return (current_state in [States.ROUND_WIN, States.SET_WIN] and not $AnimationPlayer.is_playing())
+	return (current_state in [States.ROUND_WIN, States.SET_WIN] and not s_2d_anim_player.is_playing())
 
 
 func _in_defeated_state() -> bool:
@@ -406,8 +404,8 @@ func _in_attacking_state() -> bool:
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if (anim_name
-			.trim_suffix($AnimationPlayer.anim_left_suf)
-			.trim_suffix($AnimationPlayer.anim_right_suf)) in (
+			.trim_suffix(s_2d_anim_player.anim_left_suf)
+			.trim_suffix(s_2d_anim_player.anim_right_suf)) in (
 					attack_return_states.keys() + grab_return_states.keys()):
 		animation_ended = true
 
@@ -572,7 +570,6 @@ func try_super_attack(cur_state: States) -> States:
 						update_attack("attack_super/projectile_air")
 						jump_count = 0
 						return States.ATCK_SUPR
-
 	return cur_state
 
 
@@ -615,28 +612,20 @@ func try_special_attack(cur_state: States) -> States:
 					if motion_input_check(MOTION_QCB) and one_atk_just_pressed():
 						update_attack("attack_motion/spin_approach")
 						return States.ATCK_MOTN
-
 	return cur_state
 
 
 func try_attack(cur_state: States) -> States:
-	if (
-			!btn_just_pressed("button0") and
-			!btn_just_pressed("button1") and
-			!btn_just_pressed("button2")
-	):
+	if (not btn_just_pressed("button0") and not btn_just_pressed("button1") and
+		not btn_just_pressed("button2")):
 		return cur_state
-
 	previous_state = cur_state
-
 	var super_attack = try_super_attack(cur_state)
 	if super_attack != cur_state:
 		return super_attack
-
 	var special_attack = try_special_attack(cur_state)
 	if special_attack != cur_state:
 		return special_attack
-
 	match current_state:
 		States.IDLE, States.WALK_F:
 			if two_atk_just_pressed():
@@ -684,9 +673,8 @@ func try_attack(cur_state: States) -> States:
 			if btn_just_pressed("button2"):
 				update_attack("attack_jumping/c")
 				return States.ATCK_JUMP
-
 	# how did we get here, something has gone terribly wrong
-	return States.INTRO
+	return previous_state
 
 
 func try_magic_series(level: int, cur_state: States) -> States:
@@ -701,13 +689,10 @@ func try_magic_series(level: int, cur_state: States) -> States:
 
 #returns -1 (walk away), 0 (neutral), and 1 (walk towards)
 func walk_value() -> int:
-	return (
-			(1 * int((btn_pressed("right") and right_facing) or
+	return ((1 * int((btn_pressed("right") and right_facing) or
 			(btn_pressed("left") and !right_facing))) +
 			(-1 * int((btn_pressed("left") and right_facing) or
-			(btn_pressed("right") and !right_facing))
-			)
-	)
+			(btn_pressed("right") and !right_facing))))
 
 
 func try_walk(exclude, cur_state: States) -> States:
@@ -726,11 +711,8 @@ func try_walk(exclude, cur_state: States) -> States:
 
 func try_dash(input: String, success_state: States, cur_state: States, cost := false) -> States:
 # we only need the last three inputs
-	var walks = [
-		btn_pressed_ind(input, -3),
-		btn_pressed_ind(input, -2),
-		btn_pressed_ind(input, -1),
-	]
+	var walks = [btn_pressed_ind(input, -3), btn_pressed_ind(input, -2),
+		btn_pressed_ind(input, -1)]
 	var count_frames = btn_state(input, -3)[0] + btn_state(input, -2)[0] + btn_state(input, -1)[0]
 	if walks == [true, false, true] and count_frames <= DASH_INPUT_LENIENCY and (
 			(not cost) or (cost and jump_count >= 0.5)):
@@ -751,7 +733,8 @@ func handle_input() -> void:
 	var decision : States = current_state
 	match current_state:
 # Priority order, from least to most:
-# Walk, Backdash, Dash, Crouch, Jump, Attack, Block/Hurt (handled elsewhere)
+# Walk, Backdash, Dash, Crouch, Jump, Attack
+# Blocking and Hurting is at the top but handled in _damage_step()
 		States.IDLE, States.WALK_B, States.WALK_F:
 			match current_state:
 				States.IDLE:
@@ -839,7 +822,6 @@ func handle_stand_stun():
 func handle_air_stun():
 	if stun_time_current > 0:
 		return
-
 	if is_on_floor():
 		var new_walk = try_walk(null, current_state)
 		set_state(new_walk)
@@ -922,15 +904,14 @@ func update_character_state():
 
 
 func resolve_state_transitions():
-	# complete jump bug fix
+	# jump bug patch
 	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT, States.DASH_A_F, States.DASH_A_B]:
 		previous_state = States.JUMP
-
 	match current_state:
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
 			set_state(States.ROUND_WIN)
 			return
-		States.INTRO when not $AnimationPlayer.is_playing():
+		States.INTRO when not s_2d_anim_player.is_playing():
 			set_state(States.IDLE)
 			previous_state = current_state
 		States.ROUND_WIN:
@@ -940,7 +921,7 @@ func resolve_state_transitions():
 			previous_state = current_state
 			set_state(States.SET_WIN)
 		States.GET_UP:
-			if not $AnimationPlayer.is_playing():
+			if not s_2d_anim_player.is_playing():
 				set_state(previous_state)
 		States.DASH_B, States.DASH_F when animation_ended:
 			set_state(States.IDLE)
@@ -990,8 +971,6 @@ func resolve_state_transitions():
 			set_state(States.ATCK_JUMP_IMP)
 		States.ATCK_CMND when attack_connected:
 			set_state(States.ATCK_CMND_IMP)
-		#States.ATCK_MOTN when attack_connected:
-			#set_state(States.ATCK_MOTN_IMP)
 		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
 			force_collisions = false
@@ -1011,43 +990,17 @@ func resolve_state_transitions():
 
 func update_character_animation():
 	if _in_attacking_state():
-		$AnimationPlayer.play(
-				current_attack + ($AnimationPlayer.anim_right_suf if right_facing
-						else $AnimationPlayer.anim_left_suf))
+		s_2d_anim_player.play(
+				current_attack + (s_2d_anim_player.anim_right_suf if right_facing
+						else s_2d_anim_player.anim_left_suf))
 	elif impact_state():
-		$AnimationPlayer.play(
-				current_attack + "_imp" + ($AnimationPlayer.anim_right_suf if right_facing
-						else $AnimationPlayer.anim_left_suf))
+		s_2d_anim_player.play(
+				current_attack + "_imp" + (s_2d_anim_player.anim_right_suf if right_facing
+						else s_2d_anim_player.anim_left_suf))
 	else:
-		match current_state:
-			States.WALK_F when right_facing:
-				$AnimationPlayer.play(move_right_anim)
-			States.WALK_F when !right_facing:
-				$AnimationPlayer.play(move_left_anim)
-			States.WALK_B when right_facing:
-				$AnimationPlayer.play(move_left_anim)
-			States.WALK_B when !right_facing:
-				$AnimationPlayer.play(move_right_anim)
-			States.DASH_F when right_facing:
-				$AnimationPlayer.play(dash_right_anim)
-			States.DASH_F when !right_facing:
-				$AnimationPlayer.play(dash_left_anim)
-			States.DASH_B when right_facing:
-				$AnimationPlayer.play(dash_left_anim)
-			States.DASH_B when !right_facing:
-				$AnimationPlayer.play(dash_right_anim)
-			States.DASH_A_F when right_facing:
-				$AnimationPlayer.play(dash_right_anim)
-			States.DASH_A_F when !right_facing:
-				$AnimationPlayer.play(dash_left_anim)
-			States.DASH_A_B when right_facing:
-				$AnimationPlayer.play(dash_left_anim)
-			States.DASH_A_B when !right_facing:
-				$AnimationPlayer.play(dash_right_anim)
-			_:
-				$AnimationPlayer.play(basic_anim_state_dict[current_state] + ($AnimationPlayer.anim_right_suf if right_facing else $AnimationPlayer.anim_left_suf))
+		s_2d_anim_player.update_animation()
 	# Update animation immediately for manual processing mode
-	($AnimationPlayer as AnimationPlayer).advance(0)
+	s_2d_anim_player.advance(0)
 
 
 func reset_facing():
