@@ -5389,6 +5389,7 @@ JUST_PRESSED_BUFFER = 2
 start_x_offset = 2.0
 grabbed_offset = Vector3(-0.46, -0.87, 0)
 grab_point = NodePath("Grabbing")
+mtn_input_lenience = 12
 command_list = Array[String](["Dash|66/44j|A short burst of speed forwards or backwards.", "Forward Throw|BABA|Grab which bounces the opponent up and forward.", "Backward Throw|4BABA|Grab which bounces the opponent up and forward, while turning around.", "Projectile|236BAj|Throws a moderate speed projectile attack. When airborne, also pops the fighter up slightly.", "Uppercut|623BA|A jumping uppercut, with an invincible wakeup.", "Spin Approach|214BAj|An approaching, hovering attack which hits multiple times. When used in the air, it becomes weaker, but faster.", "Super Projectile|632146BA|Throws a fast trio of projectiles. Costs 50 Super Meter to perform.", "Aerial Super Projectile|632146BAJ|Throws 8 slow moving, launching projectiles. Costs 50 Super Meter to perform."])
 char_name = "Godot Guy"
 win_quote = "godot 👍"

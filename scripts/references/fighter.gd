@@ -1,9 +1,9 @@
 class_name Fighter
 extends CharacterBody3D
 
-## The most basic requirements for a valid fighter in OFGE. Please extend off of this class.
+## Common requirements for a valid fighter in OFGE. Please extend off of this class.
 ##
-## This script holds the main components of a Fighter.[br]
+## This script holds the main components of a Fighter, as well as some extra helpers.[br]
 ## A Fighter has several variables and methods which are accessed and called by the game.[br]
 ## _damage_step() is called per each overlapping hitbox before handling inputs,
 ## with the details of the attack.[br]
@@ -31,9 +31,51 @@ signal dramatic_freeze_created
 ## This signal is fired when the Fighter is defeated.
 signal defeated
 
+# the motion input stuff is here to make the documentation render correctly.
 ## Infinite Stun constant, just -1.
-## Avoid using infinite stun unless you are ABSOLUTELY SURE that it is applicable.
+## Avoid using infinite stun unless you are ABSOLUTELY SURE that it is applicable.[br]
+## --------------------------------------------------------------------------------[br]
+## Motion inputs, with some leniency built in, for usage in [method motion_input_check].[br]
+## For more specific inputs, I recommend following the naming convention shown here.
 const INFINITE_STUN := -1
+
+## Quarter Circle Forward.
+const MOTION_QCF = [[2,3,6], [2,6]]
+
+## Quarter Circle Back.
+const MOTION_QCB = [[2,1,4], [2,4]]
+
+## Quarter Circle Forward and then Up+Forward.[br]
+## The name is a reference to the Street Fighter 2 input [url]https://glossary.infil.net/?t=Tiger%20Knee[/url].
+const MOTION_TKF = [[2,3,6,9]]
+## Quarter Circle Back and then Up+Back.
+
+const MOTION_TKB = [[2,1,4,7]]
+
+## Forward, then Down, then Down+Forward.[br]
+## Due to the nature of this input, multiple cases have been included for brevity and lenience.
+const MOTION_ZFORWARD = [[6,2,3], #canonical
+	[6,5,2,3], #forward then down
+	[6,2,3,6], #overshot a little
+	[6,3,2,3], #rolling method
+	[6,3,2,1,2,3], #super rolling method
+	[6,5,1,2,3], #forward to two away from a half circle
+	[6,5,4,1,2,3], #forward to one away from a half circle
+	[6,5,4,1,2,3,6], #forward to a half circle, maximumly lenient
+]
+
+## Back, then Down, then Down+Back.
+const MOTION_ZBACK = [[4,2,1], [4,5,2,1], [4,1,2,3],
+	[4,1,2,3,2,1], [4,5,3,2,1], [4,5,6,3,2,1], [4,5,6,3,2,1,4],
+]
+
+## Half Circle Forward.
+## NOTE: This input may overlay with [member MOTION_ZFORWARD]. Make sure to check between the two.
+const MOTION_HCF = [[4,2,6], [4,2,3,6], [4,1,2,6], [4,1,2,3,6]]
+
+## Half Circle Back.
+## NOTE: This input may overlay with [member MOTION_ZBACK]. Make sure to check between the two.
+const MOTION_HCB = [[6,2,4], [6,3,2,4], [6,2,1,4], [6,3,2,1,4]]
 
 @export_category("Gameplay Details")
 ## The number of buttons that the Fighter uses. Can be any number from 0 to 6.
@@ -47,6 +89,8 @@ const INFINITE_STUN := -1
 @export var grabbed_offset : Vector3
 ## A reference to the Fighter's GrabPoint node, used for when the Fighter grabs the opponent.
 @export var grab_point : GrabPoint
+## The number of frames in which a direction in a motion input can be held.
+@export var mtn_input_lenience : int
 ## An array of commands that the Fighter has. Use for listing attacks, special details, etc. [br]
 ## Format: <Command Name>|[Command Input]|[Command Description][br]
 ## Command Input Details: Directions are rendered with numpad notation. Multiple inputs for the
@@ -58,6 +102,9 @@ const INFINITE_STUN := -1
 ## on-the-ground opponents, etc.)[br]
 ## The Command Description uses a RichTextLabel, so BBCode is supported.
 @export var command_list : Array[String]
+
+## Used when the Fighter has a facing direction, can be pinned to a value if not necessary.
+var right_facing : bool
 
 @export_category("Fighter Details")
 ## The name of the Fighter. Supports Unicode.
@@ -145,6 +192,12 @@ var inputs
 var hitbox_layer : int
 ## [color=red] DO NOT TOUCH. [/color] Set by [method _update_paused] when the game pausees/unpauses.
 var paused := false
+
+## Walking across the screen (referred to as the x direction)
+enum WalkingX {BACK = -1, NEUTRAL = 0, FORWARD = 1}
+
+## Walking into/out of the screen (referred to as the z direction)
+enum WalkingZ {IN = 1, NEUTRAL = 0, OUT = 1}
 
 ## The knockback applied to a Fighter. Typically set by hitboxes through [member Hitbox.hitstop_hit]
 ## and [member Hitbox.hitstop_block] during [method _damage_step],
@@ -304,3 +357,62 @@ func btn_pressed_ind_under_time(input: String, ind: int, duration: int) -> bool:
 ## Otherwise, it will always return False.
 func btn_held_over_time(input: String, duration: int) -> bool:
 	return btn_state(input, -1)[0] >= duration and btn_pressed(input)
+
+## Returns the currently held joystick input as a simple number between 1 and 9:[br]
+## 7 (up + back) 8 (up) 9 (up + forward)[br]
+## 4 (back) 5 (neutral) 6 (forward)[br]
+## 1 (down + back) 2 (down) 3 (down + forward)[br]
+## Also known as Numpad Notation.
+func directions_as_numpad(up, down, back, forward) -> int:
+	if up:
+		if back and right_facing or forward and not right_facing:
+			return 7
+		if forward and right_facing or back and not right_facing:
+			return 9
+		return 8
+	if down:
+		if back and right_facing or forward and not right_facing:
+			return 1
+		if forward and right_facing or back and not right_facing:
+			return 3
+		return 2
+	if back and right_facing or forward and not right_facing:
+		return 4
+	if forward and right_facing or back and not right_facing:
+		return 6
+	return 5
+
+## Returns the input variable as an array of ints between 1 and 9.[br]
+## if timing is true, this also uses mtn_input_lenience to introduce lenience.
+func inputs_as_numpad(timing := true) -> Array:
+	var numpad_buffer = []
+	for i in range(max(0, len(inputs.up) - 2)):
+		numpad_buffer.append(directions_as_numpad(btn_pressed_ind("up", i),
+			btn_pressed_ind("down", i),
+			btn_pressed_ind("left", i),
+			btn_pressed_ind("right", i)))
+	if max(0, len(inputs.up) - 2) == 0:
+		return [5]
+	if timing:
+		numpad_buffer.append(directions_as_numpad(
+			btn_pressed_ind_under_time("up", -2, mtn_input_lenience),
+			btn_pressed_ind_under_time("down", -2, mtn_input_lenience),
+			btn_pressed_ind_under_time("left", -2, mtn_input_lenience),
+			btn_pressed_ind_under_time("right", -2, mtn_input_lenience)))
+	else:
+		numpad_buffer.append(directions_as_numpad(btn_pressed_ind("up", -2),
+			btn_pressed_ind("down", -2),
+			btn_pressed_ind("left", -2),
+			btn_pressed_ind("right", -2)))
+	return numpad_buffer
+
+## Checks if an attempted motion string is valid.[br]
+## Relies on the stored joystick values in input.
+func motion_input_check(motions_to_check) -> bool:
+	var buffer_as_numpad = inputs_as_numpad()
+	for motion_to_check in motions_to_check:
+		var buffer_sliced = buffer_as_numpad.slice(
+			len(buffer_as_numpad) - len(motion_to_check))
+		if buffer_sliced == motion_to_check:
+			return true
+	return false

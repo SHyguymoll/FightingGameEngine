@@ -5,15 +5,12 @@ extends Fighter
 ##
 ## This is an example of a fighter that someone could make in my engine.[br]
 ## This Fighter implements the following gameplay features:[br]
-## [b]2D Movement[/b]: walking and jumping forwards and backwards on the X-axis.[br]
 ## [b]Normal Attacks[/b]: Attack Buttons 0, 1 and 2 (from hereon A, B and C) perform simple attacks.[br]
 ## [b]Command Attacks[/b]: Pressing an attack button with a direction will perform a command attack.[br]
-## [b]Motion Attacks[/b]:  Pressing any attack button after performing a motion with the direction keys will
-## perform a special attack or super attack.[br]
 ## [b]Grounded Dashing and Aerial Dashing[/b]: Double tap left or right for a burst of speed.[br]
 ## [b]Jump-Cancelling[/b]: During the impact frames of an attack, the fighter can jump.[br]
-## [b]The Magic Series[/b]: During the impact frames of an attack, a stronger attack can be used for combos
-## and blockstrings. [br]
+## [b]The Magic Series[/b]: During the impact frames of an attack,
+## a stronger attack can be used for combos and blockstrings. [br]
 ## Grab Breaks: When grabbed, the grab can be broken by inputting a grab within 5 frames. This will reset
 ## both fighters to a neutral state.[br]
 ## [b]Special Cancelling[/b]: During the impact frames of a normal attack, a special attack can be used.[br]
@@ -38,41 +35,34 @@ enum States {
 	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE # The final stage of not handling it
 }
 
-enum WalkDirections {BACK = -1, NEUTRAL = 0, FORWARD = 1}
-
 const JUMP_SQUAT_LENGTH = 4
 const DASH_INPUT_LENIENCY : int = 10
-const MOTION_INPUT_LENIENCY : int = 12
-# motion inputs, with some leniency
-const QUARTER_CIRCLE_FORWARD = [[2,3,6], [2,6]]
-const QUARTER_CIRCLE_BACK = [[2,1,4], [2,4]]
-# Referencing the Street Fighter 2 input
-const TIGER_KNEE_FORWARD = [[2,3,6,9]]
-const TIGER_KNEE_BACK = [[2,1,4,7]]
-const Z_MOTION_FORWARD = [[6,2,3], #canonical
-	[6,5,2,3], #forward then down
-	[6,2,3,6], #overshot a little
-	[6,3,2,3], #rolling method
-	[6,3,2,1,2,3], #super rolling method
-	[6,5,1,2,3], #forward to two away from a half circle
-	[6,5,4,1,2,3], #forward to one away from a half circle
-	[6,5,4,1,2,3,6], #forward to a half circle, maximumly lenient
-]
-const Z_MOTION_BACK = [[4,2,1], [4,5,2,1], [4,1,2,3],
-	[4,1,2,3,2,1], [4,5,3,2,1], [4,5,6,3,2,1], [4,5,6,3,2,1,4],
-]
-# Name is a reference to the common Guilty Gear Overdrive input of a half circle back to forward
-const GG_INPUT = [ [6,3,2,1,4,6], [6,3,2,1,4,5,6], [6,2,1,4,6],
+const GRABBED_OFFSET_X = 0.46
+
+## Half Circle Back, then Forward. [br]
+## The name is a reference to the common Guilty Gear Overdrive input.
+const MOTION_GG = [ [6,3,2,1,4,6], [6,3,2,1,4,5,6], [6,2,1,4,6],
 	[6,2,4,6], [6,2,4,5,6], [6,2,1,4,5,6],
 ]
 
-const GRABBED_OFFSET_X = 0.46
+## Used as a reference for handling blocking attacks.[br]
+## block rule arrays: [up, down, away, towards][br]
+## 1 means must hold, 0 means ignored, -1 means must not hold.
+var block : Dictionary = {
+	away_any = [0, 0, 1, -1],
+	away_high = [0, -1, 1, -1],
+	away_low = [-1, 1, 1, -1],
+	nope = [-1, -1. -1, -1],
+}
 
 var current_state: States = States.IDLE
 var previous_state : States
 var ticks_since_state_change : int = 0
 var force_airborne := false
 var force_collisions := false
+
+## Holds the results of a move_and_slide() call when the Fighter collides with another Fighter.
+var check_true : bool # Used to remember results of move_and_slide()
 
 var basic_anim_state_dict := {
 	States.INTRO : "other/intro",
@@ -110,17 +100,7 @@ var meter : float = 0
 var METER_MAX : float = 100
 var damage_mult : float = 1.0
 var defense_mult : float = 1.0
-## block rule arrays: [up, down, away, towards]
-## 1 means must hold, 0 means ignored, -1 means must not hold
-var block : Dictionary = {
-	away_any = [0, 0, 1, -1],
-	away_high = [0, -1, 1, -1],
-	away_low = [-1, 1, 1, -1],
-	nope = [-1, -1. -1, -1],
-}
 
-var check_true : bool # Used to remember results of move_and_slide()
-var right_facing : bool
 var jump_count : float = 0
 
 var ground_vel : Vector3
@@ -374,7 +354,7 @@ func _action_step(dramatic_freeze : bool, delta : float):
 func _connect_hud_elements(training_mode : bool):
 	if training_mode:
 		(ui_training.get_node("HSlider") as HSlider).value_changed.connect(training_mode_set_meter)
-		(ui_training.get_node("Label") as Label).text = States.keys()[current_state]
+		(ui_training.get_node("Label") as Label).text = (States.keys() as Array[String])[current_state]
 		if "attack" in (ui_training.get_node("Label") as Label).text:
 			(ui_training.get_node("Label") as Label).text += " : " + current_attack
 
@@ -658,12 +638,12 @@ func one_atk_just_pressed():
 func try_super_attack(cur_state: States) -> States:
 	match current_state:
 		States.IDLE, States.WALK_B, States.WALK_F, States.DASH_F, States.DASH_B:
-			if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
+			if motion_input_check(MOTION_GG) and one_atk_just_pressed() and meter >= 50:
 				meter -= 50
 				update_attack("attack_super/projectile")
 				return States.ATCK_SUPR
 		States.JUMP, States.DASH_A_F, States.DASH_A_B:
-			if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
+			if motion_input_check(MOTION_GG) and one_atk_just_pressed() and meter >= 50:
 				meter -= 50
 				update_attack("attack_super/projectile_air")
 				jump_count = 0
@@ -671,7 +651,7 @@ func try_super_attack(cur_state: States) -> States:
 		States.ATCK_MOTN:
 			match current_attack:
 				"attack_motion/uppercut", "attack_motion/spin_approach", "attack_motion/spin_approach_air":
-					if motion_input_check(GG_INPUT) and one_atk_just_pressed() and meter >= 50:
+					if motion_input_check(MOTION_GG) and one_atk_just_pressed() and meter >= 50:
 						meter -= 50
 						update_attack("attack_super/projectile_air")
 						jump_count = 0
@@ -684,39 +664,39 @@ func try_special_attack(cur_state: States) -> States:
 	match current_state:
 		States.IDLE, States.WALK_B, States.WALK_F, States.ATCK_NRML, States.DASH_F, States.DASH_B:
 			# check z_motion first since there's a lot of overlap with quarter_circle in some cases
-			if motion_input_check(Z_MOTION_FORWARD) and one_atk_just_pressed():
+			if motion_input_check(MOTION_ZFORWARD) and one_atk_just_pressed():
 				update_attack("attack_motion/uppercut")
 				jump_count = 0
 				return States.ATCK_MOTN
-			if motion_input_check(QUARTER_CIRCLE_FORWARD) and one_atk_just_pressed():
+			if motion_input_check(MOTION_QCF) and one_atk_just_pressed():
 				update_attack("attack_motion/projectile")
 				return States.ATCK_MOTN
-			if motion_input_check(QUARTER_CIRCLE_BACK) and one_atk_just_pressed():
+			if motion_input_check(MOTION_QCB) and one_atk_just_pressed():
 				update_attack("attack_motion/spin_approach")
 				return States.ATCK_MOTN
 		States.CRCH:
-			if motion_input_check(Z_MOTION_FORWARD) and one_atk_just_pressed():
+			if motion_input_check(MOTION_ZFORWARD) and one_atk_just_pressed():
 				update_attack("attack_motion/uppercut")
 				jump_count = 0
 				return States.ATCK_MOTN
 		States.JUMP, States.DASH_A_F, States.DASH_A_B:
-			if (motion_input_check(QUARTER_CIRCLE_FORWARD + TIGER_KNEE_FORWARD) and
+			if (motion_input_check(MOTION_QCF + MOTION_TKF) and
 					one_atk_just_pressed()):
 				update_attack("attack_motion/projectile_air")
 				jump_count = 0
 				return States.ATCK_MOTN
-			if (motion_input_check(QUARTER_CIRCLE_BACK + TIGER_KNEE_BACK) and
+			if (motion_input_check(MOTION_QCB + MOTION_TKB) and
 					one_atk_just_pressed()):
 				update_attack("attack_motion/spin_approach_air")
 				return States.ATCK_MOTN
 		States.ATCK_NRML:
 			match current_attack:
 				"attack_normal/c", "attack_command/crouch_c":
-					if motion_input_check(Z_MOTION_FORWARD) and one_atk_just_pressed():
+					if motion_input_check(MOTION_ZFORWARD) and one_atk_just_pressed():
 						update_attack("attack_motion/uppercut")
 						jump_count = 0
 						return States.ATCK_MOTN
-					if motion_input_check(QUARTER_CIRCLE_BACK) and one_atk_just_pressed():
+					if motion_input_check(MOTION_QCB) and one_atk_just_pressed():
 						update_attack("attack_motion/spin_approach")
 						return States.ATCK_MOTN
 
@@ -816,17 +796,15 @@ func walk_value() -> int:
 
 func try_walk(exclude, cur_state: States) -> States:
 	var walk = walk_value()
-
 	if walk != exclude:
 		match walk:
-			WalkDirections.FORWARD:
+			WalkingX.FORWARD:
 				return States.WALK_F
-			WalkDirections.NEUTRAL:
+			WalkingX.NEUTRAL:
 				return States.IDLE
-			WalkDirections.BACK:
+			WalkingX.BACK:
 				if distance < 5:
 					return States.WALK_B
-
 	return cur_state
 
 
@@ -853,75 +831,6 @@ func try_jump(cur_state: States, grounded := true) -> States:
 	return cur_state
 
 
-func directions_as_numpad(up, down, back, forward) -> int:
-	if up:
-		if back and right_facing or forward and not right_facing:
-			return 7
-		if forward and right_facing or back and not right_facing:
-			return 9
-		return 8
-	if down:
-		if back and right_facing or forward and not right_facing:
-			return 1
-		if forward and right_facing or back and not right_facing:
-			return 3
-		return 2
-	if back and right_facing or forward and not right_facing:
-		return 4
-	if forward and right_facing or back and not right_facing:
-		return 6
-	return 5
-
-
-func inputs_as_numpad(timing := true) -> Array:
-	var numpad_buffer = []
-
-	for i in range(max(0, len(inputs.up) - 2)):
-		numpad_buffer.append(
-			directions_as_numpad(
-					btn_pressed_ind("up", i),
-					btn_pressed_ind("down", i),
-					btn_pressed_ind("left", i),
-					btn_pressed_ind("right", i)
-			)
-		)
-
-	if max(0, len(inputs.up) - 2) == 0:
-		return [5]
-
-	if timing:
-		numpad_buffer.append(
-			directions_as_numpad(
-					btn_pressed_ind_under_time("up", -2, MOTION_INPUT_LENIENCY),
-					btn_pressed_ind_under_time("down", -2, MOTION_INPUT_LENIENCY),
-					btn_pressed_ind_under_time("left", -2, MOTION_INPUT_LENIENCY),
-					btn_pressed_ind_under_time("right", -2, MOTION_INPUT_LENIENCY)
-			)
-		)
-	else:
-		numpad_buffer.append(
-			directions_as_numpad(
-					btn_pressed_ind("up", -2),
-					btn_pressed_ind("down", -2),
-					btn_pressed_ind("left", -2),
-					btn_pressed_ind("right", -2)
-			)
-		)
-
-	return numpad_buffer
-
-
-func motion_input_check(motions_to_check) -> bool:
-	var buffer_as_numpad = inputs_as_numpad()
-
-	for motion_to_check in motions_to_check:
-		var buffer_sliced = buffer_as_numpad.slice(len(buffer_as_numpad) - len(motion_to_check))
-		if buffer_sliced == motion_to_check:
-			return true
-
-	return false
-
-
 func handle_input() -> void:
 	var decision : States = current_state
 	match current_state:
@@ -930,7 +839,7 @@ func handle_input() -> void:
 		States.IDLE, States.WALK_B, States.WALK_F:
 			match current_state:
 				States.IDLE:
-					decision = try_walk(WalkDirections.NEUTRAL, decision)
+					decision = try_walk(WalkingX.NEUTRAL, decision)
 					if len(inputs.up) > 3:
 						if right_facing:
 							decision = try_dash("left", States.DASH_B, decision)
@@ -939,9 +848,9 @@ func handle_input() -> void:
 							decision = try_dash("left", States.DASH_F, decision)
 							decision = try_dash("right", States.DASH_B, decision)
 				States.WALK_B:
-					decision = try_walk(WalkDirections.BACK, decision)
+					decision = try_walk(WalkingX.BACK, decision)
 				States.WALK_F:
-					decision = try_walk(WalkDirections.FORWARD, decision)
+					decision = try_walk(WalkingX.FORWARD, decision)
 			decision = States.CRCH if btn_pressed("down") else decision
 			decision = try_jump(decision)
 			decision = try_attack(decision)
