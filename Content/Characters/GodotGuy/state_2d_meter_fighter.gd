@@ -368,7 +368,7 @@ func _return_attackers() -> Array[Hitbox]:
 # This is called when a hitbox makes contact with the other fighter,
 # after resolving that the fighter was hit by the attack.
 # An Array is passed for maximum customizability.
-# For this fighter, the on_hit and on_block arrays stores only the meter_gain, a float.
+# For this fighter, the on_hit and on_block arrays stores only a float for meter.
 func _on_hit(on_hit_data : Array):
 	add_meter(on_hit_data[0])
 
@@ -428,18 +428,13 @@ func training_mode_set_meter(val):
 
 
 func impact_state() -> bool:
-	return current_state in [
-		States.ATCK_NRML_IMP,
-		States.ATCK_JUMP_IMP,
-		States.ATCK_CMND_IMP,
-		States.ATCK_MOTN_IMP,
-	]
+	return current_state in [States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP,
+		States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP]
 
 
 func airborne() -> bool:
-	return current_state in [
-		States.JUMP, States.JUMP_NO_ACT, States.JUMP_AIR_INIT,
-		States.DASH_A_B, States.DASH_A_F,
+	return current_state in [States.JUMP, States.JUMP_NO_ACT,
+		States.JUMP_AIR_INIT, States.DASH_A_B, States.DASH_A_F,
 		States.ATCK_JUMP, States.ATCK_JUMP_IMP, States.BLCK_AIR,
 		States.HURT_BNCE, States.HURT_FALL, States.OUTRO_BNCE, States.OUTRO_FALL
 	] or force_airborne
@@ -450,90 +445,12 @@ func crouching() -> bool:
 
 
 func dashing() -> bool:
-	return current_state in [States.DASH_B, States.DASH_F, States.DASH_A_B, States.DASH_A_F]
+	return current_state in [States.DASH_B, States.DASH_F,
+		States.DASH_A_B, States.DASH_A_F]
 
 
 func blocking() -> bool:
 	return current_state in [States.BLCK_AIR, States.BLCK_HGH, States.BLCK_LOW]
-
-
-# Functions used by the AnimationPlayer to perform actions within animations
-func add_grd_vel(vel : Vector3):
-	if not right_facing:
-		vel.x *= -1
-	ground_vel += vel
-
-
-func add_air_vel(vel : Vector3):
-	if not right_facing:
-		vel.x *= -1
-	aerial_vel += vel
-
-
-func set_grd_vel(vel : Vector3):
-	if not right_facing:
-		vel.x *= -1
-	ground_vel = vel
-
-
-func set_air_vel(vel : Vector3):
-	if not right_facing:
-		vel.x *= -1
-	aerial_vel = vel
-
-
-func set_x_grd_vel(val : float):
-	if not right_facing:
-		val *= -1
-	ground_vel.x = val
-
-
-func set_x_air_vel(val : float):
-	if not right_facing:
-		val *= -1
-	aerial_vel.x = val
-
-
-func set_y_grd_vel(val : float):
-	ground_vel.y = val
-
-
-func set_y_air_vel(val : float):
-	aerial_vel.y = val
-
-
-func expediate_grd_vel(vel : Vector3):
-	vel.x = abs(vel.x)
-	if ground_vel.x < 0:
-		ground_vel.x -= vel.x
-	elif ground_vel.x > 0:
-		ground_vel.x += vel.x
-	else:
-		if right_facing:
-			ground_vel.x += vel.x
-		else:
-			ground_vel.x -= vel.x
-	if ground_vel.y < 0:
-		ground_vel.y -= vel.y
-	else:
-		ground_vel.y += vel.y
-
-
-func expediate_air_vel(vel : Vector3):
-	vel.x = abs(vel.x)
-	if aerial_vel.x < 0:
-		aerial_vel.x -= vel.x
-	elif aerial_vel.x > 0:
-		aerial_vel.x += vel.x
-	else:
-		if right_facing:
-			aerial_vel.x += vel.x
-		else:
-			aerial_vel.x -= vel.x
-	if aerial_vel.y < 0:
-		aerial_vel.y -= vel.y
-	else:
-		aerial_vel.y += vel.y
 
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
@@ -595,7 +512,6 @@ func set_airborne():
 
 func set_collisions():
 	force_collisions = true
-####################################################################################################
 
 func set_state(new_state: States):
 	if current_state != new_state:

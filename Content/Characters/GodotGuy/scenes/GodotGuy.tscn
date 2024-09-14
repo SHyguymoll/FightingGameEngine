@@ -7,7 +7,6 @@
 [ext_resource type="AudioStream" uid="uid://cx5hcekevi8v7" path="res://Content/Characters/GodotGuy/sounds/crouch_c_launch.wav" id="3_sx7kg"]
 [ext_resource type="PackedScene" uid="uid://bheinqfnk6wxk" path="res://Content/Characters/GodotGuy/scenes/SuperBarP2.tscn" id="3_yl6a6"]
 [ext_resource type="PackedScene" uid="uid://bjnhblqpyw7vp" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP1.tscn" id="4_m71sm"]
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/dupe_2d_anim_player.gd" id="5_e82io"]
 [ext_resource type="PackedScene" uid="uid://deergjaym2msh" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP2.tscn" id="5_fjkep"]
 [ext_resource type="AudioStream" uid="uid://c2tgndwonbirx" path="res://Content/Characters/GodotGuy/sounds/step.wav" id="5_wtfc2"]
 [ext_resource type="PackedScene" uid="uid://byer6bjupb33k" path="res://Content/Characters/GodotGuy/scenes/Animated2DSuperFreeze.tscn" id="6_xkque"]
@@ -18,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://bfr0auflihcnh" path="res://Content/Characters/GodotGuy/sounds/super_projectile_fire.wav" id="13_748ol"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
 [ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
+[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/velocity_affecting_anim_player.gd" id="16_7li7g"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
 
@@ -655,17 +655,28 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.1837, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0.25),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.931, 1.279, 0), "crouch_c"],
+"method": &"create_hitbox"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0, 0.1837),
+"transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [Vector3(-2, 0, 0)],
 "method": &"set_grd_vel"
 }, {
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.931, 1.279, 0), "crouch_c"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -1591,14 +1602,25 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.3173),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.3173),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.875549, 0.685474, 0.04), "basic", 0],
+"method": &"create_projectile"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.875549, 0.685474, 0.04), "basic", 0],
-"method": &"create_projectile"
 }]
 }
 
@@ -1737,14 +1759,11 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.0167, 0.0334, 0.0666668, 0.133334, 0.216667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0334, 0.0666668, 0.133334, 0.216667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
 "args": [],
 "method": &"set_airborne"
-}, {
-"args": [Vector3(3, 0, 0)],
-"method": &"expediate_air_vel"
 }, {
 "args": [],
 "method": &"set_collisions"
@@ -1757,6 +1776,20 @@ tracks/13/keys = {
 }, {
 "args": [Vector3(1.28335, 0.49879, 0), "spin_approach"],
 "method": &"create_hitbox"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0.0167),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(3, 0, 0)],
+"method": &"expediate_air_vel"
 }]
 }
 
@@ -1907,20 +1940,14 @@ tracks/14/path = NodePath("..")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
-"times": PackedFloat32Array(0, 0.0167, 0.0334, 0.0835, 0.133334, 0.266667, 0.400001, 0.533334, 0.666668),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0334, 0.133334, 0.266667, 0.400001, 0.533334, 0.666668),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [],
 "method": &"set_airborne"
 }, {
-"args": [Vector3(3, 6, 0)],
-"method": &"set_air_vel"
-}, {
 "args": [],
 "method": &"set_collisions"
-}, {
-"args": [0.0],
-"method": &"set_y_air_vel"
 }, {
 "args": [Vector3(1.28335, 0.49879, 0), "spin_approach"],
 "method": &"create_hitbox"
@@ -1936,6 +1963,23 @@ tracks/14/keys = {
 }, {
 "args": [Vector3(1.28335, 0.49879, 0), "spin_approach_final"],
 "method": &"create_hitbox"
+}]
+}
+tracks/15/type = "method"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("../AnimationPlayer")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0.0167, 0.0835),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [Vector3(3, 6, 0)],
+"method": &"set_air_vel"
+}, {
+"args": [0.0],
+"method": &"set_y_air_vel"
 }]
 }
 
@@ -2064,23 +2108,34 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.2338, 0.2505, 0.333334),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0.0166667, 0.2338, 0.333334),
+"transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0)],
-"method": &"set_air_vel"
-}, {
 "args": [5.0],
 "method": &"add_meter"
 }, {
 "args": [],
 "method": &"set_airborne"
 }, {
-"args": [10.0],
-"method": &"set_y_air_vel"
-}, {
 "args": [Vector3(0.580425, 0.683781, 0), "uppercut"],
 "method": &"create_hitbox"
+}]
+}
+tracks/13/type = "method"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AnimationPlayer")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 0.2505),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [Vector3(0, 0, 0)],
+"method": &"set_air_vel"
+}, {
+"args": [10.0],
+"method": &"set_y_air_vel"
 }]
 }
 
@@ -2282,14 +2337,25 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.0333334),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.0333334),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.137, 0.782, 0), "stand_a"],
+"method": &"create_hitbox"
+}]
+}
+tracks/13/type = "method"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AnimationPlayer")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.137, 0.782, 0), "stand_a"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -2459,14 +2525,25 @@ tracks/10/path = NodePath("..")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
-"times": PackedFloat32Array(0, 0.116667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.116667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(1.409, 0.561, 0), "stand_b"],
+"method": &"create_hitbox"
+}]
+}
+tracks/11/type = "method"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("../AnimationPlayer")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(1.409, 0.561, 0), "stand_b"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -2671,14 +2748,25 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.166667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.705, 0.92, 0), "stand_c"],
+"method": &"create_hitbox"
+}]
+}
+tracks/13/type = "method"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AnimationPlayer")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.705, 0.92, 0), "stand_c"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -2954,14 +3042,25 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.0666668),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.0666668),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.705, 0.92, 0), "grab"],
+"method": &"create_hitbox"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.705, 0.92, 0), "grab"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -3237,14 +3336,25 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.0668),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.0668),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0.705, 0.92, 0), "grab"],
+"method": &"create_hitbox"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
-}, {
-"args": [Vector3(0.705, 0.92, 0), "grab"],
-"method": &"create_hitbox"
 }]
 }
 
@@ -3510,14 +3620,11 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.0835, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.0835, 0.233334, 0.2505, 0.2672, 0.283334, 0.300001, 0.316667, 0.333334, 0.350001),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [],
 "method": &"set_airborne"
-}, {
-"args": [6.0],
-"method": &"set_y_air_vel"
 }, {
 "args": ["super_freeze"],
 "method": &"create_dramatic_freeze"
@@ -3545,6 +3652,20 @@ tracks/12/keys = {
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 3],
 "method": &"create_projectile"
+}]
+}
+tracks/13/type = "method"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AnimationPlayer")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0.0167),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [6.0],
+"method": &"set_y_air_vel"
 }]
 }
 
@@ -3676,12 +3797,9 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.0166667, 0.316667, 0.333334, 0.350001),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0.0166667, 0.316667, 0.333334, 0.350001),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
-"args": [Vector3(0, 0, 0)],
-"method": &"set_grd_vel"
-}, {
 "args": ["super_freeze"],
 "method": &"create_dramatic_freeze"
 }, {
@@ -3693,6 +3811,20 @@ tracks/12/keys = {
 }, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 2],
 "method": &"create_projectile"
+}]
+}
+tracks/13/type = "method"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../AnimationPlayer")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [Vector3(0, 0, 0)],
+"method": &"set_grd_vel"
 }]
 }
 
@@ -5417,7 +5549,7 @@ Current Animation : %s
 font_size = 24
 outline_size = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." node_paths=PackedStringArray("attached_fighter")]
 root_node = NodePath("../SpriteMain")
 callback_mode_process = 0
 libraries = {
@@ -5432,7 +5564,8 @@ libraries = {
 "hurting": SubResource("AnimationLibrary_r08ai"),
 "other": SubResource("AnimationLibrary_xhqxl")
 }
-script = ExtResource("5_e82io")
+script = ExtResource("16_7li7g")
+attached_fighter = NodePath("..")
 anim_left_suf = "_left"
 anim_right_suf = "_right"
 
@@ -5459,17 +5592,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
 shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
+transform = Transform3D(0.436192, 0, 0, 0, 0.436192, 0, 0, 0, 1, -0.548704, 0.298626, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
-modulate = Color(0.803922, 0.686275, 0, 1)
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.086, 0.592, 0.04)
+visible = false
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
