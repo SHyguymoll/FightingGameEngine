@@ -61,29 +61,9 @@ var ticks_since_state_change : int = 0
 var force_airborne := false
 var force_collisions := false
 
-## Holds the results of a move_and_slide() call when the Fighter collides with another Fighter.
+## Holds the results of a move_and_slide() call when the Fighter collides with the ground.
 var check_true : bool # Used to remember results of move_and_slide()
 
-var basic_anim_state_dict := {
-	States.INTRO : "other/intro",
-	States.ROUND_WIN : "other/win",
-	States.SET_WIN : "other/win",
-	States.IDLE : "basic/idle",
-	States.CRCH : "basic/crouch",
-	States.JUMP_INIT : "basic/jump", # todo new anim
-	States.JUMP_AIR_INIT : "basic/jump", # ditto
-	States.JUMP : "basic/jump",
-	States.JUMP_NO_ACT : "basic/jump", # ditto
-	States.BLCK_HGH : "blocking/high", States.BLCK_LOW : "blocking/low",
-	States.BLCK_AIR : "blocking/air",
-	States.HURT_HGH : "hurting/high", States.HURT_LOW : "hurting/low",
-	States.HURT_CRCH : "hurting/crouch",
-	States.HURT_GRB : "hurting/air",
-	States.HURT_FALL : "hurting/air", States.HURT_BNCE : "hurting/air",
-	States.HURT_LIE : "hurting/lying", States.GET_UP : "hurting/get_up",
-	States.OUTRO_FALL : "hurting/air", States.OUTRO_BNCE : "hurting/air",
-	States.OUTRO_LIE : "hurting/lying",
-}
 var animation_ended = true
 
 var walk_speed : float = 2
@@ -133,7 +113,7 @@ func _ready():
 	reset_facing()
 	$DebugData.visible = get_parent().get_parent() is TrainingModeGame
 	s_2d_anim_player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
-	s_2d_anim_player.play(basic_anim_state_dict[current_state] +
+	s_2d_anim_player.play(s_2d_anim_player.basic_anim_state_dict[current_state] +
 			(s_2d_anim_player.anim_right_suf if right_facing else s_2d_anim_player.anim_left_suf))
 
 

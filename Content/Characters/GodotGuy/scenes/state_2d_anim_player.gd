@@ -7,6 +7,27 @@ var move_right_anim : StringName = &"basic/walk_right"
 var dash_left_anim : StringName = &"basic/dash"
 var dash_right_anim : StringName = &"basic/dash"
 
+var basic_anim_state_dict := {
+	State2DMeterFighter.States.INTRO : "other/intro",
+	State2DMeterFighter.States.ROUND_WIN : "other/win",
+	State2DMeterFighter.States.SET_WIN : "other/win",
+	State2DMeterFighter.States.IDLE : "basic/idle",
+	State2DMeterFighter.States.CRCH : "basic/crouch",
+	State2DMeterFighter.States.JUMP_INIT : "basic/jump", # todo new anim
+	State2DMeterFighter.States.JUMP_AIR_INIT : "basic/jump", # ditto
+	State2DMeterFighter.States.JUMP : "basic/jump",
+	State2DMeterFighter.States.JUMP_NO_ACT : "basic/jump", # ditto
+	State2DMeterFighter.States.BLCK_HGH : "blocking/high", State2DMeterFighter.States.BLCK_LOW : "blocking/low",
+	State2DMeterFighter.States.BLCK_AIR : "blocking/air",
+	State2DMeterFighter.States.HURT_HGH : "hurting/high", State2DMeterFighter.States.HURT_LOW : "hurting/low",
+	State2DMeterFighter.States.HURT_CRCH : "hurting/crouch",
+	State2DMeterFighter.States.HURT_GRB : "hurting/air",
+	State2DMeterFighter.States.HURT_FALL : "hurting/air", State2DMeterFighter.States.HURT_BNCE : "hurting/air",
+	State2DMeterFighter.States.HURT_LIE : "hurting/lying", State2DMeterFighter.States.GET_UP : "hurting/get_up",
+	State2DMeterFighter.States.OUTRO_FALL : "hurting/air", State2DMeterFighter.States.OUTRO_BNCE : "hurting/air",
+	State2DMeterFighter.States.OUTRO_LIE : "hurting/lying",
+}
+
 var attack_return_states := {
 	"attack_normal/a": State2DMeterFighter.States.IDLE,
 	"attack_normal/a_imp": State2DMeterFighter.States.IDLE,
