@@ -98,7 +98,7 @@ func update_animation():
 		State2DMeterFighter.States.DASH_A_B when not attached_fighter.right_facing:
 			play(dash_right_anim)
 		_:
-			play(attached_fighter.basic_anim_state_dict[attached_fighter.current_state] + (anim_right_suf if attached_fighter.right_facing else anim_left_suf))
+			play(basic_anim_state_dict[attached_fighter.current_state] + (anim_right_suf if attached_fighter.right_facing else anim_left_suf))
 
 
 # Functions used by the AnimationPlayer to move the attached fighter within animations
