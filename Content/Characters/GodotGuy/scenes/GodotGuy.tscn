@@ -5594,13 +5594,14 @@ shape = ExtResource("2_ahw0y")
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.381826, 0, 0, 0, 1, 0, 0.275214, 0)
+transform = Transform3D(1.48613, 0, 0, 0, 0.3, 0, 0, 0, 1, 0.57467, 0.221657, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.371134, 0, 0, 0, 0.371134, 0, 0, 0, 1, 0.229072, 0.328669, 0.04)
+transform = Transform3D(0.992772, 0, 0, 0, 0.329543, 0, 0, 0, 1, 1.32556, 0.265214, 0.04)
+modulate = Color(0.803922, 0.686275, 0, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
@@ -5614,4 +5615,4 @@ texture = ExtResource("14_03fpi")
 
 [node name="OtherAudio" type="AudioStreamPlayer" parent="."]
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayer" to="AnimationPlayer" method="_on_animation_finished"]

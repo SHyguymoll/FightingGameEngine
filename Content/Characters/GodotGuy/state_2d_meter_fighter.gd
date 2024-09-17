@@ -127,49 +127,6 @@ var aerial_vel : Vector3
 
 var current_attack : String
 
-var attack_return_states := {
-	"attack_normal/a": States.IDLE,
-	"attack_normal/a_imp": States.IDLE,
-	"attack_normal/b": States.IDLE,
-	"attack_normal/b_imp": States.IDLE,
-	"attack_normal/c": States.IDLE,
-	"attack_normal/c_imp": States.IDLE,
-	"attack_normal/grab_followup": States.IDLE,
-	"attack_normal/grab_whiff": States.IDLE,
-	"attack_normal/grab_back_followup": States.IDLE,
-	"attack_normal/grab_back_whiff": States.IDLE,
-	"attack_command/crouch_a": States.CRCH,
-	"attack_command/crouch_a_imp": States.CRCH,
-	"attack_command/crouch_b": States.CRCH,
-	"attack_command/crouch_b_imp": States.CRCH,
-	"attack_command/crouch_c": States.CRCH,
-	"attack_command/crouch_c_imp": States.CRCH,
-	"attack_jumping/a": States.JUMP,
-	"attack_jumping/a_imp": States.JUMP,
-	"attack_jumping/b": States.JUMP_NO_ACT,
-	"attack_jumping/b_imp": States.JUMP,
-	"attack_jumping/c": States.JUMP_NO_ACT,
-	"attack_jumping/c_imp": States.JUMP,
-	"attack_motion/projectile": States.IDLE,
-	"attack_motion/projectile_air": States.JUMP_NO_ACT,
-	"attack_motion/uppercut": States.JUMP_NO_ACT,
-	"attack_motion/spin_approach": States.JUMP_NO_ACT,
-	"attack_motion/spin_approach_air": States.JUMP_NO_ACT,
-	"attack_super/projectile": States.IDLE,
-	"attack_super/projectile_air": States.JUMP_NO_ACT,
-}
-
-var grab_return_states := {
-	"attack_normal/grab": {
-		true: "attack_normal/grab_followup",
-		false: "attack_normal/grab_whiff",
-	},
-	"attack_normal/grab_back": {
-		true: "attack_normal/grab_back_followup",
-		false: "attack_normal/grab_whiff",
-	},
-}
-
 # Nothing should modify the fighter's state in _process or _ready, _process is purely for
 # real-time effects, and _ready for initialization.
 func _ready():
@@ -401,13 +358,6 @@ func _in_attacking_state() -> bool:
 		States.ATCK_GRAB_END,
 		States.ATCK_JUMP,
 	]
-
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-	if (anim_name
-			.trim_suffix(s_2d_anim_player.anim_left_suf)
-			.trim_suffix(s_2d_anim_player.anim_right_suf)) in (
-					attack_return_states.keys() + grab_return_states.keys()):
-		animation_ended = true
 
 
 func _in_hurting_state() -> bool:
@@ -899,7 +849,6 @@ func update_character_state():
 		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_INHERIT
 	else:
 		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
-
 	check_true = move_and_slide()
 
 
@@ -974,14 +923,14 @@ func resolve_state_transitions():
 		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
 			force_collisions = false
-			if attack_return_states.get(current_attack) != null:
-				set_state(attack_return_states[current_attack])
+			if s_2d_anim_player.attack_return_states.get(current_attack) != null:
+				set_state(s_2d_anim_player.attack_return_states[current_attack])
 			else:
 				set_state(previous_state)
 		States.ATCK_GRAB_START when animation_ended:
 			force_airborne = false
 			force_collisions = false
-			update_attack(grab_return_states[current_attack][attack_hurt])
+			update_attack(s_2d_anim_player.grab_return_states[current_attack][attack_hurt])
 			set_state(States.ATCK_GRAB_END)
 		States.ATCK_JUMP, States.ATCK_JUMP_IMP when is_on_floor():
 			var new_walk = try_walk(null, current_state)
@@ -1006,3 +955,4 @@ func update_character_animation():
 func reset_facing():
 	right_facing = distance < 0
 	grabbed_offset.x = GRABBED_OFFSET_X * (-1 ^ int(distance < 0))
+
