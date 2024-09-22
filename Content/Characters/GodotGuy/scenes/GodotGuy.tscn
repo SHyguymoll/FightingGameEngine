@@ -6163,20 +6163,20 @@ collision_mask = 0
 monitorable = false
 
 [node name="HurtboxShape" type="CollisionShape3D" parent="Hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
 shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104577, 1.23248, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.134824, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(1.16515, 0, 0, 0, 1.16515, 0, 0, 0, 1, 0.240387, 0.661959, 0.04)
-modulate = Color(0.807843, 0.552941, 0.254902, 1)
+transform = Transform3D(0.467686, 0, 0, 0, 0.327046, 0, 0, 0, 1, -0.635791, 0.995359, 0.04)
+modulate = Color(0.401196, 1, 1, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

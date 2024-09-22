@@ -436,8 +436,11 @@ func add_meter(add_to_meter : float):
 func set_airborne():
 	force_airborne = true
 
+
+
 func set_collisions():
 	force_collisions = true
+
 
 func set_state(new_state: States):
 	if current_state != new_state:
@@ -894,14 +897,10 @@ func resolve_state_transitions():
 			set_state(States.ATCK_JUMP_IMP)
 		States.ATCK_CMND when attack_connected:
 			set_state(States.ATCK_CMND_IMP)
-		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_GRAB_END when animation_ended:
+		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
 			force_collisions = false
-			set_state(s_2d_anim_player.attack_return_states.get(current_attack, previous_state))
-		States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP when animation_ended:
-			force_airborne = false
-			force_collisions = false
-			set_state(s_2d_anim_player.attack_return_states.get(current_attack + "_imp", previous_state))
+			set_state(s_2d_anim_player.attack_return_states.get(current_attack + ("_imp" if impact_state() else ""), previous_state))
 		States.ATCK_GRAB_START when animation_ended:
 			force_airborne = false
 			force_collisions = false
@@ -930,4 +929,3 @@ func update_character_animation():
 func reset_facing():
 	right_facing = distance < 0
 	grabbed_offset.x = GRABBED_OFFSET_X * (-1 ^ int(distance < 0))
-
