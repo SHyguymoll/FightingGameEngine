@@ -41,19 +41,16 @@ const GRABBED_OFFSET_X = 0.46
 
 ## Half Circle Back, then Forward. [br]
 ## The name is a reference to the common Guilty Gear Overdrive input.
-const MOTION_GG = [ [6,3,2,1,4,6], [6,3,2,1,4,5,6], [6,2,1,4,6],
-	[6,2,4,6], [6,2,4,5,6], [6,2,1,4,5,6],
-]
+const MOTION_GG = [[6,3,2,1,4,6], [6,3,2,1,4,5,6], [6,2,1,4,6],
+	[6,2,4,6], [6,2,4,5,6], [6,2,1,4,5,6]]
 
 ## Used as a reference for handling blocking attacks.[br]
 ## block rule arrays: [up, down, away, towards][br]
 ## 1 means must hold, 0 means ignored, -1 means must not hold.
-var block : Dictionary = {
-	away_any = [0, 0, 1, -1],
+var block : Dictionary = {away_any = [0, 0, 1, -1],
 	away_high = [0, -1, 1, -1],
 	away_low = [-1, 1, 1, -1],
-	nope = [-1, -1. -1, -1],
-}
+	nope = [-1, -1, -1, -1]}
 
 var current_state: States = States.IDLE
 var previous_state : States
@@ -104,6 +101,7 @@ var aerial_vel : Vector3
 @onready var game_instanced_sounds = {}
 
 @onready var s_2d_anim_player : State2DAnimationPlayer = $AnimationPlayer
+@onready var area3d_intersect_check : Area3D = $Area3DIntersectionCheck
 
 var current_attack : String
 
@@ -220,7 +218,7 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 		handle_damage(attack, true, choose_hurting_state(attack), combo_count)
 		return true
 	# counter-hits
-	if _in_attacking_state():
+	if _in_attacking_state() and not current_state == States.ATCK_GRAB_END:
 		create_particle("counter_hit", GameParticle.Origins.SOURCE,attack.position)
 		attack.hitstop_hit = int(float(attack.hitstop_hit) * 1.5)
 		handle_damage(attack, true, choose_hurting_state(attack), combo_count)
@@ -283,7 +281,7 @@ func _action_step(dramatic_freeze : bool, delta : float):
 		update_character_state()
 		reset_facing()
 		ticks_since_state_change += 1
-		(s_2d_anim_player as AnimationPlayer).advance(delta)
+		s_2d_anim_player.advance(delta)
 
 
 func _connect_hud_elements(training_mode : bool):
@@ -494,7 +492,7 @@ func try_super_attack(cur_state: States) -> States:
 				return States.ATCK_SUPR
 		States.ATCK_MOTN:
 			match current_attack:
-				"attack_motion/uppercut", "attack_motion/spin_approach", "attack_motion/spin_approach_air":
+				"attack_super/projectile", "attack_motion/uppercut", "attack_motion/spin_approach", "attack_motion/spin_approach_air":
 					if motion_input_check(MOTION_GG) and one_atk_just_pressed() and meter >= 50:
 						meter -= 50
 						update_attack("attack_super/projectile_air")
@@ -541,6 +539,10 @@ func try_special_attack(cur_state: States) -> States:
 						return States.ATCK_MOTN
 					if motion_input_check(MOTION_QCB) and one_atk_just_pressed():
 						update_attack("attack_motion/spin_approach")
+						return States.ATCK_MOTN
+				"attack_normal/b":
+					if motion_input_check(MOTION_QCF) and one_atk_just_pressed():
+						update_attack("attack_motion/projectile")
 						return States.ATCK_MOTN
 	return cur_state
 
@@ -618,7 +620,7 @@ func try_magic_series(level: int, cur_state: States) -> States:
 		return cur_state
 
 #returns -1 (walk away), 0 (neutral), and 1 (walk towards)
-func walk_value() -> int:
+func walk_value() -> Fighter.WalkingX:
 	return ((1 * int((btn_pressed("right") and right_facing) or
 			(btn_pressed("left") and !right_facing))) +
 			(-1 * int((btn_pressed("left") and right_facing) or
@@ -826,9 +828,9 @@ func update_character_state():
 		#aerial_vel.y = 0
 	velocity = aerial_vel if airborne() else ground_vel
 	if force_collisions:
-		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_INHERIT
+		area3d_intersect_check.process_mode = Node.PROCESS_MODE_INHERIT
 	else:
-		$Area3DIntersectionCheck.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
+		area3d_intersect_check.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
 	check_true = move_and_slide()
 
 

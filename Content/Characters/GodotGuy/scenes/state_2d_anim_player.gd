@@ -21,7 +21,7 @@ var basic_anim_state_dict := {
 	State2DMeterFighter.States.BLCK_AIR : "blocking/air",
 	State2DMeterFighter.States.HURT_HGH : "hurting/high", State2DMeterFighter.States.HURT_LOW : "hurting/low",
 	State2DMeterFighter.States.HURT_CRCH : "hurting/crouch",
-	State2DMeterFighter.States.HURT_GRB : "hurting/air",
+	State2DMeterFighter.States.HURT_GRB : "hurting/air", State2DMeterFighter.States.HURT_GRB_NOBREAK : "hurting/air",
 	State2DMeterFighter.States.HURT_FALL : "hurting/air", State2DMeterFighter.States.HURT_BNCE : "hurting/air",
 	State2DMeterFighter.States.HURT_LIE : "hurting/lying", State2DMeterFighter.States.GET_UP : "hurting/get_up",
 	State2DMeterFighter.States.OUTRO_FALL : "hurting/air", State2DMeterFighter.States.OUTRO_BNCE : "hurting/air",
