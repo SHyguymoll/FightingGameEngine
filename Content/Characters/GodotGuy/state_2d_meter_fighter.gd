@@ -782,20 +782,12 @@ func update_character_state():
 			ground_vel.x = (-1 if right_facing else 1) * walk_speed
 		States.DASH_F:
 			jump_count = jump_total
-			ground_vel.x = (1 if right_facing else -1) * walk_speed * 1.5
 		States.DASH_B:
 			jump_count = jump_total
-			ground_vel.x = (-1 if right_facing else 1) * walk_speed * 1.5
 		States.DASH_A_F when ticks_since_state_change == 0:
 			jump_count -= 0.5
-			aerial_vel.x = (1 if right_facing else -1) * walk_speed * 2.5
-			aerial_vel.y = -gravity * 3
 		States.DASH_A_B when ticks_since_state_change == 0:
 			jump_count -= 0.5
-			aerial_vel.x = (-1 if right_facing else 1) * walk_speed * 2.5
-			aerial_vel.y = -gravity * 3
-		States.JUMP_INIT when ticks_since_state_change == 0:
-			ground_vel.x = 0
 		States.JUMP_INIT when ticks_since_state_change == JUMP_SQUAT_LENGTH:
 			jump_count -= 1
 			aerial_vel.x = walk_value() * walk_speed
@@ -902,13 +894,14 @@ func resolve_state_transitions():
 			set_state(States.ATCK_JUMP_IMP)
 		States.ATCK_CMND when attack_connected:
 			set_state(States.ATCK_CMND_IMP)
-		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP, States.ATCK_GRAB_END when animation_ended:
+		States.ATCK_NRML, States.ATCK_CMND, States.ATCK_MOTN, States.ATCK_SUPR, States.ATCK_JUMP, States.ATCK_GRAB_END when animation_ended:
 			force_airborne = false
 			force_collisions = false
-			if s_2d_anim_player.attack_return_states.get(current_attack) != null:
-				set_state(s_2d_anim_player.attack_return_states[current_attack])
-			else:
-				set_state(previous_state)
+			set_state(s_2d_anim_player.attack_return_states.get(current_attack, previous_state))
+		States.ATCK_NRML_IMP, States.ATCK_JUMP_IMP, States.ATCK_CMND_IMP, States.ATCK_MOTN_IMP when animation_ended:
+			force_airborne = false
+			force_collisions = false
+			set_state(s_2d_anim_player.attack_return_states.get(current_attack + "_imp", previous_state))
 		States.ATCK_GRAB_START when animation_ended:
 			force_airborne = false
 			force_collisions = false

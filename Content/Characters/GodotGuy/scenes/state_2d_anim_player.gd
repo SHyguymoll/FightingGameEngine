@@ -2,10 +2,6 @@ class_name State2DAnimationPlayer
 extends DupliFlipping2DAnimationPlayer
 
 @export var attached_fighter : State2DMeterFighter
-var move_left_anim : StringName = &"basic/walk_left"
-var move_right_anim : StringName = &"basic/walk_right"
-var dash_left_anim : StringName = &"basic/dash"
-var dash_right_anim : StringName = &"basic/dash"
 
 var basic_anim_state_dict := {
 	State2DMeterFighter.States.INTRO : "other/intro",
@@ -13,6 +9,12 @@ var basic_anim_state_dict := {
 	State2DMeterFighter.States.SET_WIN : "other/win",
 	State2DMeterFighter.States.IDLE : "basic/idle",
 	State2DMeterFighter.States.CRCH : "basic/crouch",
+	State2DMeterFighter.States.WALK_F : "basic/walk_forward",
+	State2DMeterFighter.States.WALK_B : "basic/walk_back",
+	State2DMeterFighter.States.DASH_F : "basic/dash_forward",
+	State2DMeterFighter.States.DASH_B : "basic/dash_back",
+	State2DMeterFighter.States.DASH_A_F : "basic/airdash_forward",
+	State2DMeterFighter.States.DASH_A_B : "basic/airdash_back",
 	State2DMeterFighter.States.JUMP_INIT : "basic/jump", # todo new anim
 	State2DMeterFighter.States.JUMP_AIR_INIT : "basic/jump", # ditto
 	State2DMeterFighter.States.JUMP : "basic/jump",
@@ -72,33 +74,7 @@ var grab_return_states := {
 }
 
 func update_animation():
-	match attached_fighter.current_state:
-		State2DMeterFighter.States.WALK_F when attached_fighter.right_facing:
-			play(move_right_anim)
-		State2DMeterFighter.States.WALK_F when not attached_fighter.right_facing:
-			play(move_left_anim)
-		State2DMeterFighter.States.WALK_B when attached_fighter.right_facing:
-			play(move_left_anim)
-		State2DMeterFighter.States.WALK_B when not attached_fighter.right_facing:
-			play(move_right_anim)
-		State2DMeterFighter.States.DASH_F when attached_fighter.right_facing:
-			play(dash_right_anim)
-		State2DMeterFighter.States.DASH_F when not attached_fighter.right_facing:
-			play(dash_left_anim)
-		State2DMeterFighter.States.DASH_B when attached_fighter.right_facing:
-			play(dash_left_anim)
-		State2DMeterFighter.States.DASH_B when not attached_fighter.right_facing:
-			play(dash_right_anim)
-		State2DMeterFighter.States.DASH_A_F when attached_fighter.right_facing:
-			play(dash_right_anim)
-		State2DMeterFighter.States.DASH_A_F when not attached_fighter.right_facing:
-			play(dash_left_anim)
-		State2DMeterFighter.States.DASH_A_B when attached_fighter.right_facing:
-			play(dash_left_anim)
-		State2DMeterFighter.States.DASH_A_B when not attached_fighter.right_facing:
-			play(dash_right_anim)
-		_:
-			play(basic_anim_state_dict[attached_fighter.current_state] + (anim_right_suf if attached_fighter.right_facing else anim_left_suf))
+	play(basic_anim_state_dict[attached_fighter.current_state] + (anim_right_suf if attached_fighter.right_facing else anim_left_suf))
 
 
 # Functions used by the AnimationPlayer to move the attached fighter within animations
