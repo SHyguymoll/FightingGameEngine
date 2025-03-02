@@ -62,3 +62,12 @@ func _physics_process(_d):
 		lifetime -= 1
 	if lifetime == 0:
 		queue_free()
+
+func _to_string() -> String:
+	return "name: %s
+damage: %s (chip: %s)
+stun: %s (block: %s)
+knockback: %s (blockback: %s)
+lifetime: %s
+hit priority: %s
+hitbox flags: %s" % [name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]

@@ -137,6 +137,7 @@ func _do_intro():
 
 
 func handle_damage(attack : Hitbox, hit : bool, next_state : States, combo_count : int):
+	print(attack)
 	release_grab()
 	var reduction : float = float(combo_count) / 5 + 1.0
 	if hit:
@@ -381,6 +382,7 @@ func blocking() -> bool:
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
 	var new_hitbox := hitboxes[hitbox_name].instantiate() as Hitbox
+	new_hitbox.name = name + "_" + hitbox_name
 
 	if not right_facing:
 		pos.x *= -1
@@ -398,6 +400,7 @@ func create_hitbox(pos : Vector3, hitbox_name : String):
 
 func create_projectile(pos : Vector3, projectile_name : String, type : int):
 	var new_projectile := projectiles[projectile_name].instantiate() as Projectile
+	new_projectile.hitbox.name = name + "_" + projectile_name
 
 	if not right_facing:
 		pos.x *= -1
