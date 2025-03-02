@@ -266,4 +266,3 @@ func _on_input_button_clicked(input_item: Variant, is_kb: bool) -> void:
 	await new_prompt.prompt_completed
 	new_prompt.queue_free()
 	$ControlPrompt.hide()
-

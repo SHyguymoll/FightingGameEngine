@@ -396,8 +396,10 @@ func make_hud():
 func update_hud():
 	ui_p1_health.value = p1.health
 	ui_p1_combo_counter.text = str(p1_combo)
+	ui_p1_combo_counter.visible = p1_combo > 1
 	ui_p2_health.value = p2.health
-	ui_p1_combo_counter.text = str(p2_combo)
+	ui_p2_combo_counter.text = str(p2_combo)
+	ui_p2_combo_counter.visible = p2_combo > 1
 
 
 func init_fighters():

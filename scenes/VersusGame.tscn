@@ -110,13 +110,6 @@ texture_progress = ExtResource("5_mffto")
 layout_mode = 2
 alignment = 2
 
-[node name="PosVel" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
-theme_override_font_sizes/font_size = 24
-text = "p,v"
-horizontal_alignment = 1
-
 [node name="Char" type="Label" parent="HUD/HealthAndTime/P1Group/NameAndPosVel"]
 layout_mode = 2
 size_flags_horizontal = 8
@@ -154,13 +147,6 @@ theme_override_fonts/font = ExtResource("3_paiiu")
 theme_override_font_sizes/font_size = 64
 text = "Player 2 Character"
 horizontal_alignment = 2
-
-[node name="PosVel" type="Label" parent="HUD/HealthAndTime/P2Group/NameAndPosVel"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_paiiu")
-theme_override_font_sizes/font_size = 24
-text = "p,v"
-horizontal_alignment = 1
 
 [node name="P1_Side_UI" type="HBoxContainer" parent="HUD"]
 anchors_preset = 9
