@@ -342,7 +342,7 @@ func _in_attacking_state() -> bool:
 func _in_hurting_state() -> bool:
 	return current_state in [
 		States.HURT_HGH, States.HURT_LOW, States.HURT_CRCH, States.HURT_LIE,
-		States.HURT_GRB, States.HURT_FALL, States.HURT_BNCE,
+		States.HURT_GRB, States.HURT_GRB_NOBREAK, States.HURT_FALL, States.HURT_BNCE,
 	]
 
 
