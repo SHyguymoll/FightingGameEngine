@@ -14,6 +14,7 @@ enum HitboxFlags {
 	HIT_OTG = 512,
 	SUPER = 1024,
 	NO_KO = 2048,
+	IGNORE_EDGE = 4096,
 }
 enum StateEffects {
 	NONE = 0,
@@ -46,7 +47,7 @@ enum StateEffects {
 	"Hit Grab:4", "Connect Grab:8", "Ends Grab:16", "Breaks Grab:32",
 	"Unblockable/Inescapable:64",
 	"Hits Grounded:128", "Hits Airborne:256", "G+A:384", "Hits OTG:512", "Always Hits:896",
-	"Super Attack:1024", "Cannot KO:2048",
+	"Super Attack:1024", "Cannot KO:2048", "Ignore Stage Edge:4096",
 	) var hitbox_flags : int = 0
 @export_enum("None", "Knockdown", "Launcher", "Collapse", "Camera/Wall Bounce") var state_effect : int
 @export var on_hit : Array
@@ -70,4 +71,4 @@ stun: %s (block: %s)
 knockback: %s (blockback: %s)
 lifetime: %s
 hit priority: %s
-hitbox flags: %s" % [name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]
+hitbox flags: %s" % [name if not is_projectile else get_parent().name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]
