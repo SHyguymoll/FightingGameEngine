@@ -400,7 +400,7 @@ func create_hitbox(pos : Vector3, hitbox_name : String):
 
 func create_projectile(pos : Vector3, projectile_name : String, type : int):
 	var new_projectile := projectiles[projectile_name].instantiate() as Projectile
-	new_projectile.hitbox.name = name + "_" + projectile_name
+	new_projectile.name = name + "_" + projectile_name
 
 	if not right_facing:
 		pos.x *= -1
