@@ -166,6 +166,10 @@ var player : bool # True if player 1, False if player 2.
 ## Positive if this Fighter is on the right of the other Fighter, or 0.
 var distance : float # Ditto
 ## [color=red] DO NOT TOUCH. [/color]
+## This is set to true when the OTHER Fighter is touching the edge of the Stage,
+## as handled by the game.
+var opponent_on_stage_edge : bool
+## [color=red] DO NOT TOUCH. [/color]
 ## This is set to true when an attack from this Fighter connects with the other Fighter.
 var attack_connected : bool
 ## [color=red] DO NOT TOUCH. [/color]
@@ -199,8 +203,8 @@ enum WalkingX {BACK = -1, NEUTRAL = 0, FORWARD = 1}
 ## Walking into/out of the screen (referred to as the z direction)
 enum WalkingZ {IN = 1, NEUTRAL = 0, OUT = 1}
 
-## The knockback applied to a Fighter. Typically set by hitboxes through [member Hitbox.hitstop_hit]
-## and [member Hitbox.hitstop_block] during [method _damage_step],
+## The knockback applied to a Fighter. Typically set by hitboxes through [member Hitbox.kback_hit]
+## and [member Hitbox.kback_block] during [method _damage_step],
 ## but can be modified by the Fighter as deemed appropiate.
 var kback : Vector3 = Vector3.ZERO
 ## The current remaining duration for being stunned. Used for calculating combos. Only set this

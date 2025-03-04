@@ -687,7 +687,9 @@ func character_positioning(delta):
 		p2.grabbed_point.global_position = p2.global_position
 
 	p1.position.x = clamp(p1.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+	p2.opponent_on_stage_edge = abs(p1.position.x) == MOVEMENTBOUNDX
 	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
+	p1.opponent_on_stage_edge = abs(p2.position.x) == MOVEMENTBOUNDX
 
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x

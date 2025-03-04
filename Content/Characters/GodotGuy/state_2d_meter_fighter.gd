@@ -15,7 +15,9 @@ extends Fighter
 ## both fighters to a neutral state.[br]
 ## [b]Special Cancelling[/b]: During the impact frames of a normal attack, a special attack can be used.[br]
 ## [b]Super Cancelling[/b]: During the impact frames of a special attack, a super attack can be used.[br]
-## [b]Super Meter[/b]: This fighter's Super Attacks are tied to the fulfillment of a meter on the HUD.[br]
+## [b]Super Meter[/b]: Super Attacks are tied to the fulfillment of a meter on the HUD.[br]
+## [b]Infinite Prevention Systems[/b]: Reduction and pushback are used to stop the other Fighter from
+## infiniting this Fighter, as well as to stop this Fighter from infinitely looping the other Fighter.[br]
 ##
 ## [color=rainbow]IMPORTANT NOTE:[/color] Animations are handled in manual mode when this script runs
 ## in-game as to stop unintended behavior from happening when the game is paused (spawning way too many
@@ -306,6 +308,7 @@ func _return_attackers() -> Array[Hitbox]:
 func _on_hit(on_hit_data : Array):
 	add_meter(on_hit_data[0])
 
+
 # Ditto, but for after resolving that the opposing fighter blocked the attack.
 func _on_block(on_block_data : Array):
 	add_meter(on_block_data[0])
@@ -438,7 +441,6 @@ func add_meter(add_to_meter : float):
 
 func set_airborne():
 	force_airborne = true
-
 
 
 func set_collisions():
@@ -819,6 +821,9 @@ func update_character_state():
 			aerial_vel = Vector3((-1 if right_facing else 1) * kback.x, kback.y, kback.z)
 		States.HURT_LIE, States.OUTRO_LIE:
 			ground_vel.x *= GROUND_SLIDE_FRICTION
+		States.ATCK_NRML_IMP, States.ATCK_CMND_IMP:
+			if opponent_on_stage_edge:
+				ground_vel.x += (-1 if right_facing else 1) * walk_speed / 2
 
 	aerial_vel.y += gravity
 	aerial_vel.y = max(min_fall_vel, aerial_vel.y)

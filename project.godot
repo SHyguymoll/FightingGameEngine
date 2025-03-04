@@ -254,6 +254,7 @@ training_replay={
 3d_physics/layer_4="player_intersection"
 3d_physics/layer_5="projectile"
 3d_physics/layer_6="hitbox_interactions"
+3d_physics/layer_7="on_stage_edge"
 
 [physics]
 
