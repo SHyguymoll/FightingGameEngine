@@ -2150,7 +2150,7 @@ _data = {
 
 [sub_resource type="Animation" id="Animation_gcnhk"]
 resource_name = "a_imp_right"
-length = 0.0833352
+length = 0.0666685
 step = 0.0166667
 tracks/0/type = "position_3d"
 tracks/0/imported = false
@@ -2165,7 +2165,7 @@ tracks/1/enabled = true
 tracks/1/path = NodePath("../SpriteAttack")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = PackedFloat32Array(0, 1, 0.271676, 0.271676, 0.565, 0.0666668, 1, 0.572, 0.572, 0.565)
+tracks/1/keys = PackedFloat32Array(0, 1, 0.271676, 0.271676, 0.565, 0.05, 1, 0.572, 0.572, 0.565)
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
@@ -2173,7 +2173,7 @@ tracks/2/path = NodePath("../SpriteAttack:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.0666668),
+"times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 0, 0, 1), Color(1, 1, 1, 0)]
@@ -2185,7 +2185,7 @@ tracks/3/path = NodePath("../SpriteAttack:visible")
 tracks/3/interp = 0
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0666668),
+"times": PackedFloat32Array(0, 0.05),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
@@ -6170,14 +6170,14 @@ shape = ExtResource("3_8q5n8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.680619, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26201, 0.656478, 0.04)
-modulate = Color(0, 1, 0, 1)
+transform = Transform3D(0.271676, 0, 0, 0, 0.271676, 0, 0, 0, 0.565, 0.813568, 0.811107, 0.04)
+modulate = Color(1, 0, 0, 1)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
