@@ -243,6 +243,8 @@ func pause_function(delta):
 
 func round_end_function(delta):
 	ui_splash_text.modulate.a8 -= 4
+	for proj in (game_projectiles.get_children() as Array[Projectile]):
+		proj.tick(delta, true)
 	move_inputs(true)
 	p1._input_step()
 	p1._action_step(false, delta)

@@ -68,13 +68,14 @@ func _ready():
 			hitbox.on_block = [0]
 	$AnimationPlayer.play(start_anim)
 
-func tick(delta : float):
+func tick(delta : float, animate_only : bool = false):
 	# hitstop check
 	if GameGlobal.global_hitstop:
 		return
-	global_position += velocity
-	if hitbox == null:
-		destroy()
+	if not animate_only:
+		global_position += velocity
+		if hitbox == null:
+			destroy()
 	$AnimationPlayer.advance(delta)
 
 func destroy():
