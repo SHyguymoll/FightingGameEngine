@@ -1448,17 +1448,28 @@ tracks/13/path = NodePath("..")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.2338, 0.316667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.316667),
+"transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
 "method": &"set_airborne"
 }, {
-"args": [5.0],
-"method": &"set_y_air_vel"
-}, {
 "args": [Vector3(0.875549, 0.685474, 0.04), "basic", 1],
 "method": &"create_projectile"
+}]
+}
+tracks/14/type = "method"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../AnimationPlayer")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0.233333),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [5.0],
+"method": &"set_y_air_vel"
 }]
 }
 
@@ -3783,7 +3794,7 @@ tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "clips": [{
-"end_offset": 0.482914,
+"end_offset": 0.473011,
 "start_offset": 0.0,
 "stream": ExtResource("13_748ol")
 }],
@@ -6167,7 +6178,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642, 0)
 shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04053, 0.718174, 0)
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
@@ -6176,8 +6186,7 @@ no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.271676, 0, 0, 0, 0.271676, 0, 0, 0, 0.565, 0.813568, 0.811107, 0.04)
-modulate = Color(1, 0, 0, 1)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, -0.230993, 0.550286, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
