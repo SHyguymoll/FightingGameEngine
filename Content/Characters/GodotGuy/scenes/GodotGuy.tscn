@@ -6139,16 +6139,16 @@ outline_size = 4
 root_node = NodePath("../SpriteMain")
 callback_mode_process = 0
 libraries = {
-"": SubResource("AnimationLibrary_1cfsu"),
-"attack_command": SubResource("AnimationLibrary_w3q8l"),
-"attack_jumping": SubResource("AnimationLibrary_cdh00"),
-"attack_motion": SubResource("AnimationLibrary_gmquo"),
-"attack_normal": SubResource("AnimationLibrary_k2jj7"),
-"attack_super": SubResource("AnimationLibrary_lpwhi"),
-"basic": SubResource("AnimationLibrary_1famj"),
-"blocking": SubResource("AnimationLibrary_450jr"),
-"hurting": SubResource("AnimationLibrary_r08ai"),
-"other": SubResource("AnimationLibrary_xhqxl")
+&"": SubResource("AnimationLibrary_1cfsu"),
+&"attack_command": SubResource("AnimationLibrary_w3q8l"),
+&"attack_jumping": SubResource("AnimationLibrary_cdh00"),
+&"attack_motion": SubResource("AnimationLibrary_gmquo"),
+&"attack_normal": SubResource("AnimationLibrary_k2jj7"),
+&"attack_super": SubResource("AnimationLibrary_lpwhi"),
+&"basic": SubResource("AnimationLibrary_1famj"),
+&"blocking": SubResource("AnimationLibrary_450jr"),
+&"hurting": SubResource("AnimationLibrary_r08ai"),
+&"other": SubResource("AnimationLibrary_xhqxl")
 }
 script = ExtResource("16_7li7g")
 attached_fighter = NodePath("..")

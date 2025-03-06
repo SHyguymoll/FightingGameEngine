@@ -160,7 +160,7 @@ shape = SubResource("BoxShape3D_twgbh")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 callback_mode_process = 2
 libraries = {
-"": SubResource("AnimationLibrary_vwb2q")
+&"": SubResource("AnimationLibrary_vwb2q")
 }
 
 [node name="ProjectileContact" type="Area3D" parent="."]

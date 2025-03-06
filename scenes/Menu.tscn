@@ -95,7 +95,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme = ExtResource("4_262sp")
 theme_override_font_sizes/font_size = 32
-text = "Engine and Art by SHy, 2022-2024
+text = "Engine and Art by SHy, 2022-2025
 Godot logo by Godot Engine"
 
 [node name="ControlButtons" type="CanvasLayer" parent="."]
