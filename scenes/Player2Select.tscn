@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://nvbxi37a3huf"]
 
 [ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="1_ihs2b"]
-[ext_resource type="Script" path="res://scripts/player_select.gd" id="2_rxhrv"]
+[ext_resource type="Script" uid="uid://b0eix8gui7je4" path="res://scripts/player_select.gd" id="2_rxhrv"]
 
 [sub_resource type="QuadMesh" id="1"]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://cu47fj4c7jjwu"]
 
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="1_7ch5s"]
-[ext_resource type="Script" path="res://scripts/references/game_particle.gd" id="2_hforv"]
+[ext_resource type="Script" uid="uid://de1ipp2xsdvsw" path="res://scripts/references/game_particle.gd" id="2_hforv"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7jepb"]
 particle_flag_disable_z = true

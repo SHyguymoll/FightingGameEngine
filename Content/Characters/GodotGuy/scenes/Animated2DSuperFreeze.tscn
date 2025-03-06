@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://byer6bjupb33k"]
 
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/animated_dramatic_freeze.gd" id="1_tqlga"]
+[ext_resource type="Script" uid="uid://ckm5i55jd6g6a" path="res://Content/Characters/GodotGuy/animated_dramatic_freeze.gd" id="1_tqlga"]
 [ext_resource type="AudioStream" uid="uid://bge83bpasfrux" path="res://Content/Characters/GodotGuy/sounds/freeze_buildup.wav" id="2_1r1c4"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="2_1vd1e"]
 
@@ -62,7 +62,7 @@ tracks/3/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_e2mci"]
 _data = {
-"super_flash": SubResource("Animation_lxa2x")
+&"super_flash": SubResource("Animation_lxa2x")
 }
 
 [node name="SuperFreeze" type="Node"]

@@ -14,7 +14,7 @@ config/name="Open Fighting Game Engine"
 run/main_scene="res://scenes/Menu.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="OFGEAlpha"
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.4")
 config/icon="res://icon.png"
 
 [autoload]

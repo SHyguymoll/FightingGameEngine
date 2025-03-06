@@ -1,6 +1,6 @@
 [gd_scene load_steps=81 format=3 uid="uid://kquoyj34deus"]
 
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
+[ext_resource type="Script" uid="uid://cph1wxofcd8j3" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
 [ext_resource type="PackedScene" uid="uid://crglsjvtvqvim" path="res://Content/Characters/GodotGuy/scenes/SuperBarP1.tscn" id="2_xjhia"]
 [ext_resource type="Shape3D" uid="uid://bs5a4315bo07p" path="res://Content/Characters/GodotGuy/hurtbox_shapes/base_shape.tres" id="3_8q5n8"]
@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://bfr0auflihcnh" path="res://Content/Characters/GodotGuy/sounds/super_projectile_fire.wav" id="13_748ol"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
 [ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/state_2d_anim_player.gd" id="16_7li7g"]
+[ext_resource type="Script" uid="uid://befselwlqfe56" path="res://Content/Characters/GodotGuy/scenes/state_2d_anim_player.gd" id="16_7li7g"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
 
@@ -682,12 +682,12 @@ tracks/14/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w3q8l"]
 _data = {
-"crouch_a_imp_right": SubResource("Animation_g8ik5"),
-"crouch_a_right": SubResource("Animation_vmnh6"),
-"crouch_b_imp_right": SubResource("Animation_u2omd"),
-"crouch_b_right": SubResource("Animation_c1pcw"),
-"crouch_c_imp_right": SubResource("Animation_inbwu"),
-"crouch_c_right": SubResource("Animation_wvsyi")
+&"crouch_a_imp_right": SubResource("Animation_g8ik5"),
+&"crouch_a_right": SubResource("Animation_vmnh6"),
+&"crouch_b_imp_right": SubResource("Animation_u2omd"),
+&"crouch_b_right": SubResource("Animation_c1pcw"),
+&"crouch_c_imp_right": SubResource("Animation_inbwu"),
+&"crouch_c_right": SubResource("Animation_wvsyi")
 }
 
 [sub_resource type="Animation" id="Animation_hltd6"]
@@ -1300,12 +1300,12 @@ tracks/12/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cdh00"]
 _data = {
-"a_imp_right": SubResource("Animation_hltd6"),
-"a_right": SubResource("Animation_73ol0"),
-"b_imp_right": SubResource("Animation_52lff"),
-"b_right": SubResource("Animation_x0i0k"),
-"c_imp_right": SubResource("Animation_i3c6m"),
-"c_right": SubResource("Animation_8hvrr")
+&"a_imp_right": SubResource("Animation_hltd6"),
+&"a_right": SubResource("Animation_73ol0"),
+&"b_imp_right": SubResource("Animation_52lff"),
+&"b_right": SubResource("Animation_x0i0k"),
+&"c_imp_right": SubResource("Animation_i3c6m"),
+&"c_right": SubResource("Animation_8hvrr")
 }
 
 [sub_resource type="Animation" id="Animation_bbn6a"]
@@ -2152,11 +2152,11 @@ tracks/13/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gmquo"]
 _data = {
-"projectile_air_right": SubResource("Animation_bbn6a"),
-"projectile_right": SubResource("Animation_5onjv"),
-"spin_approach_air_right": SubResource("Animation_2bfia"),
-"spin_approach_right": SubResource("Animation_3225c"),
-"uppercut_right": SubResource("Animation_x3lbw")
+&"projectile_air_right": SubResource("Animation_bbn6a"),
+&"projectile_right": SubResource("Animation_5onjv"),
+&"spin_approach_air_right": SubResource("Animation_2bfia"),
+&"spin_approach_right": SubResource("Animation_3225c"),
+&"uppercut_right": SubResource("Animation_x3lbw")
 }
 
 [sub_resource type="Animation" id="Animation_gcnhk"]
@@ -3490,17 +3490,17 @@ tracks/11/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k2jj7"]
 _data = {
-"a_imp_right": SubResource("Animation_gcnhk"),
-"a_right": SubResource("Animation_i22pp"),
-"b_imp_right": SubResource("Animation_0wd1k"),
-"b_right": SubResource("Animation_sij77"),
-"c_imp_right": SubResource("Animation_jhwff"),
-"c_right": SubResource("Animation_j2a7j"),
-"grab_back_followup_right": SubResource("Animation_3j5ps"),
-"grab_back_right": SubResource("Animation_3w3wk"),
-"grab_followup_right": SubResource("Animation_7a0ce"),
-"grab_right": SubResource("Animation_kq2em"),
-"grab_whiff_right": SubResource("Animation_rk4iq")
+&"a_imp_right": SubResource("Animation_gcnhk"),
+&"a_right": SubResource("Animation_i22pp"),
+&"b_imp_right": SubResource("Animation_0wd1k"),
+&"b_right": SubResource("Animation_sij77"),
+&"c_imp_right": SubResource("Animation_jhwff"),
+&"c_right": SubResource("Animation_j2a7j"),
+&"grab_back_followup_right": SubResource("Animation_3j5ps"),
+&"grab_back_right": SubResource("Animation_3w3wk"),
+&"grab_followup_right": SubResource("Animation_7a0ce"),
+&"grab_right": SubResource("Animation_kq2em"),
+&"grab_whiff_right": SubResource("Animation_rk4iq")
 }
 
 [sub_resource type="Animation" id="Animation_ioq68"]
@@ -3841,8 +3841,8 @@ tracks/13/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lpwhi"]
 _data = {
-"projectile_air_right": SubResource("Animation_ioq68"),
-"projectile_right": SubResource("Animation_gosxq")
+&"projectile_air_right": SubResource("Animation_ioq68"),
+&"projectile_right": SubResource("Animation_gosxq")
 }
 
 [sub_resource type="Animation" id="Animation_y3vfv"]
@@ -4974,15 +4974,15 @@ tracks/10/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1famj"]
 _data = {
-"airdash_back_right": SubResource("Animation_y3vfv"),
-"airdash_forward_right": SubResource("Animation_1mt4w"),
-"crouch_right": SubResource("Animation_16fqf"),
-"dash_back_right": SubResource("Animation_lb7k7"),
-"dash_forward_right": SubResource("Animation_00jti"),
-"idle_right": SubResource("Animation_oq48w"),
-"jump_right": SubResource("Animation_yt5la"),
-"walk_back_right": SubResource("Animation_p2oiw"),
-"walk_forward_right": SubResource("Animation_bo21u")
+&"airdash_back_right": SubResource("Animation_y3vfv"),
+&"airdash_forward_right": SubResource("Animation_1mt4w"),
+&"crouch_right": SubResource("Animation_16fqf"),
+&"dash_back_right": SubResource("Animation_lb7k7"),
+&"dash_forward_right": SubResource("Animation_00jti"),
+&"idle_right": SubResource("Animation_oq48w"),
+&"jump_right": SubResource("Animation_yt5la"),
+&"walk_back_right": SubResource("Animation_p2oiw"),
+&"walk_forward_right": SubResource("Animation_bo21u")
 }
 
 [sub_resource type="Animation" id="Animation_y1isn"]
@@ -5347,9 +5347,9 @@ tracks/11/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_450jr"]
 _data = {
-"air_right": SubResource("Animation_y1isn"),
-"high_right": SubResource("Animation_168pe"),
-"low_right": SubResource("Animation_am371")
+&"air_right": SubResource("Animation_y1isn"),
+&"high_right": SubResource("Animation_168pe"),
+&"low_right": SubResource("Animation_am371")
 }
 
 [sub_resource type="Animation" id="Animation_4du6f"]
@@ -5879,12 +5879,12 @@ tracks/6/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_r08ai"]
 _data = {
-"air_right": SubResource("Animation_4du6f"),
-"crouch_right": SubResource("Animation_0uij0"),
-"get_up_right": SubResource("Animation_ukw7d"),
-"high_right": SubResource("Animation_j2ifv"),
-"low_right": SubResource("Animation_ca7hi"),
-"lying_right": SubResource("Animation_yyyv5")
+&"air_right": SubResource("Animation_4du6f"),
+&"crouch_right": SubResource("Animation_0uij0"),
+&"get_up_right": SubResource("Animation_ukw7d"),
+&"high_right": SubResource("Animation_j2ifv"),
+&"low_right": SubResource("Animation_ca7hi"),
+&"lying_right": SubResource("Animation_yyyv5")
 }
 
 [sub_resource type="Animation" id="Animation_mo8k0"]
@@ -6089,8 +6089,8 @@ tracks/10/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xhqxl"]
 _data = {
-"intro_right": SubResource("Animation_mo8k0"),
-"win_right": SubResource("Animation_ahwld")
+&"intro_right": SubResource("Animation_mo8k0"),
+&"win_right": SubResource("Animation_ahwld")
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_38jcs"]

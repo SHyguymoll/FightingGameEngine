@@ -1,8 +1,8 @@
 [gd_scene load_steps=13 format=3 uid="uid://kjgashkcn1j2"]
 
-[ext_resource type="Script" path="res://Content/Characters/GodotGuy/scenes/projectile_move_straight.gd" id="1_3mu63"]
+[ext_resource type="Script" uid="uid://cg568dkewrkfo" path="res://Content/Characters/GodotGuy/scenes/projectile_move_straight.gd" id="1_3mu63"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="2_tjsps"]
-[ext_resource type="Script" path="res://scripts/references/hitbox.gd" id="3_4vpve"]
+[ext_resource type="Script" uid="uid://bidbk0jw2a8se" path="res://scripts/references/hitbox.gd" id="3_4vpve"]
 [ext_resource type="AudioStream" uid="uid://ubw1f8hi4pmd" path="res://Content/Characters/GodotGuy/sounds/atk_projectile.wav" id="4_0k4xr"]
 [ext_resource type="AudioStream" uid="uid://bytcuvmfoag06" path="res://Content/Characters/GodotGuy/sounds/atk_blocked.wav" id="5_c8inj"]
 
@@ -121,10 +121,10 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vwb2q"]
 _data = {
-"end": SubResource("Animation_k5wla"),
-"loop_left": SubResource("Animation_74a68"),
-"loop_right": SubResource("Animation_f425l"),
-"start": SubResource("Animation_33uao")
+&"end": SubResource("Animation_k5wla"),
+&"loop_left": SubResource("Animation_74a68"),
+&"loop_right": SubResource("Animation_f425l"),
+&"start": SubResource("Animation_33uao")
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4ie6c"]

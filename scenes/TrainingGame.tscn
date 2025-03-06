@@ -1,18 +1,18 @@
 [gd_scene load_steps=14 format=3 uid="uid://dajlhw551dmop"]
 
-[ext_resource type="Script" path="res://scripts/training_mode.gd" id="1_m4gad"]
-[ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_d6xmc"]
+[ext_resource type="Script" uid="uid://dhtqvrd6ieoju" path="res://scripts/training_mode.gd" id="1_m4gad"]
+[ext_resource type="Script" uid="uid://depamos1erkjm" path="res://scripts/fighting_camera.gd" id="2_d6xmc"]
 [ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="3_rad5f"]
 [ext_resource type="Texture2D" uid="uid://danexq1ufr4qj" path="res://Content/Art/HUD/Player1Background.png" id="4_vd8ct"]
 [ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="5_c7bgh"]
 [ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="6_uf34b"]
 [ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="7_3pslj"]
 [ext_resource type="Theme" uid="uid://dqy1w1gb4mp1b" path="res://HUD_TrainingSectionTheme.tres" id="8_4l8k5"]
-[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_bab2q"]
+[ext_resource type="Script" uid="uid://cvo5d50r5ms2i" path="res://scripts/results_screen.gd" id="9_bab2q"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_noe3s"]
 [ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_c25kw"]
 [ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_p0xqr"]
-[ext_resource type="Script" path="res://scripts/pause_screen.gd" id="13_i00w0"]
+[ext_resource type="Script" uid="uid://sc5c3lsvgthl" path="res://scripts/pause_screen.gd" id="13_i00w0"]
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("ui_p1_position_velocity", "ui_p2_position_velocity", "ui_p1_reset_health_slider", "ui_p2_reset_health_slider", "ui_p1_reset_health_button", "ui_p2_reset_health_button", "ui_p1_inputs", "ui_p2_inputs", "ui_input_record_status", "ui_p1_training_special_section", "ui_p2_training_special_section", "fighter_camera", "game_fighters_and_stage", "game_projectiles", "game_hitboxes", "game_particles", "game_audio", "ui_splash_text", "ui_p1_health", "ui_p2_health", "ui_p1_name", "ui_p2_name", "ui_timer", "ui_p1_combo_counter", "ui_p2_combo_counter", "ui_p1_under_health_section", "ui_p2_under_health_section", "ui_p1_sidebar_section", "ui_p2_sidebar_section", "ui_p1_below_section", "ui_p2_below_section", "layer_hud", "layer_drama_freeze", "layer_results_screen", "layer_pause_screen", "layer_smooth_transistions", "pause_screen_node", "results_screen_node", "smooth_transition")]
 script = ExtResource("1_m4gad")

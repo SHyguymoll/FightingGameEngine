@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dsbw58c55oan3"]
 
 [ext_resource type="Texture2D" uid="uid://dxptcemjwa3q" path="res://Content/Art/Menu/Logo/Logo.png" id="1_c2cfo"]
-[ext_resource type="Script" path="res://scripts/logo.gd" id="2"]
+[ext_resource type="Script" uid="uid://bhuefxn4x5iyo" path="res://scripts/logo.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bof52q6woju7x" path="res://Content/Art/Menu/Logo/LogoShadow.png" id="3_1qqix"]
 
 [node name="Icon" type="Sprite3D"]

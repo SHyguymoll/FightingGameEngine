@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://biebxqayocjc1"]
 
-[ext_resource type="Script" path="res://scripts/round_element.gd" id="1_xgkm5"]
+[ext_resource type="Script" uid="uid://b764l1u4fuxpt" path="res://scripts/round_element.gd" id="1_xgkm5"]
 [ext_resource type="Texture2D" uid="uid://jnx0dn2o1qad" path="res://Content/Art/HUD/RoundUnfulfilled.png" id="2_iani0"]
 [ext_resource type="Texture2D" uid="uid://elfhpxbm35p0" path="res://Content/Art/HUD/RoundFulfilled.png" id="3_ju5df"]
 

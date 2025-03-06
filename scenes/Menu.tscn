@@ -1,16 +1,16 @@
 [gd_scene load_steps=13 format=3 uid="uid://0jmbhr7a3m4k"]
 
-[ext_resource type="Script" path="res://scripts/menu.gd" id="1"]
+[ext_resource type="Script" uid="uid://bun6pbsmhw87h" path="res://scripts/menu.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cc6cwk2ecso0v" path="res://Content/Art/Menu/MenuBackground.png" id="2_ixfup"]
 [ext_resource type="Texture2D" uid="uid://bcw0jd2sssv4q" path="res://Content/Art/Menu/CharacterSelect/CharacterSelectBackground.png" id="3_qummo"]
 [ext_resource type="PackedScene" uid="uid://dsbw58c55oan3" path="res://Content/Art/Menu/Logo/Logo.tscn" id="3_yapes"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="4_262sp"]
 [ext_resource type="PackedScene" uid="uid://c72slly80e3ji" path="res://scenes/InputItem.tscn" id="6_4c8tv"]
-[ext_resource type="Script" path="res://scripts/input_viewer.gd" id="7_eps47"]
+[ext_resource type="Script" uid="uid://cvw6n38li8ch5" path="res://scripts/input_viewer.gd" id="7_eps47"]
 [ext_resource type="Texture2D" uid="uid://dhteexn64v3j5" path="res://Content/Art/Menu/ControlsScreen/Joystick.png" id="7_un0jc"]
 [ext_resource type="Texture2D" uid="uid://0tw0shipmla4" path="res://Content/Art/Menu/ControlsScreen/JoystickTop.png" id="8_sj7ct"]
 [ext_resource type="Texture2D" uid="uid://1yu63o63msd1" path="res://Content/Art/Menu/ControlsScreen/Buttons.png" id="9_1f5fr"]
-[ext_resource type="Script" path="res://scripts/color_transition.gd" id="11_upbus"]
+[ext_resource type="Script" uid="uid://bk17meevqtgq8" path="res://scripts/color_transition.gd" id="11_upbus"]
 
 [sub_resource type="Environment" id="2"]
 background_mode = 3

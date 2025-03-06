@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8dwtbp2xlcx2"]
 
-[ext_resource type="Script" path="res://scripts/input_screen.gd" id="1_cban4"]
+[ext_resource type="Script" uid="uid://cemnwxwjxm70q" path="res://scripts/input_screen.gd" id="1_cban4"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="2_is0i2"]
 
 [node name="NewControlOuter" type="ColorRect"]

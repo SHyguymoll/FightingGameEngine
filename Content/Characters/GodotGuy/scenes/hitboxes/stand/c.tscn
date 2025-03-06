@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d20bpoiwbtntf"]
 
-[ext_resource type="Script" path="res://scripts/references/hitbox.gd" id="1_hk2tp"]
+[ext_resource type="Script" uid="uid://bidbk0jw2a8se" path="res://scripts/references/hitbox.gd" id="1_hk2tp"]
 [ext_resource type="AudioStream" uid="uid://baqsm31j0hhv8" path="res://Content/Characters/GodotGuy/sounds/atk_heavy.wav" id="2_p8imx"]
 [ext_resource type="AudioStream" uid="uid://bytcuvmfoag06" path="res://Content/Characters/GodotGuy/sounds/atk_blocked.wav" id="3_ia044"]
 

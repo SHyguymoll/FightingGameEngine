@@ -1,17 +1,17 @@
 [gd_scene load_steps=13 format=3 uid="uid://cd77r01gxs0ud"]
 
-[ext_resource type="Script" path="res://scripts/main_game.gd" id="1_k83nq"]
-[ext_resource type="Script" path="res://scripts/fighting_camera.gd" id="2_6dae8"]
+[ext_resource type="Script" uid="uid://b5dxqk4abb2ha" path="res://scripts/main_game.gd" id="1_k83nq"]
+[ext_resource type="Script" uid="uid://depamos1erkjm" path="res://scripts/fighting_camera.gd" id="2_6dae8"]
 [ext_resource type="FontFile" uid="uid://d34npoo875jqj" path="res://Content/Art/HUD/PlayerFont.ttf" id="3_paiiu"]
 [ext_resource type="Texture2D" uid="uid://danexq1ufr4qj" path="res://Content/Art/HUD/Player1Background.png" id="4_0uavl"]
 [ext_resource type="Texture2D" uid="uid://rn80docoblmo" path="res://Content/Art/HUD/Player1Bar.png" id="5_mffto"]
 [ext_resource type="Texture2D" uid="uid://byjay84lsnxmn" path="res://Content/Art/HUD/Player2Background.png" id="6_7qvqi"]
 [ext_resource type="Texture2D" uid="uid://dtwd3l33vnpa4" path="res://Content/Art/HUD/Player2Bar.png" id="7_dgrbo"]
-[ext_resource type="Script" path="res://scripts/results_screen.gd" id="9_bmxyn"]
+[ext_resource type="Script" uid="uid://cvo5d50r5ms2i" path="res://scripts/results_screen.gd" id="9_bmxyn"]
 [ext_resource type="Theme" uid="uid://bxve8gxn74gvo" path="res://menu_theme.tres" id="10_lagwi"]
 [ext_resource type="Texture2D" uid="uid://6i8oddjlc7lg" path="res://Content/Art/Menu/CharacterSelect/Player1Select.png" id="11_j877c"]
 [ext_resource type="Texture2D" uid="uid://cfv2oj5ulwqx8" path="res://Content/Art/Menu/CharacterSelect/Player2Select.png" id="12_d5gw3"]
-[ext_resource type="Script" path="res://scripts/pause_screen.gd" id="13_jiiwd"]
+[ext_resource type="Script" uid="uid://sc5c3lsvgthl" path="res://scripts/pause_screen.gd" id="13_jiiwd"]
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("fighter_camera", "game_fighters_and_stage", "game_projectiles", "game_hitboxes", "game_particles", "game_audio", "ui_splash_text", "ui_p1_health", "ui_p2_health", "ui_p1_name", "ui_p2_name", "ui_timer", "ui_p1_combo_counter", "ui_p2_combo_counter", "ui_p1_under_health_section", "ui_p2_under_health_section", "ui_p1_sidebar_section", "ui_p2_sidebar_section", "ui_p1_below_section", "ui_p2_below_section", "layer_hud", "layer_drama_freeze", "layer_results_screen", "layer_pause_screen", "layer_smooth_transistions", "pause_screen_node", "results_screen_node", "smooth_transition")]
 script = ExtResource("1_k83nq")

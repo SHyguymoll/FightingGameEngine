@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://mcwtu8yk2e3r"]
 
-[ext_resource type="Script" path="res://scripts/references/game_particle.gd" id="1_0athq"]
+[ext_resource type="Script" uid="uid://de1ipp2xsdvsw" path="res://scripts/references/game_particle.gd" id="1_0athq"]
 [ext_resource type="Texture2D" uid="uid://b464h3u22rv8o" path="res://sprites/clash_effect.png" id="1_f7kso"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hqja2"]
