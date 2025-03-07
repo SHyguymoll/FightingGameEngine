@@ -3617,7 +3617,7 @@ tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "clips": [{
-"end_offset": 0.383071,
+"end_offset": 0.372811,
 "start_offset": 0.0,
 "stream": ExtResource("13_748ol")
 }],
@@ -6168,14 +6168,13 @@ shape = ExtResource("3_8q5n8")
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.192013, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.600871, 0, 0, 0, 1.27448, 0, 0, 0, 1, -0.907047, 0.875019, 0.04)
-modulate = Color(0, 1, 1, 1)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, -0.231, 1.175, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
