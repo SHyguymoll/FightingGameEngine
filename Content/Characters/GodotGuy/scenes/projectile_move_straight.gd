@@ -53,13 +53,13 @@ func _ready():
 			hitbox.on_hit = [0]
 			hitbox.on_block = [0]
 		types.DIAGONAL_DOWN_SUPER:
-			hitbox.damage_hit = 2
+			hitbox.damage_hit = 4
 			hitbox.damage_block = 1
-			hitbox.stun_hit = 10
+			hitbox.stun_hit = 15
 			hitbox.stun_block = 5
-			hitbox.hitstop_hit = 15
-			hitbox.hitstop_block = 15
-			hitbox.kback_hit = Vector3(-4, 10, 0)
+			hitbox.hitstop_hit = 2
+			hitbox.hitstop_block = 1
+			hitbox.kback_hit = Vector3(0, 20, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hitbox_flags += Hitbox.HitboxFlags.SUPER
 			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
