@@ -52,11 +52,11 @@ tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "clips": [{
-"end_offset": 0.0,
-"start_offset": 0.0,
+"end_offset": 0.0433172,
+"start_offset": 0.204724,
 "stream": ExtResource("2_1r1c4")
 }],
-"times": PackedFloat32Array(-0.2004)
+"times": PackedFloat32Array(0.0043245)
 }
 tracks/3/use_blend = true
 
@@ -70,7 +70,7 @@ script = ExtResource("1_tqlga")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_e2mci")
+&"": SubResource("AnimationLibrary_e2mci")
 }
 
 [node name="Effects" type="Node2D" parent="."]
