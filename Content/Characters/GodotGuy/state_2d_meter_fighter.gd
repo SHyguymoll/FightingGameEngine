@@ -253,10 +253,10 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 		elif attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW:
 			blocking_rules = block.away_low
 	var directions = [
-		btn_pressed("up"),
-		btn_pressed("down"),
-		btn_pressed("left"),
-		btn_pressed("right")
+		btn_pressed(GameGlobal.BTN_UP),
+		btn_pressed(GameGlobal.BTN_DOWN),
+		btn_pressed(GameGlobal.BTN_LEFT),
+		btn_pressed(GameGlobal.BTN_RIGHT)
 	]
 	if not right_facing:
 		var temp = directions[2]
@@ -629,10 +629,10 @@ func try_magic_series(level: int, cur_state: States) -> States:
 
 #returns -1 (walk away), 0 (neutral), and 1 (walk towards)
 func walk_value() -> Fighter.WalkingX:
-	return ((1 * int((btn_pressed("right") and right_facing) or
-			(btn_pressed("left") and !right_facing))) +
-			(-1 * int((btn_pressed("left") and right_facing) or
-			(btn_pressed("right") and !right_facing))))
+	return ((1 * int((btn_pressed(GameGlobal.BTN_RIGHT) and right_facing) or
+			(btn_pressed(GameGlobal.BTN_LEFT) and !right_facing))) +
+			(-1 * int((btn_pressed(GameGlobal.BTN_LEFT) and right_facing) or
+			(btn_pressed(GameGlobal.BTN_RIGHT) and !right_facing))))
 
 
 func try_walk(exclude, cur_state: States) -> States:
@@ -662,9 +662,9 @@ func try_dash(input: String, success_state: States, cur_state: States, cost := f
 
 
 func try_jump(cur_state: States, grounded := true) -> States:
-	if btn_pressed("up") and grounded and jump_count >= 1:
+	if btn_pressed(GameGlobal.BTN_UP) and grounded and jump_count >= 1:
 		return States.JUMP_INIT
-	if btn_just_pressed("up") and not grounded and jump_count >= 1:
+	if btn_just_pressed(GameGlobal.BTN_UP) and not grounded and jump_count >= 1:
 		return States.JUMP_AIR_INIT
 	return cur_state
 
@@ -681,31 +681,31 @@ func handle_input() -> void:
 					decision = try_walk(WalkingX.NEUTRAL, decision)
 					if len(inputs.up) > 3:
 						if right_facing:
-							decision = try_dash("left", States.DASH_B, decision)
-							decision = try_dash("right", States.DASH_F, decision)
+							decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_B, decision)
+							decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_F, decision)
 						else:
-							decision = try_dash("left", States.DASH_F, decision)
-							decision = try_dash("right", States.DASH_B, decision)
+							decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_F, decision)
+							decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_B, decision)
 				States.WALK_B:
 					decision = try_walk(WalkingX.BACK, decision)
 				States.WALK_F:
 					decision = try_walk(WalkingX.FORWARD, decision)
-			decision = States.CRCH if btn_pressed("down") else decision
+			decision = States.CRCH if btn_pressed(GameGlobal.BTN_DOWN) else decision
 			decision = try_jump(decision)
 			decision = try_attack(decision)
 # Order: release down, attack, b/h
 		States.CRCH:
-			decision = try_walk(null, decision) if !btn_pressed("down") else decision
+			decision = try_walk(null, decision) if !btn_pressed(GameGlobal.BTN_DOWN) else decision
 			decision = try_attack(decision)
 # Order: jump, attack, b/h
 		States.JUMP:
 			if len(inputs.up) > 3:
 				if right_facing:
-					decision = try_dash("left", States.DASH_A_B, decision, true)
-					decision = try_dash("right", States.DASH_A_F, decision, true)
+					decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_A_B, decision, true)
+					decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_A_F, decision, true)
 				else:
-					decision = try_dash("left", States.DASH_A_F, decision, true)
-					decision = try_dash("right", States.DASH_A_B, decision, true)
+					decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_A_F, decision, true)
+					decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_A_B, decision, true)
 			decision = try_jump(decision, false)
 			decision = try_attack(decision)
 # Cancel ground dashes into specials and supers

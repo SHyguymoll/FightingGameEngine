@@ -448,14 +448,14 @@ func init_fighters():
 
 func slice_input_dictionary(input_dict: Dictionary, from: int, to: int):
 	var ret_dict = {
-		up=input_dict["up"].slice(from, to),
-		down=input_dict["down"].slice(from, to),
-		left=input_dict["left"].slice(from, to),
-		right=input_dict["right"].slice(from, to),
+		up=input_dict[GameGlobal.BTN_UP].slice(from, to),
+		down=input_dict[GameGlobal.BTN_DOWN].slice(from, to),
+		left=input_dict[GameGlobal.BTN_LEFT].slice(from, to),
+		right=input_dict[GameGlobal.BTN_RIGHT].slice(from, to),
 	}
 	var ret_dict_button_count = len(input_dict) - 4
 	for i in range(ret_dict_button_count):
-		ret_dict["button" + str(i)] = input_dict["button" + str(i)].slice(from, to)
+		ret_dict[GameGlobal.BTN_UNSPEC + str(i)] = input_dict[GameGlobal.BTN_UNSPEC + str(i)].slice(from, to)
 	return ret_dict
 
 
@@ -479,16 +479,16 @@ func generate_current_input_hash(buttons : Array, button_count : int) -> int:
 func generate_prior_input_hash(player_inputs: Dictionary):
 	var fail_case := [[0,false]]
 	return (
-			(int(player_inputs.get("up", fail_case)[-1][1]) * 1) +
-			(int(player_inputs.get("down", fail_case)[-1][1]) * 2) +
-			(int(player_inputs.get("left", fail_case)[-1][1]) * 4) +
-			(int(player_inputs.get("right", fail_case)[-1][1]) * 8) +
-			(int(player_inputs.get("button0", fail_case)[-1][1]) * 16) +
-			(int(player_inputs.get("button1", fail_case)[-1][1]) * 32) +
-			(int(player_inputs.get("button2", fail_case)[-1][1]) * 64) +
-			(int(player_inputs.get("button3", fail_case)[-1][1]) * 128) +
-			(int(player_inputs.get("button4", fail_case)[-1][1]) * 256) +
-			(int(player_inputs.get("button5", fail_case)[-1][1]) * 512)
+			(int(player_inputs.get(GameGlobal.BTN_UP, fail_case)[-1][1]) * 1) +
+			(int(player_inputs.get(GameGlobal.BTN_DOWN, fail_case)[-1][1]) * 2) +
+			(int(player_inputs.get(GameGlobal.BTN_LEFT, fail_case)[-1][1]) * 4) +
+			(int(player_inputs.get(GameGlobal.BTN_RIGHT, fail_case)[-1][1]) * 8) +
+			(int(player_inputs.get(GameGlobal.BTN_0, fail_case)[-1][1]) * 16) +
+			(int(player_inputs.get(GameGlobal.BTN_1, fail_case)[-1][1]) * 32) +
+			(int(player_inputs.get(GameGlobal.BTN_2, fail_case)[-1][1]) * 64) +
+			(int(player_inputs.get(GameGlobal.BTN_3, fail_case)[-1][1]) * 128) +
+			(int(player_inputs.get(GameGlobal.BTN_4, fail_case)[-1][1]) * 256) +
+			(int(player_inputs.get(GameGlobal.BTN_5, fail_case)[-1][1]) * 512)
 	)
 
 
@@ -509,21 +509,21 @@ func create_new_input_set(player_inputs: Dictionary, new_inputs: Array):
 
 func directional_inputs(prefix: String) -> Array:
 	return [
-		(Input.is_action_pressed(prefix + "_up") and
-				not Input.is_action_pressed(prefix + "_down")),
-		(Input.is_action_pressed(prefix + "_down") and
-				not Input.is_action_pressed(prefix + "_up")),
-		(Input.is_action_pressed(prefix + "_left") and
-				not Input.is_action_pressed(prefix + "_right")),
-		(Input.is_action_pressed(prefix + "_right") and
-				not Input.is_action_pressed(prefix + "_left")),
+		(Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_UP) and
+				not Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_DOWN)),
+		(Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_DOWN) and
+				not Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_UP)),
+		(Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_LEFT) and
+				not Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_RIGHT)),
+		(Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_RIGHT) and
+				not Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_LEFT)),
 	]
 
 
 func button_inputs(prefix : String, button_count : int) -> Array:
 	var button_input_arr = []
 	for button in range(button_count):
-		button_input_arr.append(Input.is_action_pressed(prefix + "_button" + str(button)))
+		button_input_arr.append(Input.is_action_pressed(prefix + "_" + GameGlobal.BTN_UNSPEC + str(button)))
 	return button_input_arr
 
 
