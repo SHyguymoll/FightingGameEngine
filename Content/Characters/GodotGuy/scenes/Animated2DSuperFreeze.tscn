@@ -76,6 +76,9 @@ libraries = {
 [node name="Effects" type="Node2D" parent="."]
 
 [node name="Splash" type="Sprite2D" parent="Effects"]
+modulate = Color(1, 0, 0, 0)
+position = Vector2(2.38419e-07, 7.10543e-15)
+scale = Vector2(14.9422, 14.9422)
 texture = ExtResource("2_1vd1e")
 
 [node name="SoundEffect" type="AudioStreamPlayer" parent="."]
