@@ -801,7 +801,12 @@ func update_character_state():
 			aerial_vel.x = walk_value() * walk_speed
 			if not right_facing:
 				aerial_vel.x *= -1
-			aerial_vel.y = jump_height
+			if btn_pressed_ind_under_time(GameGlobal.BTN_DOWN, -3, JUMP_SQUAT_LENGTH * 2) or \
+				btn_pressed_ind_under_time(GameGlobal.BTN_DOWN, -4, JUMP_SQUAT_LENGTH * 2):
+				jump_count -= 0.5
+				aerial_vel.y = jump_height * 1.333
+			else:
+				aerial_vel.y = jump_height
 		States.JUMP_AIR_INIT when ticks_since_state_change == 0:
 			jump_count -= 1
 			aerial_vel.x = walk_value() * walk_speed
