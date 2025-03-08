@@ -328,10 +328,13 @@ func reduce_stun() -> void:
 func update_paused(new_paused : bool):
 	paused = new_paused
 
-## Returns a tuple for the given [param input] and [param ind]. with the format (int, bool).[br]
+## Returns a two element array for the given [param input] and [param ind],
+## with the format (int, bool).[br]
 ## The int represents the length of time that the button has been pressed/unpressed.[br]
 ## The bool represents if the button was pressed or unpressed.
 func btn_state(input: String, ind: int):
+	if abs(ind) > len(inputs[GameGlobal.BTN_UP]):
+		return [0, false]
 	return inputs[input][ind]
 
 ## Returns the boolean from the tuple for the given [param input] and [param ind].
