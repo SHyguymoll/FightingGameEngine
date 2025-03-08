@@ -117,10 +117,8 @@ func construct_game():
 	GameGlobal.global_hitstop = 0
 	stage = Content.stage_resource.instantiate()
 	game_fighters_and_stage.add_child(stage)
-	if stage.mode == Stage.Modes.TWO_D:
-		fighter_camera.set_mode(FighterCamera.Modes.ORTH_BALANCED)
-	else:
-		fighter_camera.set_mode(FighterCamera.Modes.PERS_BALANCED)
+	fighter_camera.set_mode(FighterCamera.Modes.BALANCED)
+	fighter_camera.pers_orth = not stage.mode == Stage.Modes.TWO_D
 	p1 = Content.p1_resource.instantiate()
 	p1.name = "p1"
 	p1.player = true
@@ -422,6 +420,7 @@ func init_fighters():
 	p1.grabbed.connect(grabbed)
 	p1.grab_released.connect(grab_released)
 	p1.defeated.connect(player_defeated)
+	p1.activated_camera.connect(custom_camera.bind(p1.custom_camera))
 	p1.grabbed_point = grab_point.instantiate()
 	game_fighters_and_stage.add_child(p1.grabbed_point)
 
@@ -439,6 +438,7 @@ func init_fighters():
 	p2.grabbed.connect(grabbed)
 	p2.grab_released.connect(grab_released)
 	p2.defeated.connect(player_defeated)
+	p2.activated_camera.connect(custom_camera.bind(p2.custom_camera))
 	p2.grabbed_point = grab_point.instantiate()
 	game_fighters_and_stage.add_child(p2.grabbed_point)
 
@@ -809,3 +809,9 @@ func player_defeated():
 	p2.game_ended = true
 	for projectile in (game_projectiles.get_children() as Array[Projectile]):
 		projectile.destroy()
+
+
+func custom_camera(time : int, new_camera : Camera3D):
+	fighter_camera.custom_camera = new_camera
+	new_camera.make_current()
+	fighter_camera.custom_cam_timer = time

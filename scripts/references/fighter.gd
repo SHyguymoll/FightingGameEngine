@@ -25,6 +25,9 @@ signal projectile_created
 signal audio_created
 ## This signal is fired for registering particles in the game's scene tree.
 signal particle_created
+## This signal is fired when using the fighter's custom camera for specific moments.[br]
+## The int represents how many game ticks the custom camera will be used for.
+signal activated_camera(length: int)
 ## This signal is fired for registering dramatic freezes in the game's scene tree.
 ## The game will also enter the dramatic freeze moment for the duration of the dramatic freeze.
 signal dramatic_freeze_created
@@ -155,6 +158,10 @@ var ui_training : Node
 # play these to freeze the game for added drama.
 ## A simple dictionary used for holding Dramatic Freezes. How you index them is up to you.
 @export var dramatic_freezes = {}
+
+## The Camera3D node that the fighter uses for specific circumstances. Not meant to be altered
+## after being set
+@export var custom_camera : Camera3D
 
 # Don't modify any of these, the game will initialize them.
 ## [color=red] DO NOT TOUCH. [/color] a boolean used for differentiating player 1 and player 2.
