@@ -60,6 +60,8 @@ var player_record_buffer := []
 var record_buffer_current := 0
 var record := false
 var replay := false
+var game_tick : int = 0
+
 
 var p1_combo := 0
 var p2_combo := 0
@@ -219,6 +221,7 @@ func game_function(delta):
 		start_pause_menu(true)
 	if Input.is_action_just_pressed("second_pause"):
 		start_pause_menu(false)
+	game_tick += 1
 
 
 func drama_freeze_function(delta):
@@ -237,7 +240,11 @@ func drama_freeze_function(delta):
 
 
 func pause_function(delta):
+	for audio in game_audio.get_children() as Array[PausingCleaningAudioStreamPlayer]:
+		audio.pause(game_tick)
 	await pause_screen_node.exited
+	for audio in game_audio.get_children() as Array[PausingCleaningAudioStreamPlayer]:
+		audio.unpause()
 	end_pause_menu()
 
 
@@ -748,11 +755,10 @@ func character_positioning(delta):
 
 
 func spawn_audio(sound : AudioStream):
-	var new_audio = AudioStreamPlayer.new()
+	var new_audio = PausingCleaningAudioStreamPlayer.new()
 	new_audio.stream = sound
-	new_audio.finished.connect(func(): new_audio.queue_free())
-	new_audio.autoplay = true
 	game_audio.add_child(new_audio)
+
 
 func register_particle(particle : GameParticle, origin : GameParticle.Origins, position_offset : Vector3, source : Fighter):
 	match origin:
