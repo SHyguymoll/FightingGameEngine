@@ -103,15 +103,11 @@ func set_air_vel(vel : Vector3):
 
 
 func set_x_grd_vel(val : float):
-	if not attached_fighter.right_facing:
-		val *= -1
-	attached_fighter.ground_vel.x = val
+	attached_fighter.ground_vel.x = val * (1 if attached_fighter.right_facing else -1)
 
 
 func set_x_air_vel(val : float):
-	if not attached_fighter.right_facing:
-		val *= -1
-	attached_fighter.aerial_vel.x = val
+	attached_fighter.aerial_vel.x = val * (1 if attached_fighter.right_facing else -1)
 
 
 func set_y_grd_vel(val : float):
