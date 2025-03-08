@@ -27,11 +27,14 @@ var custom_cam_timer : int
 func set_mode(new_mode : Modes):
 	mode = new_mode
 
+
 func mode_is_orth() -> bool:
 	return mode < Modes.PERS_BALANCED
 
+
 func mode_is_balanced() -> bool:
 	return mode in [Modes.ORTH_BALANCED, Modes.PERS_BALANCED]
+
 
 func _physics_process(_delta: float) -> void:
 	projection = PROJECTION_ORTHOGONAL if mode_is_orth() else PROJECTION_PERSPECTIVE
