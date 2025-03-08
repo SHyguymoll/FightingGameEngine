@@ -56,10 +56,6 @@ var p2_dummy_buffer = {
 var p1_input_index : int = 0
 var p2_input_index : int = 0
 
-var player_record_buffer := []
-var record_buffer_current := 0
-var record := false
-var replay := false
 var game_tick : int = 0
 
 
@@ -535,39 +531,12 @@ func create_inputs():
 	p1_buttons = directional_inputs("first") + button_inputs("first", p1.BUTTONCOUNT)
 	p2_buttons = directional_inputs("second") + button_inputs("second", p2.BUTTONCOUNT)
 
-	if record:
-		player_record_buffer.append(p2_buttons.duplicate())
-
-	if not record and not replay and Input.is_action_just_pressed("training_replay"):
-		replay = true
-
 	if generate_prior_input_hash(p1_inputs) != generate_current_input_hash(
 				p1_buttons, p1.BUTTONCOUNT):
 		create_new_input_set(p1_inputs, p1_buttons)
 		p1_input_index += 1
 	else:
 		increment_inputs(p1_inputs)
-
-	if replay and record_buffer_current == len(player_record_buffer):
-		replay = false
-		record_buffer_current = 0
-
-	if not replay:
-		if (generate_prior_input_hash(p2_inputs) != generate_current_input_hash(
-				p2_buttons, p2.BUTTONCOUNT)):
-			create_new_input_set(p2_inputs, p2_buttons)
-			p2_input_index += 1
-		else:
-			increment_inputs(p2_inputs)
-	else:
-		if (generate_prior_input_hash(p2_inputs) !=
-					generate_current_input_hash(
-							player_record_buffer[record_buffer_current], p2.BUTTONCOUNT)):
-			create_new_input_set(p2_inputs, player_record_buffer[record_buffer_current])
-			p2_input_index += 1
-		else:
-			increment_inputs(p2_inputs)
-		record_buffer_current += 1
 
 
 func hitbox_hitbox_collisions():
