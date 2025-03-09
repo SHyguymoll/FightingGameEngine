@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=3 uid="uid://kquoyj34deus"]
+[gd_scene load_steps=82 format=3 uid="uid://kquoyj34deus"]
 
 [ext_resource type="Script" uid="uid://cph1wxofcd8j3" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
@@ -19,7 +19,32 @@
 [ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
 [ext_resource type="Script" uid="uid://befselwlqfe56" path="res://Content/Characters/GodotGuy/scenes/state_2d_anim_player.gd" id="16_7li7g"]
 
+[sub_resource type="Animation" id="Animation_at3m6"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Camera3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.72, 1)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Camera3D:size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
+_data = {
+&"RESET": SubResource("Animation_at3m6")
+}
 
 [sub_resource type="Animation" id="Animation_g8ik5"]
 resource_name = "crouch_a_imp_right"
@@ -3505,7 +3530,7 @@ _data = {
 
 [sub_resource type="Animation" id="Animation_ioq68"]
 resource_name = "projectile_air_right"
-length = 0.66667
+length = 1.33334
 step = 0.0166667
 tracks/0/type = "position_3d"
 tracks/0/imported = false
@@ -3513,7 +3538,7 @@ tracks/0/enabled = true
 tracks/0/path = NodePath(".")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.67, 0, 0.116667, 1, -0.14, 0.67, 0, 0.3, 1, 0.305, 0.67, 0, 0.383334, 1, 0.305, 0.67, 0, 0.600001, 1, 0, 0.67, 0)
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.67, 0, 0.766667, 1, -0.14, 0.67, 0, 0.95, 1, 0.305, 0.67, 0, 1.03333, 1, 0.305, 0.67, 0, 1.25, 1, 0, 0.67, 0)
 tracks/1/type = "scale_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
@@ -3535,7 +3560,7 @@ tracks/3/path = NodePath("../SpriteAttack:visible")
 tracks/3/interp = 0
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.633334),
+"times": PackedFloat32Array(0, 1.28333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
@@ -3546,14 +3571,14 @@ tracks/4/enabled = true
 tracks/4/path = NodePath("../SpriteAttack")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
-tracks/4/keys = PackedFloat32Array(0, 1, -0.231, 1.175, 0.04, 0.167, 1, -0.907, 0.875, 0.04, 0.2171, 1, 0.876, 0.135, 0.04, 0.2672, 1, -0.907, 0.875, 0.04, 0.3173, 1, 0.876, 0.135, 0.04, 0.3674, 1, -0.907, 0.875, 0.04, 0.4175, 1, 0.876, 0.135, 0.04, 0.466668, 1, -0.907, 0.875, 0.04, 0.516768, 1, 0.876, 0.135, 0.04, 0.633334, 1, 1.231, -0.155, 0.04)
+tracks/4/keys = PackedFloat32Array(0, 1, -0.231, 1.175, 0.04, 0.817, 1, -0.907, 0.875, 0.04, 0.8671, 1, 0.876, 0.135, 0.04, 0.9172, 1, -0.907, 0.875, 0.04, 0.9673, 1, 0.876, 0.135, 0.04, 1.0174, 1, -0.907, 0.875, 0.04, 1.0675, 1, 0.876, 0.135, 0.04, 1.11667, 1, -0.907, 0.875, 0.04, 1.16677, 1, 0.876, 0.135, 0.04, 1.28333, 1, 1.231, -0.155, 0.04)
 tracks/5/type = "scale_3d"
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/path = NodePath("../SpriteAttack")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/keys = PackedFloat32Array(0, 1, 0.3, 0.3, 1, 0.116667, 1, 0.495634, 0.331554, 1, 0.316667, 1, 0.600871, 1.02772, 1, 0.350001, 1, 0.600871, 1.02772, 1, 0.633334, 1, 0.600871, 1.627, 1)
+tracks/5/keys = PackedFloat32Array(0, 1, 0.3, 0.3, 1, 0.766667, 1, 0.495634, 0.331554, 1, 0.966667, 1, 0.600871, 1.02772, 1, 1, 1, 0.600871, 1.02772, 1, 1.28333, 1, 0.600871, 1.627, 1)
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
@@ -3561,7 +3586,7 @@ tracks/6/path = NodePath("../SpriteAttack:modulate")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.167, 0.533334, 0.633334),
+"times": PackedFloat32Array(0, 0.817, 1.18333, 1.28333),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(0, 1, 1, 1), Color(0, 1, 1, 1), Color(0, 1, 1, 0)]
@@ -3621,7 +3646,7 @@ tracks/11/keys = {
 "start_offset": 0.0,
 "stream": ExtResource("13_748ol")
 }],
-"times": PackedFloat32Array(0.2171)
+"times": PackedFloat32Array(0.8671)
 }
 tracks/11/use_blend = true
 tracks/12/type = "method"
@@ -3631,7 +3656,7 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0, 0.0835, 0.233334, 0.2672, 0.300001, 0.333334),
+"times": PackedFloat32Array(0, 0.0666667, 0.883334, 0.9172, 0.950001, 0.983334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [],
@@ -3660,8 +3685,8 @@ tracks/13/path = NodePath("../AnimationPlayer")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0.0167, 0.0333333, 0.216667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0.0167, 0.0333333, 0.05, 0.0833333, 0.866666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "values": [{
 "args": [6.0],
 "method": &"set_y_air_vel"
@@ -3669,14 +3694,39 @@ tracks/13/keys = {
 "args": [10.0],
 "method": &"set_x_air_vel"
 }, {
+"args": [25],
+"method": &"activate_camera"
+}, {
+"args": [Vector3(0, 0, 0)],
+"method": &"set_air_vel"
+}, {
 "args": [-2.0],
 "method": &"set_x_air_vel"
 }]
 }
+tracks/14/type = "position_3d"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../Camera3D")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = PackedFloat32Array(0.0666667, 1, 0, 0.72, 1)
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("../Camera3D:size")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0.0666667, 0.266667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [3.0, 4.0, 2.0]
+}
 
 [sub_resource type="Animation" id="Animation_gosxq"]
 resource_name = "projectile_right"
-length = 0.66667
+length = 1.33334
 step = 0.0166667
 tracks/0/type = "position_3d"
 tracks/0/imported = false
@@ -3684,7 +3734,7 @@ tracks/0/enabled = true
 tracks/0/path = NodePath(".")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.67, 0, 0.116667, 1, -0.140196, 0.67, 0, 0.3, 1, 0.305425, 0.67, 0, 0.383334, 1, 0.305425, 0.67, 0, 0.600001, 1, 0, 0.67, 0)
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.67, 0, 0.85, 1, -0.140196, 0.67, 0, 1.03333, 1, 0.305425, 0.67, 0, 1.11667, 1, 0.305425, 0.67, 0, 1.31667, 1, 0, 0.67, 0)
 tracks/1/type = "scale_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
@@ -3706,7 +3756,7 @@ tracks/3/path = NodePath("../SpriteAttack:visible")
 tracks/3/interp = 0
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.633334),
+"times": PackedFloat32Array(0, 1.31667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
@@ -3717,14 +3767,14 @@ tracks/4/enabled = true
 tracks/4/path = NodePath("../SpriteAttack")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
-tracks/4/keys = PackedFloat32Array(0, 1, -0.230993, 0.550286, 0.04, 0.116667, 1, -0.906935, 0.445139, 0.04, 0.316667, 1, 0.875549, 0.685474, 0.04, 0.350001, 1, 0.875549, 0.685474, 0.04, 0.633334, 1, 1.23104, 0.685474, 0.04)
+tracks/4/keys = PackedFloat32Array(0, 1, -0.230993, 0.550286, 0.04, 0.866666, 1, -0.906935, 0.445139, 0.04, 1, 1, 0.875549, 0.685474, 0.04, 1.03333, 1, 0.875549, 0.685474, 0.04, 1.31667, 1, 1.23104, 0.685474, 0.04)
 tracks/5/type = "scale_3d"
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/path = NodePath("../SpriteAttack")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/keys = PackedFloat32Array(0, 1, 0.3, 0.3, 1, 0.0334, 1, 0.495634, 0.331554, 1, 0.0668, 1, 0.600871, 1.02772, 1, 0.5511, 1, 2, 2, 1, 0.633334, 1, 0.600871, 1.627, 1)
+tracks/5/keys = PackedFloat32Array(0, 1, 0.3, 0.3, 1, 0.0334, 1, 0.495634, 0.331554, 1, 0.0668, 1, 0.600871, 1.02772, 1, 1.23443, 1, 2, 2, 1, 1.31667, 1, 0.600871, 1.627, 1)
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
@@ -3732,7 +3782,7 @@ tracks/6/path = NodePath("../SpriteAttack:modulate")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.167, 0.550001, 0.633334),
+"times": PackedFloat32Array(0, 0.850333, 1.23333, 1.31667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(0, 1, 1, 1), Color(0, 1, 1, 1), Color(0, 1, 1, 0)]
@@ -3792,7 +3842,7 @@ tracks/11/keys = {
 "start_offset": 0.0,
 "stream": ExtResource("13_748ol")
 }],
-"times": PackedFloat32Array(0.3173)
+"times": PackedFloat32Array(1.00063)
 }
 tracks/11/use_blend = true
 tracks/12/type = "method"
@@ -3802,7 +3852,7 @@ tracks/12/path = NodePath("..")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
-"times": PackedFloat32Array(0.0166667, 0.316667, 0.333334, 0.350001),
+"times": PackedFloat32Array(0.0333333, 1, 1.01667, 1.03333),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
 "args": ["super_freeze"],
@@ -3825,12 +3875,34 @@ tracks/13/path = NodePath("../AnimationPlayer")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.0166667),
+"transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [Vector3(0, 0, 0)],
 "method": &"set_grd_vel"
+}, {
+"args": [35],
+"method": &"activate_camera"
 }]
+}
+tracks/14/type = "position_3d"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("../Camera3D")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = PackedFloat32Array(0, 1, 0, 0.72, 1)
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("../Camera3D:size")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.916667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [3.0, 4.0, 2.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lpwhi"]
@@ -6093,7 +6165,7 @@ size = Vector3(0.202, 1.08658, 0.27)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vbsgv"]
 size = Vector3(1.2832, 1.29492, 1)
 
-[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point")]
+[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point", "custom_camera")]
 collision_layer = 0
 script = ExtResource("1_5p4re")
 BUTTONCOUNT = 3
@@ -6114,6 +6186,7 @@ ui_p2_training_scene = ExtResource("5_fjkep")
 dramatic_freezes = {
 "super_freeze": ExtResource("6_xkque")
 }
+custom_camera = NodePath("Camera3D")
 
 [node name="DebugData" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.92896, 0)
@@ -6173,15 +6246,19 @@ shape = ExtResource("3_8q5n8")
 
 [node name="Grabbing" parent="." instance=ExtResource("7_eysur")]
 
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, 1)
+projection = 1
+size = 3.0
+
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.154037, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.557022, 0, 0, 0, 0.73765, 0, 0, 0, 1, 0.298274, 0.374774, 0.04)
-modulate = Color(0, 1, 1, 1)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, -0.230993, 0.550286, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

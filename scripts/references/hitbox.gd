@@ -65,10 +65,4 @@ func _physics_process(_d):
 		queue_free()
 
 func _to_string() -> String:
-	return "name: %s
-damage: %s (chip: %s)
-stun: %s (block: %s)
-knockback: %s (blockback: %s)
-lifetime: %s
-hit priority: %s
-hitbox flags: %s" % [name if not is_projectile else get_parent().name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]
+	return "name: %s\ndamage: %s (chip: %s)\nstun: %s (block: %s)\nknockback: %s (blockback: %s)\nlifetime: %s\nhit priority: %s\nhitbox flags: %s\n" % [name if not is_projectile else get_parent().name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]

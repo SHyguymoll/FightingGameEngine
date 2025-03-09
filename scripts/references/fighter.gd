@@ -27,7 +27,7 @@ signal audio_created
 signal particle_created
 ## This signal is fired when using the fighter's custom camera for specific moments.[br]
 ## The int represents how many game ticks the custom camera will be used for.
-signal activated_camera(length: int)
+signal activated_camera(length: int, camera : Camera3D)
 ## This signal is fired for registering dramatic freezes in the game's scene tree.
 ## The game will also enter the dramatic freeze moment for the duration of the dramatic freeze.
 signal dramatic_freeze_created

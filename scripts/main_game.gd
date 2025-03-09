@@ -815,3 +815,4 @@ func custom_camera(time : int, new_camera : Camera3D):
 	fighter_camera.custom_camera = new_camera
 	new_camera.make_current()
 	fighter_camera.custom_cam_timer = time
+	fighter_camera.set_mode(FighterCamera.Modes.CUSTOM)

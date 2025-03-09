@@ -152,6 +152,10 @@ func expediate_air_vel(vel : Vector3):
 		attached_fighter.aerial_vel.y += vel.y
 
 
+func activate_camera(time : int):
+	attached_fighter.activated_camera.emit(time)
+
+
 func _on_animation_finished(anim_name: StringName) -> void:
 	if (anim_name
 			.trim_suffix(anim_left_suf)

@@ -52,7 +52,7 @@ tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "clips": [{
-"end_offset": 0.0433172,
+"end_offset": 0.0498334,
 "start_offset": 0.204724,
 "stream": ExtResource("2_1r1c4")
 }],
@@ -76,9 +76,6 @@ libraries = {
 [node name="Effects" type="Node2D" parent="."]
 
 [node name="Splash" type="Sprite2D" parent="Effects"]
-modulate = Color(1, 0, 0, 0)
-position = Vector2(2.38419e-07, 7.10543e-15)
-scale = Vector2(14.9422, 14.9422)
 texture = ExtResource("2_1vd1e")
 
 [node name="SoundEffect" type="AudioStreamPlayer" parent="."]

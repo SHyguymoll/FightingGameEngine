@@ -285,6 +285,8 @@ func _action_step(dramatic_freeze : bool, delta : float):
 		reset_facing()
 		ticks_since_state_change += 1
 		s_2d_anim_player.advance(delta)
+	if dramatic_freeze and current_state == States.ATCK_SUPR: #super move exception
+		s_2d_anim_player.advance(delta)
 
 
 func _connect_hud_elements(training_mode : bool):

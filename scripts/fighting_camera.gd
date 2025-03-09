@@ -25,11 +25,12 @@ func set_mode(new_mode : Modes):
 
 
 func _physics_process(_delta: float) -> void:
-	projection = PROJECTION_PERSPECTIVE  if pers_orth else PROJECTION_ORTHOGONAL
+	projection = PROJECTION_PERSPECTIVE if pers_orth else PROJECTION_ORTHOGONAL
 	rotation = rotation.lerp(custom_camera.rotation if mode == Modes.CUSTOM else Vector3.ZERO, DEFAULT_LERP)
 	if not mode == Modes.BALANCED:
 		custom_cam_timer = max(custom_cam_timer - 1, 0)
-		if not custom_cam_timer:
+		if custom_cam_timer == 0:
+			make_current()
 			set_mode(Modes.BALANCED)
 	if GameGlobal.global_hitstop:
 		return
