@@ -569,7 +569,7 @@ func hitbox_hitbox_collisions():
 						(hitbox.position + (check as Hitbox).position) / 2.0,
 						null)
 				spawn_audio(clash_sound)
-				if fighter_camera.mode_is_orth():
+				if not fighter_camera.pers_orth:
 					fighter_camera.size *= 1.25
 				else:
 					fighter_camera.position.z *= 1.25
