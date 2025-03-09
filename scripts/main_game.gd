@@ -233,7 +233,7 @@ func drama_freeze_function(delta):
 		start_pause_menu(false)
 
 
-func pause_function(delta):
+func pause_function(_delta):
 	for audio in game_audio.get_children() as Array[PausingCleaningAudioStreamPlayer]:
 		audio.pause(game_tick)
 	await pause_screen_node.exited
@@ -283,7 +283,7 @@ func round_end_function(delta):
 			moment = Moments.FADE_OUT
 
 
-func fade_out_function(delta):
+func fade_out_function(_delta):
 	smooth_transition.color.a = lerpf(smooth_transition.color.a, 1.0, 0.25)
 	if is_zero_approx(smooth_transition.color.a - 1.0):
 		get_tree().reload_current_scene()

@@ -13,6 +13,7 @@ extends CharacterBody3D
 ## or _ready. _process and _physics_process are purely for real-time effects,
 ## and _ready for initialization.[br]
 
+@warning_ignore_start("unused_signal")
 ## When the Fighter is grabbed in the damage step, this signal should fire to start the grab logic.
 signal grabbed
 ## When the Fighter finishes a grab, this signal is fired to release the other Fighter.
@@ -33,6 +34,7 @@ signal activated_camera(length: int, camera : Camera3D)
 signal dramatic_freeze_created
 ## This signal is fired when the Fighter is defeated.
 signal defeated
+@warning_ignore_restore("unused_signal")
 
 # the motion input stuff is here to make the documentation render correctly.
 ## Infinite Stun constant, just -1.

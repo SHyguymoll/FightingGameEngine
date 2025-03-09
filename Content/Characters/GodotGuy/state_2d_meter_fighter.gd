@@ -634,7 +634,7 @@ func walk_value() -> Fighter.WalkingX:
 	return ((1 * int((btn_pressed(GameGlobal.BTN_RIGHT) and right_facing) or
 			(btn_pressed(GameGlobal.BTN_LEFT) and !right_facing))) +
 			(-1 * int((btn_pressed(GameGlobal.BTN_LEFT) and right_facing) or
-			(btn_pressed(GameGlobal.BTN_RIGHT) and !right_facing))))
+			(btn_pressed(GameGlobal.BTN_RIGHT) and !right_facing)))) as Fighter.WalkingX
 
 
 func try_walk(exclude, cur_state: States) -> States:
@@ -803,7 +803,8 @@ func update_character_state():
 			aerial_vel.x = walk_value() * walk_speed
 			if not right_facing:
 				aerial_vel.x *= -1
-			if (btn_pressed_ind_under_time(GameGlobal.BTN_UP, -1, JUMP_SQUAT_LENGTH * 1.5) and
+			@warning_ignore("narrowing_conversion")
+			if (btn_pressed_ind_under_time(GameGlobal.BTN_UP, -1, int(JUMP_SQUAT_LENGTH * 1.5)) and
 				(btn_pressed_ind_under_time(GameGlobal.BTN_DOWN, -3, JUMP_SQUAT_LENGTH * 2) or
 				btn_pressed_ind_under_time(GameGlobal.BTN_DOWN, -4, JUMP_SQUAT_LENGTH * 2))):
 				jump_count -= 0.5

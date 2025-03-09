@@ -182,7 +182,7 @@ func make_command_list(p1 : Fighter, p2 : Fighter):
 		p2_cmd_list.add_child(new_command)
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if command_list_open:
 		main_screen.visible = false
 		command_list_screen.visible = true

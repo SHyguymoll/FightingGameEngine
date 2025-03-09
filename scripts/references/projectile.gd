@@ -1,6 +1,7 @@
 class_name Projectile
 extends Node3D
 
+@warning_ignore("unused_signal")
 signal projectile_ended(proj)
 
 @export var hitbox : Node3D
@@ -12,7 +13,7 @@ var paused : bool
 func _ready():
 	pass
 
-func tick(_delta : float, animate_only : bool = false):
+func tick(_delta : float, _animate_only : bool = false):
 	pass
 
 func update_paused(new_paused : bool):
