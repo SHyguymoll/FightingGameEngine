@@ -198,7 +198,7 @@ func choose_blocking_state(attack : Hitbox):
 func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 	# handling grabs
 	if attack.hitbox_flags & attack.HitboxFlags.CONNECT_GRAB:
-		if crouching():
+		if crouching() and attack.hitbox_flags & attack.HitboxFlags.BLOCK_LOW:
 			return false
 		if attack.hitbox_flags & attack.HitboxFlags.HIT_GROUND:
 			if airborne():
