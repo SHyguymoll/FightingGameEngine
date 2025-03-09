@@ -57,9 +57,9 @@ func _ready():
 			hitbox.damage_block = 1
 			hitbox.stun_hit = 15
 			hitbox.stun_block = 5
-			hitbox.hitstop_hit = 2
+			hitbox.hitstop_hit = 5
 			hitbox.hitstop_block = 1
-			hitbox.kback_hit = Vector3(0, 20, 0)
+			hitbox.kback_hit = Vector3(0, 7, 0)
 			hitbox.kback_block = Vector3(2, -2, 0)
 			hitbox.hitbox_flags += Hitbox.HitboxFlags.SUPER
 			hitbox.state_effect = Hitbox.StateEffects.LAUNCHER
