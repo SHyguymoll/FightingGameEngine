@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=3 uid="uid://kquoyj34deus"]
+[gd_scene load_steps=83 format=3 uid="uid://kquoyj34deus"]
 
 [ext_resource type="Script" uid="uid://cph1wxofcd8j3" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
@@ -40,6 +40,27 @@ tracks/1/keys = {
 "update": 0,
 "values": [3.0]
 }
+tracks/2/type = "scale_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../SpriteAttack")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0.362995, 0.362995, 1)
+tracks/3/type = "position_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../SpriteBlock")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0)
+tracks/4/type = "scale_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, 1, 1, 1)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1cfsu"]
 _data = {
@@ -6046,6 +6067,134 @@ tracks/8/keys = {
 "values": [-0.5]
 }
 
+[sub_resource type="Animation" id="Animation_jkx1u"]
+resource_name = "lose_right"
+length = 2.00001
+step = 0.0166667
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.67, 0, 0.466667, 1, 0, 0.67, 0, 1.76667, 1, 0, 0.0992956, 0)
+tracks/1/type = "scale_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.466667, 1, 1, 1, 1, 1.76667, 1, 1, 0.17, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../SpriteBlock:visible")
+tracks/3/interp = 0
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../SpriteAttack:visible")
+tracks/4/interp = 0
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "position_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../Hurtbox/HurtboxShape")
+tracks/5/interp = 0
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0, 0.642, 0)
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../Hurtbox/HurtboxShape:shape")
+tracks/6/interp = 0
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_8q5n8")]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("../Hurtbox/HurtboxShape:disabled")
+tracks/7/interp = 0
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "position_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("../Grabbing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0)
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("..:gravity")
+tracks/9/interp = 0
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [-0.5]
+}
+tracks/10/type = "position_3d"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("../SpriteAttack")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = PackedFloat32Array(0, 1, -0.559815, 0.141944, 0.04, 0.466667, 1, -0.252082, 1.03157, 0.04, 1.76667, 1, -0.252082, 0.197896, 0.04)
+tracks/11/type = "position_3d"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("../SpriteBlock")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = PackedFloat32Array(0, 1, 0.56, 0.129, 0.04, 0.466667, 1, 0.269053, 1.04101, 0.04, 1.76667, 1, 0.269053, 0.207332, 0.04)
+tracks/12/type = "scale_3d"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("../SpriteAttack")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = PackedFloat32Array(0, 1, 0.362995, 0.362995, 1, 0.466667, 1, 0.362995, 0.362995, 1, 1.76667, 1, 0.5, 0.363, 1)
+tracks/13/type = "scale_3d"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("../SpriteBlock")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = PackedFloat32Array(0, 1, 0.362995, 0.362995, 1, 0.466667, 1, 0.362995, 0.362995, 1, 1.76667, 1, 0.5, 0.363, 1)
+
 [sub_resource type="Animation" id="Animation_ahwld"]
 resource_name = "win_right"
 length = 3.41667
@@ -6156,6 +6305,7 @@ tracks/10/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xhqxl"]
 _data = {
 &"intro_right": SubResource("Animation_mo8k0"),
+&"lose_right": SubResource("Animation_jkx1u"),
 &"win_right": SubResource("Animation_ahwld")
 }
 
@@ -6258,14 +6408,12 @@ no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, -0.230993, 0.550286, 0.04)
+transform = Transform3D(0.362995, 0, 0, 0, 0.362995, 0, 0, 0, 1, -0.559815, 0.141944, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteBlock" type="Sprite3D" parent="."]
-transform = Transform3D(0.363, 0, 0, 0, 0.363, 0, 0, 0, 1, -0.017086, 0.517761, 0.04)
-visible = false
-modulate = Color(1, 1, 1, 0)
+transform = Transform3D(0.362995, 0, 0, 0, 0.362995, 0, 0, 0, 1, 0, 0, 0)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

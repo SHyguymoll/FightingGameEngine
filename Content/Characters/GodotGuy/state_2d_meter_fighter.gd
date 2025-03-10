@@ -34,7 +34,7 @@ enum States {
 	BLCK_HGH, BLCK_LOW, BLCK_AIR, GET_UP, # handling getting attacked well
 	HURT_HGH, HURT_LOW, HURT_CRCH, HURT_GRB, HURT_GRB_NOBREAK, # not handling getting attacked well
 	HURT_FALL, HURT_LIE, HURT_BNCE, # REALLY not handling getting attacked well
-	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE # The final stage of not handling it
+	OUTRO_FALL, OUTRO_LIE, OUTRO_BNCE, OUTRO_LOSE, # The final stage of not handling it
 }
 
 const JUMP_SQUAT_LENGTH = 4
