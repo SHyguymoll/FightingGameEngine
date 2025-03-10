@@ -39,6 +39,8 @@ func init_fighters():
 
 func construct_game():
 	super()
+	game_seconds = -1
+
 	var p1_dtar = (debug_targetter.instantiate() as DebugTargetter)
 	p1_dtar.pointer_texture = load("res://Content/Art/Menu/CharacterSelect/Player1Select.png")
 	p1_dtar.pointer_target = p1
@@ -169,6 +171,7 @@ func create_inputs():
 
 func game_function(delta):
 	super(delta)
+	game_tick -= 1 # time is frozen
 	if p1_reset_health_on_drop and not p2_combo:
 		p1.health = p1_health_reset
 	if p2_reset_health_on_drop and not p1_combo:

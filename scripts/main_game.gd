@@ -18,6 +18,9 @@ enum RoundChangeTypes {
 
 const MOVEMENTBOUNDX = 4.5
 
+const TICKS_PER_TIME_UNIT = 60
+const START_TIME = 99
+
 var p1 : Fighter
 var p2 : Fighter
 var stage : Stage
@@ -57,7 +60,7 @@ var p1_input_index : int = 0
 var p2_input_index : int = 0
 
 var game_tick : int = 0
-
+var game_seconds : int = 0
 
 var p1_combo := 0
 var p2_combo := 0
@@ -115,6 +118,7 @@ func construct_game():
 	layer_pause_screen.visible = false
 	smooth_transition.color = Color(0, 0, 0, 1)
 	GameGlobal.global_hitstop = 0
+	game_seconds = START_TIME
 	stage = Content.stage_resource.instantiate()
 	game_fighters_and_stage.add_child(stage)
 	fighter_camera.set_mode(FighterCamera.Modes.BALANCED)
@@ -209,13 +213,17 @@ func game_function(delta):
 	p2._action_step(false, delta)
 	check_combos()
 	character_positioning(delta)
+	game_tick += 1
+	if game_tick % TICKS_PER_TIME_UNIT == 0:
+		game_seconds -= 1
+		if game_seconds == 0:
+			pass
 	update_hud()
 	ui_splash_text.modulate.a8 -= 10
 	if Input.is_action_just_pressed("first_pause"):
 		start_pause_menu(true)
 	if Input.is_action_just_pressed("second_pause"):
 		start_pause_menu(false)
-	game_tick += 1
 
 
 func drama_freeze_function(delta):
@@ -403,6 +411,7 @@ func update_hud():
 	ui_p2_health.value = p2.health
 	ui_p2_combo_counter.text = str(p2_combo)
 	ui_p2_combo_counter.visible = p2_combo > 1
+	ui_timer.text = str(game_seconds)
 
 
 func init_fighters():
