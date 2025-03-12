@@ -548,6 +548,13 @@ func create_inputs():
 	else:
 		increment_inputs(p1_inputs)
 
+	if (generate_prior_input_hash(p2_inputs) != generate_current_input_hash(
+			p2_buttons, p2.BUTTONCOUNT)):
+		create_new_input_set(p2_inputs, p2_buttons)
+		p2_input_index += 1
+	else:
+		increment_inputs(p2_inputs)
+
 
 func hitbox_hitbox_collisions():
 	for hitbox in (game_hitboxes.get_children() as Array[Hitbox]):
