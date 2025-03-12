@@ -104,7 +104,7 @@ var round_change_behavior : RoundChangeTypes = RoundChangeTypes.ADD
 @export var layer_drama_freeze : CanvasLayer
 @export var layer_results_screen : CanvasLayer
 @export var layer_pause_screen : CanvasLayer
-@export var layer_smooth_transistions : CanvasLayer
+@export var layer_smooth_transistions : ColorTransition
 
 @export var pause_screen_node : PauseScreen
 @export var results_screen_node : ResultsScreen
@@ -116,7 +116,7 @@ func construct_game():
 	layer_hud.visible = true
 	layer_results_screen.visible = false
 	layer_pause_screen.visible = false
-	smooth_transition.color = Color(0, 0, 0, 1)
+	layer_smooth_transistions.visible = true
 	GameGlobal.global_hitstop = 0
 	game_seconds = START_TIME
 	stage = Content.stage_resource.instantiate()
@@ -177,12 +177,13 @@ func fade_in_function(delta):
 	p1._action_step(false, delta)
 	p2._input_step()
 	p2._action_step(false, delta)
-	smooth_transition.color.a = lerpf(smooth_transition.color.a, 0.0, 0.25)
-	if smooth_transition.color.a < 0.1:
-		smooth_transition.color.a = 0.0
-		moment = Moments.INTRO
-		p1._do_intro()
-		p2._do_intro()
+	character_positioning(delta)
+	check_combos()
+	layer_smooth_transistions.do_second_half()
+	await layer_smooth_transistions.second_half_completed
+	moment = Moments.INTRO
+	p1._do_intro()
+	p2._do_intro()
 
 
 func intro_function(delta):
@@ -292,9 +293,8 @@ func round_end_function(delta):
 
 
 func fade_out_function(_delta):
-	smooth_transition.color.a = lerpf(smooth_transition.color.a, 1.0, 0.25)
-	if is_zero_approx(smooth_transition.color.a - 1.0):
-		get_tree().reload_current_scene()
+	layer_smooth_transistions.do_first_half()
+	await layer_smooth_transistions.first_half_completed
 
 
 func _physics_process(delta):
@@ -315,6 +315,7 @@ func _physics_process(delta):
 			round_end_function(delta)
 		Moments.FADE_OUT:
 			fade_out_function(delta)
+			get_tree().reload_current_scene()
 
 
 func make_results_screen(winner : int):
