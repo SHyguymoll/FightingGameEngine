@@ -188,9 +188,16 @@ var attack_hurt : bool
 ## This is set to the other Fighter's GrabPoint for grabbing logic.
 var grabbed_point : GrabPoint
 ## [color=red] DO NOT TOUCH. [/color]
-## This is set to true when the game ends, either through a Fighter signalling that they've been defeated, or through the timer running out.
-var game_ended := false
+## This is set when the game ends, either through a Fighter signalling that they've been defeated, or through the timer running out.
+var game_ended : GameEnds = GameEnds.NO
 
+enum GameEnds {
+	NO,
+	WIN_TIME,
+	LOSE_TIME,
+	WIN_KO,
+	LOSE_KO,
+}
 ## [color=red] DO NOT TOUCH. [/color] Extremely important, how the character stores the inputs from the game.[br]
 ## Dictionary with 4 entries for each cardinal directional input, plus the number of buttons (buttonX).[br]
 ## Each entry holds an array made up of tuples of a boolean and an int, representing how long the

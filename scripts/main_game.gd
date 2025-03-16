@@ -265,14 +265,14 @@ func round_end_function(delta):
 	update_hud()
 	if game_ended:
 		return
-	if p1._post_outro() and p2._in_defeated_state():
+	if p1.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME] and p2._in_defeated_state():
 		GameGlobal.p1_wins += 1
 		if GameGlobal.p1_wins < GameGlobal.win_threshold:
 			moment = Moments.FADE_OUT
 		else:
 			print("game ended with a p1 victory, creating results screen")
 			make_results_screen(0)
-	elif p1._in_defeated_state() and p2._post_outro():
+	elif p1._in_defeated_state() and p2.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME]:
 		GameGlobal.p2_wins += 1
 		if GameGlobal.p2_wins < GameGlobal.win_threshold:
 			moment = Moments.FADE_OUT
@@ -817,13 +817,24 @@ func grab_released(player):
 		p1.grabbed_point.act_on_player = false
 
 
+func time_over():
+	GameGlobal.global_hitstop = 120
+	ui_splash_text.text = "TIME"
+	ui_splash_text.modulate.a8 = 255
+	moment = Moments.ROUND_END
+	p1.game_ended = Fighter.GameEnds.WIN_TIME if p1.health > p2.health else Fighter.GameEnds.LOSE_TIME
+	p2.game_ended = Fighter.GameEnds.WIN_TIME if p2.health > p1.health else Fighter.GameEnds.LOSE_TIME
+	for projectile in (game_projectiles.get_children() as Array[Projectile]):
+		projectile.destroy()
+
+
 func player_defeated():
 	GameGlobal.global_hitstop = 120
 	ui_splash_text.text = "KO"
 	ui_splash_text.modulate.a8 = 255
 	moment = Moments.ROUND_END
-	p1.game_ended = true
-	p2.game_ended = true
+	p1.game_ended = Fighter.GameEnds.WIN_KO if p1.health > 0 else Fighter.GameEnds.LOSE_KO
+	p2.game_ended = Fighter.GameEnds.WIN_KO if p2.health > 0 else Fighter.GameEnds.LOSE_KO
 	for projectile in (game_projectiles.get_children() as Array[Projectile]):
 		projectile.destroy()
 
