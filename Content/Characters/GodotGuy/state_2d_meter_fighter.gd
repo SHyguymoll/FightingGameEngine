@@ -138,6 +138,11 @@ func _do_intro():
 	set_state(States.INTRO)
 
 
+func _skip_intro():
+	set_state(States.IDLE)
+	previous_state = States.IDLE
+
+
 func handle_damage(attack : Hitbox, hit : bool, next_state : States, combo_count : int):
 	print(attack)
 	release_grab()
@@ -854,6 +859,10 @@ func resolve_state_transitions():
 	# jump bug patch
 	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT, States.DASH_A_F, States.DASH_A_B]:
 		previous_state = States.JUMP
+	# re-intro/outro patch
+	if previous_state in [States.INTRO, States.ROUND_WIN, States.SET_WIN,
+		States.OUTRO_LOSE, States.OUTRO_FALL, States.OUTRO_LIE, States.OUTRO_BNCE]:
+		previous_state = States.IDLE
 	match current_state:
 		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended in [Fighter.GameEnds.WIN_TIME, Fighter.GameEnds.WIN_KO]:
 			set_state(States.ROUND_WIN)

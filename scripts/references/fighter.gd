@@ -255,9 +255,12 @@ func _initialize_hud_elements(training_mode : bool) -> void:
 func _connect_hud_elements(_training_mode : bool) -> void:
 	pass
 
-
 ## Called in the intro moment of the game for running intro animations.
 func _do_intro() -> void:
+	pass
+
+## Do whatever it takes to end the intro early (make _post_intro_true)
+func _skip_intro() -> void:
 	pass
 
 ## Checked until both Fighters have completed their intros.

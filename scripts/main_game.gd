@@ -192,6 +192,9 @@ func intro_function(delta):
 	p1._action_step(false, delta)
 	p2._input_step()
 	p2._action_step(false, delta)
+	if Input.is_action_just_pressed("first_pause") or Input.is_action_just_pressed("second_pause"):
+		p1._skip_intro()
+		p2._skip_intro()
 	if p1._post_intro() and p2._post_intro():
 		moment = Moments.GAME
 		ui_splash_text.text = "FIGHT"
