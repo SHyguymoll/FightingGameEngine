@@ -6402,18 +6402,18 @@ projection = 1
 size = 3.0
 
 [node name="SpriteMain" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0992956, 0)
 rotation_edit_mode = 1
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteAttack" type="Sprite3D" parent="."]
-transform = Transform3D(0.362995, 0, 0, 0, 0.362995, 0, 0, 0, 1, -0.559815, 0.141944, 0.04)
+transform = Transform3D(0.362995, 0, 0, 0, 0.362995, 0, 0, 0, 1, -0.252082, 0.197896, 0.04)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 
 [node name="SpriteBlock" type="Sprite3D" parent="."]
-transform = Transform3D(0.362995, 0, 0, 0, 0.362995, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.363, 0, 0, 0, 1, 0, 0, 0)
 no_depth_test = true
 texture = ExtResource("14_03fpi")
 

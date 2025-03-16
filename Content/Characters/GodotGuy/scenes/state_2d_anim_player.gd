@@ -28,6 +28,7 @@ var basic_anim_state_dict := {
 	State2DMeterFighter.States.HURT_LIE : "hurting/lying", State2DMeterFighter.States.GET_UP : "hurting/get_up",
 	State2DMeterFighter.States.OUTRO_FALL : "hurting/air", State2DMeterFighter.States.OUTRO_BNCE : "hurting/air",
 	State2DMeterFighter.States.OUTRO_LIE : "hurting/lying",
+	State2DMeterFighter.States.OUTRO_LOSE : "other/lose",
 }
 
 var attack_return_states := {

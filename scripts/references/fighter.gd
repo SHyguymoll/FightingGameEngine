@@ -289,6 +289,11 @@ func _in_hurting_state() -> bool:
 func _in_grabbed_state() -> bool:
 	return true
 
+## Returns based on if the Fighter is in a "Neutral" state.[br]
+## That is, the state that the Fighter rests in when no action is imposed upon it.
+func _in_neutral_state() -> bool:
+	return true
+
 ## Returns an array of Hitboxes which are colliding with the Fighter's hurtbox(es).
 func _return_attackers() -> Array[Hitbox]:
 	return []

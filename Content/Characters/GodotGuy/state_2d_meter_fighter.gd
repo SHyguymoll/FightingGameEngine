@@ -325,7 +325,7 @@ func _post_outro() -> bool:
 
 
 func _in_defeated_state() -> bool:
-	return current_state == States.OUTRO_LIE
+	return current_state in [States.OUTRO_LIE, States.OUTRO_LOSE]
 
 
 func _in_outro_state() -> bool:
@@ -353,6 +353,10 @@ func _in_hurting_state() -> bool:
 
 func _in_grabbed_state() -> bool:
 	return current_state == States.HURT_GRB
+
+
+func _in_neutral_state() -> bool:
+	return current_state == States.IDLE
 
 
 func training_mode_set_meter(val):
@@ -851,8 +855,11 @@ func resolve_state_transitions():
 	if previous_state in [States.JUMP_INIT, States.JUMP_AIR_INIT, States.DASH_A_F, States.DASH_A_B]:
 		previous_state = States.JUMP
 	match current_state:
-		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended:
+		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended in [Fighter.GameEnds.WIN_TIME, Fighter.GameEnds.WIN_KO]:
 			set_state(States.ROUND_WIN)
+			return
+		States.IDLE, States.WALK_F, States.WALK_B, States.CRCH when game_ended in [Fighter.GameEnds.LOSE_TIME]:
+			set_state(States.OUTRO_LOSE)
 			return
 		States.INTRO when not s_2d_anim_player.is_playing():
 			set_state(States.IDLE)
