@@ -19,7 +19,7 @@ enum RoundChangeTypes {
 const MOVEMENTBOUNDX = 4.5
 
 const TICKS_PER_TIME_UNIT = 60
-const START_TIME = 5
+const START_TIME = 99
 
 var p1 : Fighter
 var p2 : Fighter
