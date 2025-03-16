@@ -609,6 +609,7 @@ start_val = 1.0
 lerp_val = 0.4
 
 [node name="ColorRect" type="ColorRect" parent="SmoothTransitionLayer/Control"]
+layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2

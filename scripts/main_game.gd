@@ -19,7 +19,7 @@ enum RoundChangeTypes {
 const MOVEMENTBOUNDX = 4.5
 
 const TICKS_PER_TIME_UNIT = 60
-const START_TIME = 99
+const START_TIME = 5
 
 var p1 : Fighter
 var p2 : Fighter
@@ -218,7 +218,7 @@ func game_function(delta):
 	if game_tick % TICKS_PER_TIME_UNIT == 0:
 		game_seconds -= 1
 		if game_seconds == 0:
-			pass
+			time_over()
 	update_hud()
 	ui_splash_text.modulate.a8 -= 10
 	if Input.is_action_just_pressed("first_pause"):
@@ -251,8 +251,12 @@ func pause_function(_delta):
 	end_pause_menu()
 
 
+func _ko_animation_complete() -> bool:
+	return ui_splash_text.modulate.a8 == 0
+
+
 func round_end_function(delta):
-	ui_splash_text.modulate.a8 -= 4
+	ui_splash_text.modulate.a8 = max(ui_splash_text.modulate.a8 - 4, 0)
 	for proj in (game_projectiles.get_children() as Array[Projectile]):
 		proj.tick(delta, true)
 	move_inputs(true)
@@ -265,14 +269,16 @@ func round_end_function(delta):
 	update_hud()
 	if game_ended:
 		return
-	if p1.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME] and p2._in_defeated_state():
+	if not _ko_animation_complete():
+		return
+	if p1.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME] and p1._post_outro() and p2._in_defeated_state():
 		GameGlobal.p1_wins += 1
 		if GameGlobal.p1_wins < GameGlobal.win_threshold:
 			moment = Moments.FADE_OUT
 		else:
 			print("game ended with a p1 victory, creating results screen")
 			make_results_screen(0)
-	elif p1._in_defeated_state() and p2.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME]:
+	elif p1._in_defeated_state() and p2.game_ended in [Fighter.GameEnds.WIN_KO, Fighter.GameEnds.WIN_TIME] and p2._post_outro():
 		GameGlobal.p2_wins += 1
 		if GameGlobal.p2_wins < GameGlobal.win_threshold:
 			moment = Moments.FADE_OUT
