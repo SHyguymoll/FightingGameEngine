@@ -625,7 +625,8 @@ func move_inputs(fake_inputs : bool):
 				if not p1_attacker.is_projectile:
 					p2.attack_connected = true
 					p2.attack_hurt = true
-				p2_combo += 1
+				if not p1_attacker.hitbox_flags & Hitbox.HitboxFlags.NO_COMBO_COUNT:
+					p2_combo += 1
 				p2._on_hit(p1_attacker.on_hit)
 				GameGlobal.global_hitstop = int(p1_attacker.hitstop_hit)
 			else:
@@ -647,7 +648,8 @@ func move_inputs(fake_inputs : bool):
 				if not p2_attacker.is_projectile:
 					p1.attack_connected = true
 					p1.attack_hurt = true
-				p1_combo += 1
+				if not p2_attacker.hitbox_flags & Hitbox.HitboxFlags.NO_COMBO_COUNT:
+					p1_combo += 1
 				p1._on_hit(p2_attacker.on_hit)
 				GameGlobal.global_hitstop = int(p2_attacker.hitstop_hit)
 			else:
