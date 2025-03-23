@@ -146,10 +146,6 @@ func _skip_intro():
 func handle_damage(attack : Hitbox, hit : bool, next_state : States, combo_count : int):
 	print(attack)
 	release_grab()
-	if attack.hitbox_flags & Hitbox.HitboxFlags.NO_SCALING_CHANGE:
-		return
-	if attack.hitbox_flags & Hitbox.HitboxFlags.NO_COMBO_COUNT:
-		return
 	var reduction : float = float(combo_count) / 5 + 1.0
 	if hit:
 		health -= (attack.damage_hit * defense_mult) / reduction
