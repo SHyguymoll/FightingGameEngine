@@ -182,6 +182,8 @@ func fade_in_function(delta):
 	layer_smooth_transistions.do_second_half()
 	await layer_smooth_transistions.second_half_completed
 	moment = Moments.INTRO
+	p1.show()
+	p2.show()
 	p1._do_intro()
 	p2._do_intro()
 
@@ -443,6 +445,7 @@ func init_fighters():
 	p1.activated_camera.connect(custom_camera.bind(p1.custom_camera))
 	p1.grabbed_point = grab_point.instantiate()
 	game_fighters_and_stage.add_child(p1.grabbed_point)
+	p1.hide()
 
 	for i in range(p2.BUTTONCOUNT):
 		p2_inputs["button" + str(i)] = [[0, false]]
@@ -461,6 +464,7 @@ func init_fighters():
 	p2.activated_camera.connect(custom_camera.bind(p2.custom_camera))
 	p2.grabbed_point = grab_point.instantiate()
 	game_fighters_and_stage.add_child(p2.grabbed_point)
+	p2.hide()
 
 	p1.distance = p1.position.x - p2.position.x
 	p2.distance = p2.position.x - p1.position.x
