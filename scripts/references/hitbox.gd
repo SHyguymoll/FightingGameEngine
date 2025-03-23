@@ -15,6 +15,8 @@ enum HitboxFlags {
 	SUPER = 1024,
 	NO_KO = 2048,
 	IGNORE_EDGE = 4096,
+	NO_COMBO_COUNT = 8192,
+	NO_SCALING_CHANGE = 16384,
 }
 enum StateEffects {
 	NONE = 0,
@@ -47,7 +49,8 @@ enum StateEffects {
 	"Hit Grab:4", "Connect Grab:8", "Ends Grab:16", "Breaks Grab:32",
 	"Unblockable/Inescapable:64",
 	"Hits Grounded:128", "Hits Airborne:256", "G+A:384", "Hits OTG:512", "Always Hits:896",
-	"Super Attack:1024", "Cannot KO:2048", "Ignore Stage Edge:4096",
+	"Super Attack:1024", "Cannot KO:2048", "Ignore Stage Edge:4096", "Don't Increment Combo Counter:8192",
+	"Don't Affect Scaling:16384"
 	) var hitbox_flags : int = 0
 @export_enum("None", "Knockdown", "Launcher", "Collapse", "Camera/Wall Bounce") var state_effect : int
 @export var on_hit : Array
