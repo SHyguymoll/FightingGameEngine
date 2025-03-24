@@ -68,4 +68,11 @@ func _physics_process(_d):
 		queue_free()
 
 func _to_string() -> String:
-	return "name: %s\ndamage: %s (chip: %s)\nstun: %s (block: %s)\nknockback: %s (blockback: %s)\nlifetime: %s\nhit priority: %s\nhitbox flags: %s\n" % [name if not is_projectile else get_parent().name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flags]
+	var hitbox_flag_str = ""
+	var hitbox_flag_working = hitbox_flags
+	while hitbox_flag_working > 0:
+		var yoinked_flag = int(floor(log(hitbox_flag_working) / log(2)))
+		var val_actual = int(pow(2, yoinked_flag))
+		hitbox_flag_str += Hitbox.HitboxFlags.keys()[yoinked_flag] + " "
+		hitbox_flag_working -= val_actual
+	return "name: %s\ndamage: %s (chip: %s)\nstun: %s (block: %s)\nknockback: %s (blockback: %s)\nlifetime: %s\nhit priority: %s\nhitbox flags: %s\n" % [name if not is_projectile else get_parent().name, damage_hit, damage_block, stun_hit, stun_block, kback_hit, kback_block, lifetime, hit_priority, hitbox_flag_str]
