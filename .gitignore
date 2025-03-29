@@ -6,3 +6,6 @@
 bin/
 build/
 lib/
+
+# Custom Characters Folder
+Content/Characters/More/
