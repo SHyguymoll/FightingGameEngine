@@ -281,16 +281,16 @@ func _in_outro_state() -> bool:
 
 ## Returns based on if this Fighter is attacking. Used for determining counter-hits, punishes, etc.
 func _in_attacking_state() -> bool:
-	return true
+	return false
 
 ## Returns based on if the Fighter is "hurting", typically meaning that they have been struck by an
 ## attack and is still immobilized by it.
 func _in_hurting_state() -> bool:
-	return true
+	return false
 
 ## Returns based on if the Fighter has been grabbed.
 func _in_grabbed_state() -> bool:
-	return true
+	return false
 
 ## Returns based on if the Fighter is in a "Neutral" state.[br]
 ## That is, the state that the Fighter rests in when no action is imposed upon it.
@@ -324,7 +324,7 @@ func _on_block(_on_block_data : Array) -> void:
 ## Holds a reference to that Hitbox in [param _attack],
 ## as well as the current state of the combo counter.
 func _damage_step(_attack : Hitbox, _combo_counter : int) -> bool:
-	return true
+	return false
 
 ## Used to initialize the Hurtboxes for the Fighter.[br]
 ## Player 1 ([member player] is True): Hurtbox Collision Masks = 2, [member hitbox_layer] = 4.
