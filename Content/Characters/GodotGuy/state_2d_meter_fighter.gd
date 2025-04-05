@@ -105,13 +105,15 @@ var aerial_vel : Vector3
 @onready var s_2d_anim_player : State2DAnimationPlayer = $AnimationPlayer
 @onready var area3d_intersect_check : Area3D = $Area3DIntersectionCheck
 
+@onready var debug_data : Label3D = $DebugData
+
 var current_attack : String
 
 # Nothing should modify the fighter's state in _process or _ready, _process is purely for
 # real-time effects, and _ready for initialization.
 func _ready():
 	reset_facing()
-	$DebugData.visible = get_parent().get_parent() is TrainingModeGame
+	debug_data.visible = get_parent().get_parent() is TrainingModeGame
 	s_2d_anim_player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 	s_2d_anim_player.play(s_2d_anim_player.basic_anim_state_dict[current_state] +
 			(s_2d_anim_player.anim_right_suf if right_facing else s_2d_anim_player.anim_left_suf))
@@ -121,7 +123,7 @@ func _process(_delta):
 	(ui_under_health as TextureProgressBar).value = meter
 	if not get_parent().get_parent() is TrainingModeGame:
 		return
-	$DebugData.text = """State: %s (Prev: %s)
+	debug_data.text = """State: %s (Prev: %s)
 Vels: %s | %s | %s
 Stun: %s/%s
 Current Animation : %s
