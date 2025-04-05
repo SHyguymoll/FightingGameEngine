@@ -1,6 +1,6 @@
 [gd_scene load_steps=83 format=3 uid="uid://kquoyj34deus"]
 
-[ext_resource type="Script" uid="uid://cph1wxofcd8j3" path="res://Content/Characters/GodotGuy/state_2d_meter_fighter.gd" id="1_5p4re"]
+[ext_resource type="Script" uid="uid://cpxifdu2k43kt" path="res://Content/Characters/GodotGuy/godot_guy.gd" id="1_hspw6"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
 [ext_resource type="PackedScene" uid="uid://crglsjvtvqvim" path="res://Content/Characters/GodotGuy/scenes/SuperBarP1.tscn" id="2_xjhia"]
 [ext_resource type="Shape3D" uid="uid://bs5a4315bo07p" path="res://Content/Characters/GodotGuy/hurtbox_shapes/base_shape.tres" id="3_8q5n8"]
@@ -6317,7 +6317,7 @@ size = Vector3(1.2832, 1.29492, 1)
 
 [node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point", "custom_camera")]
 collision_layer = 0
-script = ExtResource("1_5p4re")
+script = ExtResource("1_hspw6")
 BUTTONCOUNT = 3
 JUST_PRESSED_BUFFER = 2
 start_x_offset = 2.0
