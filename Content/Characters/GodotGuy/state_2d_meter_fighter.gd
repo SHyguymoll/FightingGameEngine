@@ -165,6 +165,7 @@ func choose_blocking_state(attack : Hitbox):
 	else:
 		return States.BLCK_HGH
 
+
 # Only runs when a hitbox is overlapping
 # If attack is blocked or doesn't land, return false
 # Otherwise, return true
@@ -246,7 +247,6 @@ func _damage_step(attack : Hitbox, combo_count : int) -> bool:
 	# attack was blocked successfully
 	handle_damage(attack, false, choose_blocking_state(attack), combo_count)
 	return false
-
 
 
 # This is called when a hitbox makes contact with the other fighter,
@@ -379,6 +379,7 @@ func create_projectile(pos : Vector3, projectile_name : String, type : int):
 
 	emit_signal(&"projectile_created", new_projectile)
 
+
 func create_particle(par_name : String, origin : GameParticle.Origins, pos_offset : Vector3):
 	var try_get = particles.get(par_name)
 	if try_get == null:
@@ -386,6 +387,7 @@ func create_particle(par_name : String, origin : GameParticle.Origins, pos_offse
 		return
 	var particle_instance : GameParticle = try_get.instantiate()
 	emit_signal(&"particle_created", particle_instance, origin, pos_offset, self)
+
 
 func create_dramatic_freeze(frz_name : String):
 	var try_get = dramatic_freezes.get(frz_name)
@@ -395,12 +397,14 @@ func create_dramatic_freeze(frz_name : String):
 	var new_freeze := try_get.instantiate() as DramaticFreeze
 	emit_signal(&"dramatic_freeze_created", new_freeze, self)
 
+
 func create_audio(audio_name):
 	var try_get = game_instanced_sounds.get(audio_name)
 	if try_get == null:
 		printerr(audio_name + " does not exist")
 		return
 	emit_signal(&"audio_created", try_get as AudioStream)
+
 
 func release_grab():
 	emit_signal("grab_released", player)
@@ -817,9 +821,6 @@ func update_character_state():
 	else:
 		area3d_intersect_check.process_mode = Node.PROCESS_MODE_DISABLED if airborne() else Node.PROCESS_MODE_INHERIT
 	check_true = move_and_slide()
-
-
-
 
 
 func reset_facing():
