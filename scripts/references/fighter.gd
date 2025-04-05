@@ -111,6 +111,8 @@ const MOTION_HCB = [[6,2,4], [6,3,2,4], [6,2,1,4], [6,3,2,1,4]]
 ## Used when the Fighter has a facing direction, can be pinned to a value if not necessary.
 var right_facing : bool
 
+@export var hurtbox : Area3D
+
 @export_category("Fighter Details")
 ## The name of the Fighter. Supports Unicode.
 @export var char_name : String
@@ -299,7 +301,10 @@ func _in_neutral_state() -> bool:
 
 ## Returns an array of Hitboxes which are colliding with the Fighter's hurtbox(es).
 func _return_attackers() -> Array[Hitbox]:
-	return []
+	var attackers = hurtbox.get_overlapping_areas()
+	var actual_attackers : Array[Hitbox] = []
+	actual_attackers.assign(attackers)
+	return actual_attackers
 
 ## The step taken after the damage step, used for determining what is done with recieved inputs.
 ## This step is not affected by active Dramatic Freezes.
