@@ -65,18 +65,18 @@ var check_true : bool # Used to remember results of move_and_slide()
 
 var animation_ended = true
 
-var walk_speed : float = 2
-var jump_total : float = 2
-var jump_height : float = 11
-var gravity : float = -0.5
-var min_fall_vel : float = -6.5
-var GROUND_SLIDE_FRICTION : float = 0.97
-var meter : float = 0
-var METER_MAX : float = 100
-var damage_mult : float = 1.0
-var defense_mult : float = 1.0
+@export var walk_speed : float = 2
+@export var jump_total : float = 2
+@export var jump_height : float = 11
+@export var gravity : float = -0.5
+@export var min_fall_vel : float = -6.5
+@export var GROUND_SLIDE_FRICTION : float = 0.97
+@export var meter : float = 0
+@export var METER_MAX : float = 100
+@export var damage_mult : float = 1.0
+@export var defense_mult : float = 1.0
 
-var jump_count : float = 0
+@export var jump_count : float = 0
 
 var ground_vel : Vector3
 var aerial_vel : Vector3
