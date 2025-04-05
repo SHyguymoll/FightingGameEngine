@@ -3,9 +3,10 @@ extends Fighter
 
 ## A Finite State Machine-based Fighter with features based off of Guilty Gear, Street Fighter, etc.
 ##
-## This is an example of a fighter that someone could make in my engine.[br]
+## This is an example of a fighter that someone could make.[br]
 ## This Fighter implements the following gameplay features:[br]
-## [b]Normal Attacks[/b]: Attack Buttons 0, 1 and 2 (from hereon A, B and C) perform simple attacks.[br]
+## [b]Simple Hitboxes[/b]: Hitboxes are preloaded and instantiated on the fly.[br]
+## [b]Normal Attacks[/b]: Pressing an attack button with no direction will perform an attack.[br]
 ## [b]Command Attacks[/b]: Pressing an attack button with a direction will perform a command attack.[br]
 ## [b]Grounded Dashing and Aerial Dashing[/b]: Double tap left or right for a burst of speed.[br]
 ## [b]Jump-Cancelling[/b]: During the impact frames of an attack, the fighter can jump.[br]
@@ -81,26 +82,10 @@ var animation_ended = true
 var ground_vel : Vector3
 var aerial_vel : Vector3
 
-@onready var hitboxes : Dictionary = {
-	"stand_a": preload("scenes/hitboxes/stand/a.tscn"),
-	"stand_b": preload("scenes/hitboxes/stand/b.tscn"),
-	"stand_c": preload("scenes/hitboxes/stand/c.tscn"),
-	"crouch_a": preload("scenes/hitboxes/crouch/a.tscn"),
-	"crouch_b": preload("scenes/hitboxes/crouch/b.tscn"),
-	"crouch_c": preload("scenes/hitboxes/crouch/c.tscn"),
-	"jump_a": preload("scenes/hitboxes/jump/a.tscn"),
-	"jump_b": preload("scenes/hitboxes/jump/b.tscn"),
-	"jump_c": preload("scenes/hitboxes/jump/c.tscn"),
-	"uppercut": preload("scenes/hitboxes/special/uppercut.tscn"),
-	"grab": preload("scenes/hitboxes/stand/grab.tscn"),
-	"grab_followup": preload("scenes/hitboxes/stand/grab_followup.tscn"),
-	"grab_break": preload("scenes/hitboxes/stand/grab_break.tscn"),
-	"spin_approach": preload("scenes/hitboxes/special/spin_approach.tscn"),
-	"spin_approach_final": preload("scenes/hitboxes/special/spin_approach_final.tscn"),
-}
-@onready var projectiles = {"basic": preload("scenes/ProjectileMoveStraight.tscn")}
-@onready var particles = {"counter_hit": preload("scenes/particles/CounterHit.tscn")}
-@onready var game_instanced_sounds = {}
+@export var hitboxes : Dictionary[String, Resource]
+@export var projectiles : Dictionary[String, Resource]
+@export var particles : Dictionary[String, Resource]
+@export var game_instanced_sounds : Dictionary[String, Resource]
 
 @onready var area3d_intersect_check : Area3D = $Area3DIntersectionCheck
 
@@ -348,7 +333,11 @@ func blocking() -> bool:
 
 
 func create_hitbox(pos : Vector3, hitbox_name : String):
-	var new_hitbox := hitboxes[hitbox_name].instantiate() as Hitbox
+	var try_get = hitboxes.get(hitbox_name)
+	if try_get == null:
+		printerr(hitbox_name + " does not exist")
+		return
+	var new_hitbox := try_get.instantiate() as Hitbox
 	new_hitbox.name = name + "_" + hitbox_name
 
 	if not right_facing:
@@ -366,7 +355,11 @@ func create_hitbox(pos : Vector3, hitbox_name : String):
 
 
 func create_projectile(pos : Vector3, projectile_name : String, type : int):
-	var new_projectile := projectiles[projectile_name].instantiate() as Projectile
+	var try_get = projectiles.get(projectile_name)
+	if try_get == null:
+		printerr(projectile_name + " does not exist")
+		return
+	var new_projectile := try_get.instantiate() as Projectile
 	new_projectile.name = name + "_" + projectile_name
 
 	if not right_facing:
@@ -384,16 +377,27 @@ func create_projectile(pos : Vector3, projectile_name : String, type : int):
 	emit_signal(&"projectile_created", new_projectile)
 
 func create_particle(par_name : String, origin : GameParticle.Origins, pos_offset : Vector3):
-	var particle_instance : GameParticle = particles[par_name].instantiate()
+	var try_get = particles.get(par_name)
+	if try_get == null:
+		printerr(par_name + " does not exist")
+		return
+	var particle_instance : GameParticle = try_get.instantiate()
 	emit_signal(&"particle_created", particle_instance, origin, pos_offset, self)
 
 func create_dramatic_freeze(frz_name : String):
-	var new_freeze := dramatic_freezes[frz_name].instantiate() as DramaticFreeze
+	var try_get = dramatic_freezes.get(frz_name)
+	if try_get == null:
+		printerr(frz_name + " does not exist")
+		return
+	var new_freeze := try_get.instantiate() as DramaticFreeze
 	emit_signal(&"dramatic_freeze_created", new_freeze, self)
 
 func create_audio(audio_name):
-	var new_audio : AudioStream = game_instanced_sounds[audio_name]
-	emit_signal(&"audio_created", new_audio)
+	var try_get = game_instanced_sounds.get(audio_name)
+	if try_get == null:
+		printerr(audio_name + " does not exist")
+		return
+	emit_signal(&"audio_created", try_get as AudioStream)
 
 func release_grab():
 	emit_signal("grab_released", player)

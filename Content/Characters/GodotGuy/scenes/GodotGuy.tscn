@@ -1,23 +1,40 @@
-[gd_scene load_steps=83 format=3 uid="uid://kquoyj34deus"]
+[gd_scene load_steps=100 format=3 uid="uid://kquoyj34deus"]
 
 [ext_resource type="Script" uid="uid://cpxifdu2k43kt" path="res://Content/Characters/GodotGuy/godot_guy.gd" id="1_hspw6"]
+[ext_resource type="PackedScene" uid="uid://ygcyupdgtal0" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/a.tscn" id="2_27lkr"]
 [ext_resource type="Shape3D" uid="uid://dlbbd7lyja2p6" path="res://Content/Characters/GodotGuy/hurtbox_shapes/crouch_shape.tres" id="2_ahw0y"]
 [ext_resource type="PackedScene" uid="uid://crglsjvtvqvim" path="res://Content/Characters/GodotGuy/scenes/SuperBarP1.tscn" id="2_xjhia"]
 [ext_resource type="Shape3D" uid="uid://bs5a4315bo07p" path="res://Content/Characters/GodotGuy/hurtbox_shapes/base_shape.tres" id="3_8q5n8"]
 [ext_resource type="AudioStream" uid="uid://cx5hcekevi8v7" path="res://Content/Characters/GodotGuy/sounds/crouch_c_launch.wav" id="3_sx7kg"]
+[ext_resource type="PackedScene" uid="uid://c8ig7ivqbjdig" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/b.tscn" id="3_v1ios"]
 [ext_resource type="PackedScene" uid="uid://bheinqfnk6wxk" path="res://Content/Characters/GodotGuy/scenes/SuperBarP2.tscn" id="3_yl6a6"]
 [ext_resource type="PackedScene" uid="uid://bjnhblqpyw7vp" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP1.tscn" id="4_m71sm"]
+[ext_resource type="PackedScene" uid="uid://d20bpoiwbtntf" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/c.tscn" id="4_n6p3c"]
 [ext_resource type="PackedScene" uid="uid://deergjaym2msh" path="res://Content/Characters/GodotGuy/scenes/SuperBarTrainingModeP2.tscn" id="5_fjkep"]
+[ext_resource type="PackedScene" uid="uid://dysl5oirbl7rj" path="res://Content/Characters/GodotGuy/scenes/hitboxes/crouch/a.tscn" id="5_vt734"]
 [ext_resource type="AudioStream" uid="uid://c2tgndwonbirx" path="res://Content/Characters/GodotGuy/sounds/step.wav" id="5_wtfc2"]
+[ext_resource type="PackedScene" uid="uid://deli82dreupsu" path="res://Content/Characters/GodotGuy/scenes/hitboxes/crouch/b.tscn" id="6_hkmh1"]
 [ext_resource type="PackedScene" uid="uid://byer6bjupb33k" path="res://Content/Characters/GodotGuy/scenes/Animated2DSuperFreeze.tscn" id="6_xkque"]
+[ext_resource type="PackedScene" uid="uid://nd2ptk2bfyvt" path="res://Content/Characters/GodotGuy/scenes/hitboxes/crouch/c.tscn" id="7_24cv8"]
 [ext_resource type="PackedScene" uid="uid://b3qx5aofxylc7" path="res://scenes/GrabPoint.tscn" id="7_eysur"]
+[ext_resource type="PackedScene" uid="uid://cttbaw4rwfvsc" path="res://Content/Characters/GodotGuy/scenes/hitboxes/jump/a.tscn" id="8_0nakc"]
+[ext_resource type="PackedScene" uid="uid://dl6ohs6nmcmh0" path="res://Content/Characters/GodotGuy/scenes/hitboxes/jump/b.tscn" id="9_uuudo"]
+[ext_resource type="PackedScene" uid="uid://c0g6uk4rdolcc" path="res://Content/Characters/GodotGuy/scenes/hitboxes/jump/c.tscn" id="10_704pw"]
 [ext_resource type="AudioStream" uid="uid://dblbn1xejoslb" path="res://Content/Characters/GodotGuy/sounds/projectile_fire.wav" id="10_otsw8"]
+[ext_resource type="PackedScene" uid="uid://b3ydct5slon0m" path="res://Content/Characters/GodotGuy/scenes/hitboxes/special/uppercut.tscn" id="11_ec7wr"]
 [ext_resource type="AudioStream" uid="uid://cusjecr87ys5i" path="res://Content/Characters/GodotGuy/sounds/spin_approach_air.wav" id="11_imos3"]
 [ext_resource type="AudioStream" uid="uid://bpjmb2mg3jvgs" path="res://Content/Characters/GodotGuy/sounds/spin_approach.wav" id="12_2smnv"]
+[ext_resource type="PackedScene" uid="uid://cevgp2nq8oehc" path="res://Content/Characters/GodotGuy/scenes/hitboxes/special/spin_approach.tscn" id="12_v2yk8"]
+[ext_resource type="PackedScene" uid="uid://bcj33jffndhqd" path="res://Content/Characters/GodotGuy/scenes/hitboxes/special/spin_approach_final.tscn" id="13_8cnd1"]
 [ext_resource type="AudioStream" uid="uid://bfr0auflihcnh" path="res://Content/Characters/GodotGuy/sounds/super_projectile_fire.wav" id="13_748ol"]
 [ext_resource type="Texture2D" uid="uid://dgxkcfd58xett" path="res://Content/Characters/GodotGuy/icon.svg" id="14_03fpi"]
 [ext_resource type="AudioStream" uid="uid://clpvqfolijj4k" path="res://Content/Characters/GodotGuy/sounds/dash.wav" id="14_mv6ts"]
+[ext_resource type="PackedScene" uid="uid://cewomt4t8gq53" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/grab.tscn" id="14_s6w66"]
+[ext_resource type="PackedScene" uid="uid://bxcbnaebtmb10" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/grab_followup.tscn" id="15_36lfj"]
 [ext_resource type="Script" uid="uid://befselwlqfe56" path="res://Content/Characters/GodotGuy/scenes/state_2d_anim_player.gd" id="16_7li7g"]
+[ext_resource type="PackedScene" uid="uid://bni3ld6dsombb" path="res://Content/Characters/GodotGuy/scenes/hitboxes/stand/grab_break.tscn" id="16_gqmmh"]
+[ext_resource type="PackedScene" uid="uid://kjgashkcn1j2" path="res://Content/Characters/GodotGuy/scenes/ProjectileMoveStraight.tscn" id="17_n6p3c"]
+[ext_resource type="PackedScene" uid="uid://cu47fj4c7jjwu" path="res://Content/Characters/GodotGuy/scenes/particles/CounterHit.tscn" id="18_vt734"]
 
 [sub_resource type="Animation" id="Animation_at3m6"]
 length = 0.001
@@ -6315,9 +6332,32 @@ size = Vector3(0.202, 1.08658, 0.27)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vbsgv"]
 size = Vector3(1.2832, 1.29492, 1)
 
-[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point", "custom_camera")]
+[node name="GodotGuy" type="CharacterBody3D" node_paths=PackedStringArray("grab_point", "hurtbox", "custom_camera")]
 collision_layer = 0
 script = ExtResource("1_hspw6")
+hitboxes = Dictionary[String, Resource]({
+"crouch_a": ExtResource("5_vt734"),
+"crouch_b": ExtResource("6_hkmh1"),
+"crouch_c": ExtResource("7_24cv8"),
+"grab": ExtResource("14_s6w66"),
+"grab_break": ExtResource("16_gqmmh"),
+"grab_followup": ExtResource("15_36lfj"),
+"jump_a": ExtResource("8_0nakc"),
+"jump_b": ExtResource("9_uuudo"),
+"jump_c": ExtResource("10_704pw"),
+"spin_approach": ExtResource("12_v2yk8"),
+"spin_approach_final": ExtResource("13_8cnd1"),
+"stand_a": ExtResource("2_27lkr"),
+"stand_b": ExtResource("3_v1ios"),
+"stand_c": ExtResource("4_n6p3c"),
+"uppercut": ExtResource("11_ec7wr")
+})
+projectiles = Dictionary[String, Resource]({
+"basic": ExtResource("17_n6p3c")
+})
+particles = Dictionary[String, Resource]({
+"counter_hit": ExtResource("18_vt734")
+})
 BUTTONCOUNT = 3
 JUST_PRESSED_BUFFER = 2
 start_x_offset = 2.0
@@ -6325,6 +6365,7 @@ grabbed_offset = Vector3(-0.46, -0.87, 0)
 grab_point = NodePath("Grabbing")
 mtn_input_lenience = 12
 command_list = Array[String](["Dash|66/44j|A short burst of speed forwards or backwards.", "Forward Throw|BABA|Grab which bounces the opponent up and forward.", "Backward Throw|4BABA|Grab which bounces the opponent up and forward, while turning around.", "Projectile|236BAj|Throws a moderate speed projectile attack. When airborne, also pops the fighter up slightly.", "Uppercut|623BA|A flying uppercut, invincible on startup.", "Spin Approach|214BAj|An approaching, hovering attack which hits multiple times. When used in the air, it becomes weaker, but faster.", "Super Projectile|632146BA|Throws a fast trio of projectiles. Costs 50 Super Meter to perform.", "Aerial Super Projectile|632146BAJ|Throws 8 slow moving, launching projectiles. Costs 50 Super Meter to perform."])
+hurtbox = NodePath("Hurtbox")
 char_name = "Godot Guy"
 win_quote = "godot 👍"
 health = 100.0
