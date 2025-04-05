@@ -22,9 +22,12 @@ extends Fighter
 ##
 ## [color=rainbow]IMPORTANT NOTE:[/color] Animations are handled in manual mode when this script runs
 ## in-game as to stop unintended behavior from happening when the game is paused (spawning way too many
-## projectiles, deep-landed jumping attacks failing to come out, etc.), and that is updated in _ready.
-
-## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.
+## projectiles, deep-landed jumping attacks failing to come out, etc.), and that is updated in _ready.[br]
+##
+## State transitions are handled by a FSM. The nodes of this FSM are denoted by this enum. Transitions are handled in the _damage_step and _input_step. Most non-attacking animations are also tied to these nodes.[br]
+##
+## _input_step and _action_step are left to be implemented by the developer. An example of implementations
+## of these functions can be found in Godot Guy.
 enum States {
 	INTRO, ROUND_WIN, SET_WIN, # round stuff
 	IDLE, CRCH, # no movement
