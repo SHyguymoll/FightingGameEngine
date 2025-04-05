@@ -80,7 +80,7 @@ var animation_ended = true
 @export var damage_mult : float = 1.0
 @export var defense_mult : float = 1.0
 
-@export var jump_count : float = 0
+var jump_count : float = 0
 
 var ground_vel : Vector3
 var aerial_vel : Vector3
