@@ -29,9 +29,105 @@ func _post_outro() -> bool:
 	return (current_state in [States.ROUND_WIN, States.SET_WIN] and not s_2d_anim_player.is_playing())
 
 
+func handle_defeated():
+	set_state(States.OUTRO_BNCE)
+	kback.y += 6.5
+	emit_signal(&"defeated")
+
+
+func counter_hit(attack : Hitbox, combo_count : int):
+	create_particle("counter_hit", GameParticle.Origins.SOURCE,attack.position)
+	attack.hitstop_hit = int(float(attack.hitstop_hit) * 1.5)
+	handle_damage(attack, true, choose_hurting_state(attack), combo_count)
+
+
 func _input_step() -> void:
 	resolve_state_transitions()
 	handle_input()
+
+
+func handle_input() -> void:
+	var decision : States = current_state
+	match current_state:
+# Priority order, from least to most:
+# Walk, Backdash, Dash, Crouch, Jump, Attack
+# Blocking and Hurting is at the top but handled in _damage_step()
+		States.IDLE, States.WALK_B, States.WALK_F:
+			match current_state:
+				States.IDLE:
+					decision = try_walk(WalkingX.NEUTRAL, decision)
+					if len(inputs.up) > 3:
+						if right_facing:
+							decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_B, decision)
+							decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_F, decision)
+						else:
+							decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_F, decision)
+							decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_B, decision)
+				States.WALK_B:
+					decision = try_walk(WalkingX.BACK, decision)
+				States.WALK_F:
+					decision = try_walk(WalkingX.FORWARD, decision)
+			decision = States.CRCH if btn_pressed(GameGlobal.BTN_DOWN) else decision
+			decision = try_jump(decision)
+			decision = try_attack(decision)
+# Order: release down, attack, b/h
+		States.CRCH:
+			decision = try_walk(null, decision) if !btn_pressed(GameGlobal.BTN_DOWN) else decision
+			decision = try_attack(decision)
+# Order: jump, attack, b/h
+		States.JUMP:
+			if len(inputs.up) > 3:
+				if right_facing:
+					decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_A_B, decision, true)
+					decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_A_F, decision, true)
+				else:
+					decision = try_dash(GameGlobal.BTN_LEFT, States.DASH_A_F, decision, true)
+					decision = try_dash(GameGlobal.BTN_RIGHT, States.DASH_A_B, decision, true)
+			decision = try_jump(decision, false)
+			decision = try_attack(decision)
+# Cancel ground dashes into specials and supers
+		States.DASH_F, States.DASH_B:
+			decision = try_super_attack(decision)
+			decision = try_special_attack(decision)
+# Cancel air dashes into any attack
+		States.DASH_A_F, States.DASH_A_B:
+			decision = try_attack(decision)
+# Special cases for attack canceling
+		States.ATCK_NRML_IMP:
+			# dash canceling normals
+			if len(inputs.up) > 3:
+				if right_facing:
+					decision = try_dash("left", States.DASH_B, decision)
+					decision = try_dash("right", States.DASH_F, decision)
+				else:
+					decision = try_dash("left", States.DASH_F, decision)
+					decision = try_dash("right", States.DASH_B, decision)
+			# jump canceling normals
+			if decision == States.ATCK_NRML_IMP:
+				decision = try_jump(decision)
+			# magic series
+			if decision == States.ATCK_NRML_IMP:
+				match current_attack:
+					"attack_normal/a":
+						decision = try_magic_series(1, decision)
+					"attack_normal/b":
+						decision = try_magic_series(2, decision)
+					"attack_normal/c":
+						decision = try_magic_series(3, decision)
+			# special cancelling
+			if decision == States.ATCK_NRML_IMP:
+				decision = try_special_attack(decision)
+		States.ATCK_MOTN:
+			if attack_hurt:
+				decision = try_super_attack(decision)
+# grab breaks
+		States.HURT_GRB:
+			if ticks_since_state_change < 10 and two_atk_just_pressed():
+				set_stun(4)
+				kback = Vector3(3, 5, 0)
+				create_hitbox(Vector3.ZERO, "grab_break")
+				decision = States.HURT_FALL
+	set_state(decision)
 
 
 ## NOTE: AnimationPlayer uses a manual mode in order to fix desyncing when pausing.
