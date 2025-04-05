@@ -61,10 +61,10 @@ func _process(_delta):
 		)
 		if p1_cursor.choice_made and p2_cursor.choice_made:
 			Content.p1_resource = load(
-					Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x][1])
+					Content.char_map[p1_cursor.selected.y][p1_cursor.selected.x].scene_path)
 			Content.p2_resource = load(
-					Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x][1])
-			Content.stage_resource = load(Content.stages.pick_random()[1])
+					Content.char_map[p2_cursor.selected.y][p2_cursor.selected.x].scene_path)
+			Content.stage_resource = load((Content.stages.pick_random() as Content.StageId).scene_path)
 			for character_icon_instance in $CharSelectHolder.get_children():
 				character_icon_instance.queue_free()
 			if training_mode:
@@ -111,10 +111,10 @@ func load_character_select():
 		var prev_slice = custom_layout.definition[max(y_index - 1, 0)]
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = character[0]
-			icon.character_data = character[1]
+			icon.name = character.name
+			icon.character_data = character.scene_path
 			icon.set_surface_override_material(
-					0,build_albedo(character[2], false))
+					0,build_albedo(character.icon_path, false))
 			$CharSelectHolder.add_child(icon)
 			while cur_slice[cur_index] == 0:
 				slice_built.append(null)
@@ -170,10 +170,10 @@ func load_character_select():
 		var char_position_working = char_top_left
 		for character in Content.characters:
 			var icon = character_icon.instantiate()
-			icon.name = character[0]
-			icon.character_data = character[1]
+			icon.name = character.name
+			icon.character_data = character.scene_path
 			icon.set_surface_override_material(
-					0,build_albedo(character[2], false))
+					0,build_albedo(character.icon_path, false))
 			$CharSelectHolder.add_child(icon)
 			icon.position = char_position_working
 			char_position_working.x += X_JUMP
