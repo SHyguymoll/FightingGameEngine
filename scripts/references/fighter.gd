@@ -281,6 +281,10 @@ func _in_defeated_state() -> bool:
 func _in_outro_state() -> bool:
 	return true
 
+## Called by the game when the two fighters switch sides on the screen.
+func _do_switch_facing() -> void:
+	right_facing = not right_facing
+
 ## Returns based on if this Fighter is attacking. Used for determining counter-hits, punishes, etc.
 func _in_attacking_state() -> bool:
 	return false

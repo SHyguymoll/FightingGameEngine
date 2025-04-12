@@ -702,8 +702,14 @@ func character_positioning(delta):
 	p2.position.x = clamp(p2.position.x, -MOVEMENTBOUNDX, MOVEMENTBOUNDX)
 	p1.opponent_on_stage_edge = abs(p2.position.x) == MOVEMENTBOUNDX
 
-	p1.distance = p1.position.x - p2.position.x
-	p2.distance = p2.position.x - p1.position.x
+	var p1_new_dist = p1.position.x - p2.position.x
+	var p2_new_dist = p2.position.x - p1.position.x
+	if sign(p1_new_dist) + sign(p1.distance) == 0:
+		p1._do_switch_facing()
+	if sign(p2_new_dist) + sign(p2.distance) == 0:
+		p2._do_switch_facing()
+	p1.distance = p1_new_dist
+	p2.distance = p2_new_dist
 	# overlap fix
 	if (not (p1.grabbed_point.act_on_player or p2.grabbed_point.act_on_player)
 			and p1.get_node_or_null("Area3DIntersectionCheck") != null
