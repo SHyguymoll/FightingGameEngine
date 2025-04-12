@@ -427,4 +427,11 @@ func update_character_animation():
 	s_2d_anim_player.advance(0)
 
 func _do_switch_facing():
-	pass
+	reset_facing(true)
+	if current_state in [
+		States.IDLE,
+		States.CRCH,
+		States.WALK_F,
+		States.WALK_B,
+	]:
+		s_2d_anim_player.update_animation()

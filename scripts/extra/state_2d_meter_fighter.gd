@@ -580,6 +580,6 @@ func update_character_state():
 	check_true = move_and_slide()
 
 
-func reset_facing():
-	right_facing = distance < 0
+func reset_facing(called_by_game : bool = false):
+	right_facing = distance < 0 if not called_by_game else not right_facing
 	grabbed_offset.x = GRABBED_OFFSET_X * (-1 ^ int(distance < 0))
