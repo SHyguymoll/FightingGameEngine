@@ -425,3 +425,6 @@ func update_character_animation():
 		s_2d_anim_player.update_animation()
 	# Update animation immediately for manual processing mode
 	s_2d_anim_player.advance(0)
+
+func _do_switch_facing():
+	pass
