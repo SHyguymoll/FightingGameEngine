@@ -1,6 +1,5 @@
 class_name State2DMeterFighter
 extends Fighter
-
 ## A Finite State Machine-based Fighter with features based off of Guilty Gear, Street Fighter, etc.
 ##
 ## This is an example of a fighter that someone could make.[br]
@@ -28,6 +27,8 @@ extends Fighter
 ##
 ## _input_step and _action_step are left to be implemented by the developer. An example of implementations
 ## of these functions can be found in Godot Guy.
+
+## The States used by this type of Fighter.
 enum States {
 	INTRO, ROUND_WIN, SET_WIN, # round stuff
 	IDLE, CRCH, # no movement
